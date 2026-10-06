@@ -1,0 +1,155 @@
+// Formulas that each exercise one feature of math evaluation, the math IR or
+// the MathML export: every element, the spacing rules, attachments and
+// limits, fences, tables, styles and the whitespace rules of text. Some
+// appear both inline and in display style, where the two differ.
+
+const inline = [
+  // Text, numbers and spacing.
+  ['number-decimal', '3.14 + 2.'],
+  ['number-grouped', '1234567'],
+  ['text-quoted', '"if" x > 0'],
+  ['text-two-spaces', '"a  b"'],
+  ['text-leading-space', '" a"'],
+  ['text-trailing-space', '"a " b'],
+  ['text-tab', '"a\tb"'],
+  ['text-newline', '"line one\nline two"'],
+  // Pairs that fonts kern.
+  ['text-kerning', '"AVATAR" + "Typst" + "To" + "f."'],
+  ['space-symbol', 'a space b'],
+  ['spacings', 'a thin b med c thick d quad e wide f'],
+  ['h-weak', 'a #h(1em, weak: true) #h(2em, weak: true) b'],
+  // In a subscript, 1em is 70% of the font size, less than 9pt.
+  ['h-weak-script', 'x_(a #h(1em, weak: true) #h(9pt, weak: true) b)'],
+  ['h-fraction', 'a #h(1fr) b'],
+  ['h-relative', 'a #h(50%) b'],
+  ['h-negative', 'a #h(-0.5em) b'],
+  ['h-points', 'a #h(3pt) b'],
+  ['h-mixed', 'a #h(1em + 2pt) b'],
+  // Classes and automatic spacing.
+  ['vary-binary', 'a - b'],
+  ['vary-unary', '- b'],
+  ['vary-after-relation', 'a = - b'],
+  ['relation-chain', 'a < b <= c = d'],
+  ['punctuation', 'f(a, b; c)'],
+  ['large-op', 'sum x + product y'],
+  ['large-before-paren', 'sum (x)'],
+  ['class-relation', 'a class("relation", +) b'],
+  ['class-large', 'class("large", x)_1^2'],
+  ['class-punct-close', '(a,)'],
+  ['dif', 'integral f(x) dif x'],
+  ['factorial', 'n! + 3!'],
+  ['primes-many', "f''''' + g''''"],
+  ['primes-script', "x'^2 + x'_1 + x''_1^2"],
+  // Attachments.
+  ['attach-nested', 'x_1_2'],
+  ['attach-nested-top', 'x^1^2'],
+  ['attach-paren', '(x_1)^2'],
+  ['attach-all', 'attach(x, t: 1, b: 2, tl: 3, bl: 4, tr: 5, br: 6)'],
+  ['attach-prescripts', 'attach(x, tl: 1)'],
+  ['attach-limits', 'limits(x)_1^2'],
+  ['attach-limits-inline', 'limits(x, inline: #false)_1^2'],
+  ['attach-scripts', 'scripts(sum)_1^2'],
+  ['attach-large', 'sum_(i=0)^n i'],
+  ['attach-integral', 'integral_0^1 x dif x'],
+  ['attach-text-op', 'lim_(x -> 0) f(x) + max_i x_i + sin^2 x'],
+  ['attach-op-custom', 'op("argmin", limits: #true)_x f(x)'],
+  ['attach-equation-base', '#math.attach($x$, t: $2$)'],
+  // Fractions and roots.
+  ['frac-nested', '1/(1 + 1/x)'],
+  ['frac-paren', '(a + b)/(c + d)'],
+  ['frac-horizontal', 'math.frac(a + b, c, style: "horizontal")'],
+  ['frac-horizontal-paren', '#math.frac($(a+b)$, $c$, style: "horizontal")'],
+  ['frac-skewed', 'math.frac(1, 2, style: "skewed")'],
+  ['binom-many', 'binom(n, k_1, k_2)'],
+  ['root-sign', '√x + ∛y + ∜(a + b)'],
+  ['root-func', 'root(3, x) + sqrt(y)'],
+  ['root-text-index', 'root("n", x)'],
+  // Fences.
+  ['lr-auto', 'lr(( x/y ))'],
+  ['lr-size', 'lr([ x ], size: #150%)'],
+  ['lr-mid', 'lr(chevron.l a mid(|) b chevron.r)'],
+  ['lr-unbalanced', '(a]'],
+  ['lr-single', 'lr(|)'],
+  ['lr-weak-space', 'lr(( #h(1em, weak: true) x #h(1em, weak: true) ))'],
+  ['fence-bars', '|x| + ||y||'],
+  ['fence-brackets', '[a, b) + {c}'],
+  ['abs-norm', 'abs(x) + norm(y) + floor(z) + ceil(w) + round(v)'],
+  ['abs-size', 'abs(x, size: #2em)'],
+  ['delim-callable', 'paren.l(x) + chevron.l(y)'],
+  ['stretch', 'stretch(->)^"def" + stretch(=, size: #200%)'],
+  // Accents and lines.
+  ['accents', 'hat(x) + tilde(a) + macron(b) + dot(c) + dot.double(d) + arrow(e) + breve(f)'],
+  ['accent-wide', 'hat(x y z) + arrow(A B)'],
+  ['accent-dotless', 'hat(i) + hat(j) + hat(i, dotless: #false)'],
+  ['accent-below', 'accent(x, ̲)'],
+  ['accent-size', 'accent(x, arrow, size: #50%)'],
+  ['accent-string', 'accent(x, "→")'],
+  ['accent-int-error', 'accent(x, #1)'],
+  ['under-over', 'underbrace(a + b, n) + overbrace(c, m) + underparen(d) + overbracket(e, k)'],
+  ['under-shell', 'undershell(x) + overshell(y, 2)'],
+  ['lines', 'overline(x) + underline(y)'],
+  ['cancel', 'cancel(x) + cancel(y, cross: #true)'],
+  // Tables.
+  ['vec-align', 'vec(1, 22, 333, align: #right)'],
+  ['vec-gap', 'vec(a, b, gap: #1em)'],
+  ['mat-align-points', 'mat(a & b, c; d & e, f)'],
+  ['mat-empty-cell', 'mat(1, , 3; , 5, )'],
+  ['mat-ragged', 'mat(1, 2; 3)'],
+  ['mat-delims', 'mat(delim: "[", 1; 2) + mat(delim: #(none, "]"), 3)'],
+  ['mat-augment-int', 'mat(augment: #1, 1, 2; 3, 4)'],
+  ['mat-augment-negative', 'mat(augment: #(-1), 1, 2; 3, 4)'],
+  ['mat-augment-offset-error', 'mat(augment: #3, 1, 2; 3, 4)'],
+  ['mat-gaps', 'mat(row-gap: #1em, column-gap: #2em, 1, 2; 3, 4)'],
+  ['mat-gap', 'mat(gap: #1em, 1, 2; 3, 4)'],
+  ['mat-linebreak-warning', 'mat(a \\ b, c)'],
+  ['cases-reverse', 'cases(reverse: #true, a, b)'],
+  ['cases-align', 'cases(x & "if" y, z & "else")'],
+  // Multiple lines.
+  ['multiline', 'a \\ b'],
+  ['multiline-align', 'x &= 1 \\ &= 2'],
+  ['multiline-align-many', 'a & = b & c \\ d & = e & f'],
+  ['multiline-fence', '( a \\ b )'],
+  // A backslash right before the closing dollar would escape it, so a space follows.
+  ['multiline-trailing', 'a \\ '],
+  // Styles.
+  ['styles-variants', 'bb(R) + cal(A) + scr(B) + frak(g) + sans(x) + mono(y) + serif(z)'],
+  ['styles-bold-italic', 'bold(x) + italic(1) + upright(x) + bold(upright(alpha)) + bold(Gamma)'],
+  ['styles-greek', 'sans(alpha) + sans(Gamma) + upright(alpha) + italic(Gamma)'],
+  ['styles-digits', 'bb(1) + bold(2) + sans(3) + mono(4) + frak(5)'],
+  ['styles-text', 'bold("text") + upright(2)'],
+  ['styles-dotless', 'italic(ı) + upright(ı) + ħ'],
+  ['styles-hebrew', 'aleph + beth'],
+  ['sizes', 'display(1/2) + inline(1/2) + script(1/2) + sscript(1/2)'],
+  ['sizes-cramped', 'display(x^2, cramped: #true) + script(x^2, cramped: #false)'],
+  // Symbols.
+  ['shorthands', 'a -> b => c <=> d != e <= f >= g ... h :: i'],
+  ['shorthands-brackets', '[| x |] + || y ||'],
+  ['emoji-text', '♀ ⚥'],
+  ['nested-module', 'gender.female + gender.male.stroke + control.nul'],
+  ['variation-selector', 'arrow.r.filled + gender.female'],
+  ['combining', 'x̂ + é'],
+  ['invisible', 'a zwj b + wj'],
+  ['alignment-display', '#left #(left + top)'],
+];
+
+// These differ between inline and display style.
+const both = [
+  ['display-large', 'sum_(i=1)^n x_i + integral_a^b f'],
+  ['display-limits', 'lim_(n -> oo) a_n'],
+  ['display-frac', 'a/b + display(c/d)'],
+  ['display-mat', 'mat(1, 2; 3, 4)'],
+  ['display-cases', 'f(x) = cases(1 & x > 0, 0 & "else")'],
+  ['display-binom', 'binom(n, k)'],
+  ['display-accent', 'hat(sum)'],
+  ['display-class-large', 'class("large", x)_a^b'],
+];
+
+export function featureFormulas() {
+  return [
+    ...inline.map(([id, src]) => ({ id, src, display: false })),
+    ...both.flatMap(([id, src]) => [
+      { id: `${id}-inline`, src, display: false },
+      { id: `${id}-block`, src, display: true },
+    ]),
+  ];
+}

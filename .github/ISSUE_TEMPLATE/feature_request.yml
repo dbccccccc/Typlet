@@ -1,0 +1,16 @@
+name: Feature request
+description: Something Typst's math can do that Typlet refuses or draws as MathML, or something an integration lacks
+labels: [enhancement]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What you need
+      description: The formula or the code Typlet should support, or what the API or an integration should do.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Where it comes up
+      description: What you are building, and how often formulas like this appear in it. The roadmap follows what formulas use.

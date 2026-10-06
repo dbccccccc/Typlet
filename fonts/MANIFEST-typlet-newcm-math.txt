@@ -1,0 +1,33 @@
+Typlet NewCM Math
+
+The files below make up Typlet NewCM Math, derived from New Computer Modern Math
+Book and Bold (NewCMMath-Book.otf and NewCMMath-Bold.otf, (C) 2019-2026
+Antonis Tsolomitis), as bundled by Typst 0.15.1. As the GUST Font
+License requests, the fonts and their files have new names. The changes:
+the Book font is subset to the glyphs Typst reaches from the characters
+Typlet supports, split into the files below by character, and given
+private-use code points for its glyphs that have none; the Bold font is
+subset to Latin characters; both have the same ascent and descent in their
+hhea, OS/2 typo and win metrics, and TrueType outlines converted from their
+CFF ones. The license is in GUST-FONT-LICENSE.txt.
+
+typlet-newcm-math-main.woff2
+typlet-newcm-math-bold.woff2
+typlet-newcm-math-bold-italic.woff2
+typlet-newcm-math-script.woff2
+typlet-newcm-math-bold-script.woff2
+typlet-newcm-math-fraktur.woff2
+typlet-newcm-math-bold-fraktur.woff2
+typlet-newcm-math-double-struck.woff2
+typlet-newcm-math-sans.woff2
+typlet-newcm-math-sans-bold.woff2
+typlet-newcm-math-mono.woff2
+typlet-newcm-math-operators.woff2
+typlet-newcm-math-arrows.woff2
+typlet-newcm-math-symbols.woff2
+typlet-newcm-math-latin.woff2
+typlet-newcm-math-devanagari.woff2
+typlet-newcm-math-arabic-math.woff2
+typlet-newcm-math-other.woff2
+typlet-newcm-math-bold-latin.woff2
+typlet.css

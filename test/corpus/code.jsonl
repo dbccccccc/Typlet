@@ -1,0 +1,37 @@
+{"display":false,"id":"display-none","src":"#none"}
+{"display":false,"id":"display-auto","src":"#auto"}
+{"display":false,"id":"display-bool","src":"#true"}
+{"display":false,"id":"display-int","src":"#2"}
+{"display":false,"id":"display-float","src":"#2.5"}
+{"display":false,"id":"display-str","src":"#\"text\""}
+{"display":false,"id":"display-length","src":"#1em"}
+{"display":false,"id":"display-ratio","src":"#50%"}
+{"display":false,"id":"display-array","src":"#(1, 2)"}
+{"display":false,"id":"display-color","src":"#red"}
+{"display":false,"id":"display-alignment","src":"#left"}
+{"display":false,"id":"display-symbol","src":"#sym.arrow.r"}
+{"display":false,"id":"display-content","src":"#math.frac(1, 2)"}
+{"display":false,"id":"paren-expr","src":"#(1 + 2)"}
+{"display":false,"id":"unary-needs-parens","src":"#-1"}
+{"display":false,"id":"spacing-h","src":"a #h(1em) b"}
+{"display":false,"id":"spacing-h-negative","src":"a #h(-1em/6) b"}
+{"display":false,"id":"spread-rows","src":"mat(..#((1, 2), (3, 4)))"}
+{"display":false,"id":"spread-dict","src":"mat(..#(delim: \"[\"), 1, 2)"}
+{"display":false,"id":"named-int","src":"mat(augment: #2, 1, 2, 3)"}
+{"display":false,"id":"named-content-fails","src":"mat(augment: 2, 1, 2, 3)"}
+{"display":false,"id":"named-string","src":"mat(delim: \"[\", 1, 2)"}
+{"display":false,"id":"named-none","src":"mat(delim: #none, 1, 2)"}
+{"display":false,"id":"named-dict","src":"mat(augment: #(hline: 1, vline: 1), a, b; c, d)"}
+{"display":false,"id":"named-alignment","src":"mat(align: #left, 1, 22)"}
+{"display":false,"id":"named-duplicate","src":"mat(delim: \"[\", delim: \"(\", 1)"}
+{"display":false,"id":"call-non-function","src":"alpha(x)"}
+{"display":false,"id":"call-callable-accent","src":"hat(x)"}
+{"display":false,"id":"call-callable-delimiter","src":"floor(x)"}
+{"display":false,"id":"call-unknown","src":"foo(x)"}
+{"display":false,"id":"unknown-variable","src":"foo"}
+{"display":false,"id":"single-letter-literal","src":"x(y)"}
+{"display":false,"id":"field-on-symbol","src":"arrow.r.double"}
+{"display":false,"id":"field-unknown-modifier","src":"arrow.nope"}
+{"display":false,"id":"deprecated-symbol","src":"gt.tri"}
+{"display":false,"id":"math-module-call","src":"#math.attach(\"x\", t: \"2\")"}
+{"display":false,"id":"sym-module","src":"#sym.alpha + #sym.RR"}

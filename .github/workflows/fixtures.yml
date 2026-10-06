@@ -1,0 +1,42 @@
+name: Oracle
+
+# Checks Typlet against the real Typst compiler: the committed fixtures must be
+# what the oracle produces for the committed corpus, and the parser must match
+# typst-syntax on 100,000 fuzzed inputs. It runs when the files the fixtures
+# come from change, and weekly; CI's own jobs use the oracle for its unit tests,
+# the visual diffs and shorter fuzzing.
+
+on:
+  push:
+    branches: [main]
+    paths: [oracle/**, test/corpus/**, test/fixtures/**, tools/**, src/syntax/**, src/utils/**, src/generated/**]
+  pull_request:
+    paths: [oracle/**, test/corpus/**, test/fixtures/**, tools/**, src/syntax/**, src/utils/**, src/generated/**]
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  oracle:
+    name: Fixtures are current, parser matches typst-syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: oracle
+      - run: npm ci
+      - run: npm run oracle:build
+      - run: npm run fixtures:check
+      - run: npm run fuzz -- --count 100000 --seed ${{ github.run_number }}

@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+# A new push to a pull request cancels the run it replaces. Runs for pushes to
+# main always finish.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    # On the oldest Node the package supports, and on the one the other jobs use.
+    name: Type check, headers, tests, build, size, package (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+
+  oracle:
+    name: Oracle unit tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        # rust-toolchain.toml in oracle/ pins the Rust version.
+        working-directory: oracle
+    steps:
+      - uses: actions/checkout@v7
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: oracle
+      - run: cargo test --release
+
+  browsers:
+    name: Browser tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run build
+      - run: npm run test:browsers
+
+  # The visual diffs and the fuzzers both need the oracle. They run as separate
+  # jobs, sharing its build cache, so that one failing doesn't hide the other.
+  visual:
+    name: Visual diffs against Typst
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: oracle
+          shared-key: oracle
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run oracle:build
+      - run: npm run build
+      - run: npm run test:visual
+      # Each mismatch is saved as Typst's picture above Typlet's.
+      - if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-mismatches
+          path: /tmp/typlet-visual
+          if-no-files-found: ignore
+
+  fuzz:
+    name: Fuzzing against Typst
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: oracle
+          shared-key: oracle
+      - run: npm ci
+      - run: npm run oracle:build
+      # Each run fuzzes with a new seed, which the log shows, so failures
+      # reproduce with `--seed`.
+      - run: npm run fuzz -- --count 20000 --seed ${{ github.run_number }}
+      - run: npm run fuzz:eval -- --count 2000 --seed ${{ github.run_number }}

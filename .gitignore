@@ -1,0 +1,25 @@
+node_modules/
+dist/
+coverage/
+oracle/target/
+bench/results/
+
+# Tarballs from `npm pack`.
+*.tgz
+
+# The documentation site, built by `npm run docs:build`.
+/site/
+
+# The Python environment for the font pipeline (tools/fonts/).
+.venv/
+
+# Local-only corpus and fixtures, built with `npm run corpus -- --labels FILE`.
+# Their sources mix datasets with different licenses, so they stay out of git.
+test/corpus/local/
+test/fixtures/local/
+
+# Operating systems and editors.
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

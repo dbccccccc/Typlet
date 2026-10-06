@@ -1,0 +1,133 @@
+{"display":false,"id":"content-block","src":"#[text]"}
+{"display":false,"id":"content-strong","src":"x + #[*bold*]"}
+{"display":false,"id":"content-emph","src":"x + #[_emph_]"}
+{"display":false,"id":"content-equation","src":"#[a $x^2$ b]"}
+{"display":false,"id":"content-code","src":"#[#(1 + 2)]"}
+{"display":false,"id":"content-escape","src":"#[\\#1 \\$]"}
+{"display":false,"id":"content-shorthand","src":"#[a -- b --- c ~ d ...]"}
+{"display":false,"id":"content-smartquote","src":"#[\"quoted\" it's]"}
+{"display":false,"id":"content-raw","src":"#[`code`]"}
+{"display":false,"id":"content-link","src":"#[https://typst.app]"}
+{"display":false,"id":"content-label","src":"#[a <label>]"}
+{"display":false,"id":"content-heading","src":"#[= Heading]"}
+{"display":false,"id":"content-parbreak","src":"#[a\n\nb]"}
+{"display":false,"id":"equation-value","src":"#$x + y$ = z"}
+{"display":false,"id":"strong","src":"x = #strong[bold]"}
+{"display":false,"id":"strong-delta","src":"#strong(delta: 600)[heavy]"}
+{"display":false,"id":"strong-math","src":"#strong[$x + 1$]"}
+{"display":false,"id":"strong-number","src":"#strong[$1 + 2$]"}
+{"display":false,"id":"emph","src":"x = #emph[it]"}
+{"display":false,"id":"text-fill","src":"#text(fill: red)[$x$] + y"}
+{"display":false,"id":"text-fill-math","src":"#text(fill: red, $x$) + #text(fill: blue, $y$)"}
+{"display":false,"id":"text-fill-call","src":"text(fill: #red, x)"}
+{"display":false,"id":"text-size","src":"#text(size: 2em, $x$) + y"}
+{"display":false,"id":"text-size-abs","src":"#text(size: 8pt, $x^2$) + y"}
+{"display":false,"id":"text-weight","src":"#text(weight: \"bold\")[text]"}
+{"display":false,"id":"text-style","src":"#text(style: \"italic\")[text]"}
+{"display":false,"id":"text-font","src":"#text(font: \"Arial\")[text]"}
+{"display":false,"id":"text-string","src":"#text(\"x\")"}
+{"display":false,"id":"text-missing-body","src":"#text(fill: red)"}
+{"display":false,"id":"text-tracking","src":"#text(tracking: 2pt)[ab c] + #text(tracking: 2pt)[a#\"b\"c]"}
+{"display":false,"id":"text-tracking-math","src":"#text(tracking: 0.1em, $\"ab\" x y$)"}
+{"display":false,"id":"text-spacing","src":"#text(spacing: 200%)[a b] + #text(spacing: 100% + 2pt)[a~b]"}
+{"display":false,"id":"text-baseline","src":"#text(baseline: 2pt)[ab] + #text(baseline: -0.2em, $x^2 + (a/b)$)"}
+{"display":false,"id":"text-baseline-highlight","src":"#highlight(text(baseline: 2pt)[ab])"}
+{"display":false,"id":"text-weight-575","src":"#text(weight: 575)[ab] + #text(weight: 425)[cd]"}
+{"display":false,"id":"text-weight-regular","src":"#text(weight: \"regular\")[ab]"}
+{"display":false,"id":"text-stroke","src":"#text(stroke: 0.5pt + red, $x$)"}
+{"display":false,"id":"text-features","src":"#text(features: (\"ss01\",))[ag0]"}
+{"display":false,"id":"text-composed","src":"#text(tracking: 2pt)[éa] + x̂"}
+{"display":false,"id":"text-lang-quotes","src":"#text(lang: \"de\")[\"a\" 'b'] #text(lang: \"fr\")[\"c\"] #text(lang: \"de\", region: \"CH\")[\"d\"]"}
+{"display":false,"id":"text-lang-rtl","src":"#text(lang: \"he\")[if x] + #text(lang: \"ar\", $\"ab cd\"$)"}
+{"display":false,"id":"text-lang-rtl-punctuation","src":"#text(lang: \"ar\")[(a)]"}
+{"display":false,"id":"box-stroke","src":"#box(stroke: 0.5pt, inset: 3pt, $E=m c^2$)"}
+{"display":false,"id":"box-fill","src":"a + #box(fill: yellow, $z$)"}
+{"display":false,"id":"box-width","src":"#box(width: 3em, $x$) + y"}
+{"display":false,"id":"box-height","src":"#box(height: 2em, $x$) + y"}
+{"display":false,"id":"box-baseline","src":"#box(baseline: 30%, $x$) + y"}
+{"display":false,"id":"box-radius","src":"#box(radius: 2pt, stroke: red, inset: 2pt, $x$)"}
+{"display":false,"id":"box-side-stroke","src":"#box(stroke: (bottom: 1pt), $x$)"}
+{"display":false,"id":"box-outset","src":"#box(outset: 2pt, fill: aqua, $x$)"}
+{"display":false,"id":"box-text","src":"#box(stroke: 0.5pt)[text] + 1"}
+{"display":false,"id":"box-empty","src":"a #box(width: 1em) b"}
+{"display":false,"id":"hide","src":"a + #hide[$x y z$] + b"}
+{"display":false,"id":"hide-text","src":"a #hide[text] b"}
+{"display":false,"id":"box-hide-paragraphs","src":"x + #box[a #hide[b] c]"}
+{"display":false,"id":"box-hide-lone-paragraph","src":"#box[#hide[a] \\ b]"}
+{"display":false,"id":"box-parbreak","src":"#box[a\n\nb]"}
+{"display":false,"id":"strong-hide-paragraphs","src":"#strong[a #hide[b] c]"}
+{"display":false,"id":"box-paragraph-quotes","src":"#box[\"a\" #hide[b] \"c\"]"}
+{"display":false,"id":"box-block-equation","src":"#box[$ x $]"}
+{"display":false,"id":"box-block-equation-text","src":"#box[a $ x $ b]"}
+{"display":false,"id":"box-nested-paragraphs","src":"#box[a #box[b #hide[c] d] e]"}
+{"display":false,"id":"box-lone-box","src":"#box[#box[a b]]"}
+{"display":false,"id":"cancel-box-cramped","src":"a_(cancel(#box[$x$] y))"}
+{"display":false,"id":"box-quote-after-number","src":"1 #box[\"a\"]"}
+{"display":false,"id":"strong-quote-after-number","src":"1#strong[\"a\"]"}
+{"display":false,"id":"box-in-box-region","src":"#box(fill: yellow, width: 2em)[#box(stroke: blue + 1pt)[dots.c]]"}
+{"display":false,"id":"box-in-equation-region","src":"#box(fill: yellow, width: 2em, $#box(stroke: blue + 1pt, outset: 1pt)[dots.c]$)"}
+{"display":false,"id":"highlight","src":"#highlight[text] + x"}
+{"display":false,"id":"highlight-math","src":"#highlight($x^2$)"}
+{"display":false,"id":"link","src":"#link(\"https://typst.app\")[$x$]"}
+{"display":false,"id":"link-text","src":"#link(\"https://typst.app\")[docs]"}
+{"display":false,"id":"stroke-sum","src":"cancel(x, stroke: #(0.5pt + red))"}
+{"display":false,"id":"stroke-dict","src":"cancel(x, stroke: #(paint: blue, thickness: 1pt))"}
+{"display":false,"id":"stroke-dashed","src":"cancel(x, stroke: #(dash: \"dashed\"))"}
+{"display":false,"id":"stroke-bad-key","src":"cancel(x, stroke: #(color: red))"}
+{"display":false,"id":"let-value","src":"#let n = 5\n#n + 1"}
+{"display":false,"id":"let-content","src":"#let e = $a + b$\n#e = c"}
+{"display":false,"id":"let-single-letter","src":"#let x = 5\nx + #x"}
+{"display":false,"id":"let-shadow","src":"#let sum = 1\nsum + #sum"}
+{"display":false,"id":"let-function","src":"#let f(x) = x + 1\n#f(2)"}
+{"display":false,"id":"let-function-math-call","src":"#let f(x) = $#x^2$\nf(a) + 1"}
+{"display":false,"id":"let-named-param","src":"#let f(x, y: 2) = x * y\n#f(3) + #f(3, y: 4)"}
+{"display":false,"id":"let-sink","src":"#let f(a, ..rest) = rest\n#f(1, 2, 3)"}
+{"display":false,"id":"let-closure","src":"#let f = x => x * 2\n#f(4)"}
+{"display":false,"id":"let-destructure","src":"#let (a, b) = (1, 2)\n#a #b"}
+{"display":false,"id":"let-destructure-dict","src":"#let (x: p, y: q) = (x: 1, y: 2)\n#p #q"}
+{"display":false,"id":"let-destructure-error","src":"#let (a, b) = (1,)\n#a"}
+{"display":false,"id":"closure-capture","src":"#let k = 3\n#let f(x) = x * k\n#f(2)"}
+{"display":false,"id":"closure-missing-arg","src":"#let f(x) = x\n#f()"}
+{"display":false,"id":"closure-unexpected-arg","src":"#let f(x) = x\n#f(1, 2)"}
+{"display":false,"id":"closure-unknown-named","src":"#let f(x) = x\n#f(1, y: 2)"}
+{"display":false,"id":"recursion","src":"#let fac(n) = if n <= 1 { 1 } else { n * fac(n - 1) }\n#fac(10)"}
+{"display":false,"id":"recursion-depth","src":"#let f(n) = f(n + 1)\n#f(0)"}
+{"display":false,"id":"conditional","src":"#if 1 < 2 [yes] else [no]"}
+{"display":false,"id":"conditional-math","src":"#if true { $x$ } else { $y$ }"}
+{"display":false,"id":"conditional-not-bool","src":"#if 1 [a]"}
+{"display":false,"id":"code-block","src":"#{ let a = 2; a * 3 }"}
+{"display":false,"id":"code-block-join","src":"#{ \"a\"; \"b\" }"}
+{"display":false,"id":"code-block-content","src":"#{ [x]; [+]; $y$ }"}
+{"display":false,"id":"code-block-join-error","src":"#{ 1; \"a\" }"}
+{"display":false,"id":"return-outside","src":"#{ return 1 }"}
+{"display":false,"id":"return-in-function","src":"#let f(x) = { if x > 0 { return [pos] }; [neg] }\n#f(1) #f(-1)"}
+{"display":false,"id":"return-discards","src":"#let f() = { [a]; return [b] }\n#f()"}
+{"display":false,"id":"break-outside","src":"#{ break }"}
+{"display":false,"id":"loop-refused","src":"#for i in (1, 2) [#i]"}
+{"display":false,"id":"set-in-content","src":"#[#set text(fill: red)\n$x$] + y"}
+{"display":false,"id":"set-in-code","src":"#{ set math.mat(delim: \"[\"); $mat(1, 2)$ }"}
+{"display":false,"id":"set-in-math","src":"#set text(fill: red) x"}
+{"display":false,"id":"set-non-element","src":"#[#set math.bold(x)]"}
+{"display":false,"id":"set-conditional","src":"#[#set text(fill: red) if false\n$x$]"}
+{"display":false,"id":"show-refused","src":"#[#show \"x\": \"y\"\nx]"}
+{"display":false,"id":"preamble-norm","preamble":"#let norm(x) = $lr(|| #x ||)$","src":"norm(v) + norm(w)"}
+{"display":false,"id":"preamble-macro","preamble":"#let RR = $bb(R)$","src":"f: RR^n -> RR"}
+{"display":false,"id":"preamble-mat-delim","preamble":"#set math.mat(delim: \"[\")","src":"mat(1, 2; 3, 4)"}
+{"display":false,"id":"preamble-vec-gap","preamble":"#set math.vec(gap: 1em)","src":"vec(1, 2)"}
+{"display":false,"id":"preamble-cases-reverse","preamble":"#set math.cases(reverse: true)","src":"cases(1, 2) = x"}
+{"display":false,"id":"preamble-text-fill","preamble":"#set text(fill: blue)","src":"x + y"}
+{"display":false,"id":"preamble-text-size","preamble":"#set text(size: 1.2em)","src":"x^2 + y"}
+{"display":false,"id":"preamble-text-font","preamble":"#set text(font: \"New Computer Modern\")","src":"x + y"}
+{"display":false,"id":"preamble-text-layout","preamble":"#set text(tracking: 1pt, spacing: 150%, baseline: 1pt)","src":"x y + \"a b\""}
+{"display":false,"id":"preamble-text-lang","preamble":"#set text(lang: \"de\")","src":"#[\"a\"] + \"if\""}
+{"display":false,"id":"preamble-tracking-scripts","preamble":"#set text(tracking: 1pt)","src":"op(\"b dot α\") + \"aα\""}
+{"display":true,"id":"preamble-numbering","preamble":"#set math.equation(numbering: \"(1)\")","src":"E = m c^2"}
+{"display":false,"id":"preamble-numbering-inline","preamble":"#set math.equation(numbering: \"(1)\")","src":"E = m c^2"}
+{"display":true,"id":"preamble-numbering-roman","preamble":"#set math.equation(numbering: \"i.\")","src":"a + b"}
+{"display":true,"id":"preamble-numbering-align","preamble":"#set math.equation(numbering: \"(1)\", number-align: left)","src":"a + b"}
+{"display":true,"id":"preamble-numbering-func","preamble":"#set math.equation(numbering: n => [Eq. #n])","src":"a + b"}
+{"display":false,"id":"preamble-strong-delta","preamble":"#set strong(delta: 600)","src":"#strong[x]"}
+{"display":false,"id":"preamble-several","preamble":"#let norm(x) = $||#x||$\n#set text(fill: maroon)","src":"f(norm(x))"}
+{"display":false,"id":"preamble-error","preamble":"#let f(x) = x\n#f()","src":"x"}
+{"display":false,"id":"preamble-show","preamble":"#show math.equation: set text(fill: blue)","src":"x"}
+{"display":false,"id":"preamble-text","preamble":"Some text before.","src":"x"}

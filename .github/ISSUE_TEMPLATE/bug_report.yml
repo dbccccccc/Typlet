@@ -1,0 +1,41 @@
+name: Bug report
+description: A formula that Typlet renders wrongly, or an error it shouldn't throw
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Typlet aims to render formulas exactly as Typst 0.15.1 does, so a difference from Typst is a bug.
+        To report a security problem, see SECURITY.md instead of opening an issue.
+  - type: textarea
+    id: formula
+    attributes:
+      label: Formula
+      description: The formula's source, without its dollar signs, and its preamble and options if it has any.
+      render: typst
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What Typlet does
+      description: What it rendered (a screenshot helps), or the error or warning.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What Typst does
+      description: What Typst renders for the same formula, if you can check.
+  - type: input
+    id: version
+    attributes:
+      label: Typlet version
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser or Node version
+      placeholder: Firefox 150, Node 24

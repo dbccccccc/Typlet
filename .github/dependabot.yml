@@ -1,0 +1,23 @@
+# Weekly pull requests that update GitHub Actions and the npm development
+# dependencies. Cargo is left out: the oracle pins Typst's crates to the Typst
+# version Typlet reproduces, and moving them is a port of a new Typst version
+# (docs/DESIGN.md §9), not an update.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # Minor and patch updates come together; each major update comes alone.
+    groups:
+      development:
+        dependency-type: development
+        update-types: [minor, patch]

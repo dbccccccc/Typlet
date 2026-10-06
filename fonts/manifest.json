@@ -1,0 +1,147 @@
+{
+  "family": "Typlet NewCM Math",
+  "source": {
+    "fonts": [
+      "NewCMMath-Book.otf",
+      "NewCMMath-Bold.otf"
+    ],
+    "package": "typst-assets 0.15.1",
+    "typst": "0.15.1",
+    "license": "GUST Font License 1.0"
+  },
+  "files": [
+    {
+      "file": "typlet-newcm-math-main.woff2",
+      "bytes": 104024,
+      "glyphs": 1653,
+      "characters": 591,
+      "unicodeRange": "U+20-7E, U+A0, U+A7, U+AC, U+B0-B1, U+B7, U+D7, U+F7, U+131, U+237, U+300-308, U+30A-30C, U+391-3A1, U+3A3-3A9, U+3B1-3C9, U+3D0-3D1, U+3D5-3D6, U+3D8-3DD, U+3E0-3E1, U+3F0-3F1, U+3F4-3F6, U+2000-200A, U+2013-2016, U+2018-2019, U+201C-201D, U+2020-2022, U+2026, U+2032-2037, U+2057, U+20D0-20D1, U+20D6-20D7, U+20DB-20DC, U+20E1, U+210E-210F, U+2113, U+2118, U+2127, U+2135-2138, U+2190-2199, U+21A6, U+21A9-21AA, U+21BC-21C4, U+21D0-21D5, U+21DD, U+2200-2245, U+2248, U+224D, U+2250, U+2254, U+225C, U+2260-2273, U+227A-227B, U+2282-228B, U+228E, U+2293-2299, U+229B, U+22A0-22A9, U+22BA, U+22C0-22C6, U+22CE-22CF, U+22EE-22F1, U+2308-230B, U+2320-2321, U+239B-23A9, U+23AB-23AE, U+23B4-23B5, U+23B7, U+23DC-23E1, U+27C2, U+27D8-27D9, U+27DD-27DE, U+27E6-27EF, U+27F5-27FC, U+27FF, U+2A00-2A02, U+2A04-2A06, U+2A7D-2A7E, U+2AAF-2AB0, U+E003-E006, U+E008-E00B, U+E00D-E00E, U+E012-E017, U+E01A-E01B, U+E021, U+E025-E027, U+E02A-E031, U+E035, U+E037-E03C, U+E03F-E041, U+E043-E044, U+E046-E04C, U+E050-E056, U+E05B-E05D, U+E060, U+E062-E064, U+E066-E068, U+E06A-E06C, U+E070-E072, U+E074-E075, U+E077-E078, U+E07B, U+E07D-E088, U+E08A-E08C, U+E093-E094, U+E0C7, U+E0C9-E0CB, U+E0CF-E0D4, U+E0D7-E0D8, U+E0DE, U+E0E2-E0E4, U+E0E7-E0EE, U+E0F2, U+E0F4-E0F9, U+E0FC-E0FE, U+E100-E101, U+E103-E109, U+E10D-E113, U+E118-E11A, U+E11D, U+E11F-E121, U+E123-E125, U+E127-E129, U+E12D-E12F, U+E131-E132, U+E134-E135, U+E138, U+E13A-E145, U+E147-E149, U+E150-E151, U+E185, U+E187-E1F9, U+E2EA-E2FD, U+E312-E31F, U+E32A-E330, U+E336-E339, U+E355-E357, U+E360-E367, U+E376-E396, U+E398-E39A, U+E3C6-E3DA, U+E435-E438, U+E43D, U+E441, U+E443, U+E445, U+E447, U+E44B, U+E44D, U+E44F, U+E451, U+E455, U+E457, U+E459, U+E45B, U+E45F, U+E461, U+E463, U+E465, U+E469, U+E46B, U+E46D, U+E46F, U+E473, U+E475, U+E477, U+E479, U+E47D, U+E47F, U+E481, U+E483-E563, U+E565-E566, U+E568-E56B, U+E56D-E570, U+E572-E575, U+E577-E57A, U+E57C-E57F, U+E581-E584, U+E586-E593, U+E595-E5B2, U+E5B4-E5B7, U+E5B9-E5CB, U+E6B0-E6BD, U+E6BF-E6D7, U+E6D9-E727, U+E79A-E80B, U+E87E, U+E880, U+E882, U+E884, U+E903-E916, U+E919-E928, U+E92B-E932, U+E9D3-E9E1, U+E9EE-E9EF, U+FE00-FE0F, U+1D434-1D454, U+1D456-1D467, U+1D6A4-1D6A5, U+1D6E2-1D71B"
+    },
+    {
+      "file": "typlet-newcm-math-bold.woff2",
+      "bytes": 32816,
+      "glyphs": 369,
+      "characters": 122,
+      "unicodeRange": "U+E1FA-E27B, U+E728-E799, U+E87F, U+E883, U+1D400-1D433, U+1D6A8-1D6E1, U+1D7CA-1D7CB, U+1D7CE-1D7D7"
+    },
+    {
+      "file": "typlet-newcm-math-bold-italic.woff2",
+      "bytes": 35688,
+      "glyphs": 337,
+      "characters": 110,
+      "unicodeRange": "U+E27C-E2E9, U+E80C-E87D, U+E881, U+E885, U+1D468-1D49B, U+1D71C-1D755"
+    },
+    {
+      "file": "typlet-newcm-math-script.woff2",
+      "bytes": 25628,
+      "glyphs": 171,
+      "characters": 78,
+      "unicodeRange": "U+210A-210B, U+2110, U+2112, U+211B, U+212C, U+212F-2131, U+2133-2134, U+E8A5-E8BE, U+E96B-E99E, U+E9FA-EA1F, U+FE00-FE0F, U+1D49C, U+1D49E-1D49F, U+1D4A2, U+1D4A5-1D4A6, U+1D4A9-1D4AC, U+1D4AE-1D4B9, U+1D4BB, U+1D4BD-1D4C3, U+1D4C5-1D4CF"
+    },
+    {
+      "file": "typlet-newcm-math-bold-script.woff2",
+      "bytes": 28500,
+      "glyphs": 185,
+      "characters": 78,
+      "unicodeRange": "U+E8BF-E8D8, U+E99F-E9D2, U+EA20-EA53, U+FE00-FE0F, U+1D4D0-1D503"
+    },
+    {
+      "file": "typlet-newcm-math-fraktur.woff2",
+      "bytes": 20768,
+      "glyphs": 163,
+      "characters": 52,
+      "unicodeRange": "U+210C, U+2111, U+211C, U+2128, U+212D, U+E5D2-E63F, U+1D504-1D505, U+1D507-1D50A, U+1D50D-1D514, U+1D516-1D51C, U+1D51E-1D537"
+    },
+    {
+      "file": "typlet-newcm-math-bold-fraktur.woff2",
+      "bytes": 21096,
+      "glyphs": 163,
+      "characters": 52,
+      "unicodeRange": "U+E640-E6AD, U+1D56C-1D59F"
+    },
+    {
+      "file": "typlet-newcm-math-double-struck.woff2",
+      "bytes": 8272,
+      "glyphs": 76,
+      "characters": 72,
+      "unicodeRange": "U+2102, U+210D, U+2115, U+2119-211A, U+211D, U+2124, U+213C-2140, U+2145-2149, U+E5D0-E5D1, U+E899, U+1D538-1D539, U+1D53B-1D53E, U+1D540-1D544, U+1D546, U+1D54A-1D550, U+1D552-1D56B, U+1D7D8-1D7E1"
+    },
+    {
+      "file": "typlet-newcm-math-sans.woff2",
+      "bytes": 7200,
+      "glyphs": 119,
+      "characters": 114,
+      "unicodeRange": "U+E5CC-E5CF, U+1D5A0-1D5D3, U+1D608-1D63B, U+1D7E2-1D7EB"
+    },
+    {
+      "file": "typlet-newcm-math-sans-bold.woff2",
+      "bytes": 14512,
+      "glyphs": 231,
+      "characters": 230,
+      "unicodeRange": "U+1D5D4-1D607, U+1D63C-1D66F, U+1D756-1D7C9, U+1D7EC-1D7F5"
+    },
+    {
+      "file": "typlet-newcm-math-mono.woff2",
+      "bytes": 5624,
+      "glyphs": 65,
+      "characters": 62,
+      "unicodeRange": "U+E6AE-E6AF, U+1D670-1D6A3, U+1D7F6-1D7FF"
+    },
+    {
+      "file": "typlet-newcm-math-operators.woff2",
+      "bytes": 51040,
+      "glyphs": 901,
+      "characters": 724,
+      "unicodeRange": "U+2246-2247, U+2249-224C, U+224E-224F, U+2251-2253, U+2255-225B, U+225D-225F, U+2274-2279, U+227C-2281, U+228C-228D, U+228F-2292, U+229A, U+229C-229F, U+22AA-22B9, U+22BB-22BF, U+22C7-22CD, U+22D0-22ED, U+22F2-2307, U+230C-231F, U+2322-239A, U+23AA, U+23AF-23B3, U+23B6, U+23B8-23DB, U+23E2-23FF, U+2980-29FF, U+2A03, U+2A07-2A7C, U+2A7F-2AAE, U+2AB1-2AFF, U+E564, U+E594, U+E5B3, U+E5B8, U+E888-E897, U+E89A-E8A4, U+E8D9-E902, U+E917-E918, U+E929-E92A, U+E933-E96A, U+E9E2-E9ED, U+E9F0-E9F9, U+FE00-FE0F"
+    },
+    {
+      "file": "typlet-newcm-math-arrows.woff2",
+      "bytes": 41728,
+      "glyphs": 831,
+      "characters": 642,
+      "unicodeRange": "U+219A-21A5, U+21A7-21A8, U+21AB-21BB, U+21C5-21CF, U+21D6-21DC, U+21DE-21FF, U+27F0-27F4, U+27FD-27FE, U+2900-297F, U+2B00-2B73, U+2B76-2B95, U+2B97-2BFF, U+E320-E329, U+E331-E335, U+E33A-E354, U+E358-E35F, U+E368-E375, U+E397, U+E39B-E3C5, U+E3DB-E415, U+E417-E419, U+E41D-E42C, U+1F800-1F80B, U+1F810-1F847, U+1F850-1F859, U+1F860-1F887, U+1F890-1F8AD, U+1F8B0-1F8BB, U+1F8C0-1F8C1, U+1F8D0-1F8D8"
+    },
+    {
+      "file": "typlet-newcm-math-symbols.woff2",
+      "bytes": 42700,
+      "glyphs": 827,
+      "characters": 737,
+      "unicodeRange": "U+200B-200D, U+2010-2012, U+2017, U+201A-201B, U+201E-201F, U+2023-2025, U+2027, U+202F-2031, U+2038-2056, U+2058-2064, U+20A1, U+20AC, U+20D2-20D5, U+20D8, U+20DD-20DF, U+20E4-20F0, U+2100-2101, U+2103-2109, U+2114, U+2116-2117, U+211E-2123, U+2125-2126, U+2129-212B, U+212E, U+2132, U+2139-213B, U+2141-2144, U+214A-214F, U+2422-2423, U+2460-2600, U+2605-2606, U+2609, U+2621, U+2639-263E, U+2640, U+2642, U+2660-2667, U+2669-266B, U+266D-266F, U+267E, U+2680-2689, U+26A5, U+26AA-26AE, U+26B2, U+2713, U+2717, U+2720, U+272A, U+2736, U+273D, U+275A, U+2772-2773, U+279B, U+27A1, U+27C0-27C1, U+27C3-27D7, U+27DA-27DC, U+27DF-27E5, U+2E18, U+3012, U+3016-3017, U+3030, U+3036, U+E001-E002, U+E022, U+E029, U+E032, U+E03E, U+E045, U+E04F, U+E05E-E05F, U+E061, U+E069, U+E06D-E06E, U+E073, U+E07C, U+E08D, U+E090-E092, U+E0C8, U+E0DF, U+E0E6, U+E0EF, U+E0FB, U+E102, U+E10C, U+E11B-E11C, U+E11E, U+E126, U+E12A-E12B, U+E130, U+E139, U+E14A, U+E14D-E14F, U+E186, U+E2FE-E30D, U+E416, U+E41A-E41C, U+E567, U+E56C, U+E571, U+E576, U+E57B, U+E580, U+E585, U+E6BE, U+E6D8, U+E886-E887, U+E898, U+EA56, U+EA58, U+EA6A, U+EB21, U+EB23, U+EB35, U+1F780-1F7D8, U+1F7E0-1F7EB"
+    },
+    {
+      "file": "typlet-newcm-math-latin.woff2",
+      "bytes": 51208,
+      "glyphs": 981,
+      "characters": 354,
+      "unicodeRange": "U+A1-A6, U+A8-AB, U+AD-AF, U+B2-B6, U+B8-D6, U+D8-F6, U+F8-130, U+132-180, U+1A0-1A1, U+1AF-1B0, U+1B5, U+218-21B, U+2C6-2C7, U+2D8-2DD, U+309, U+30F-312, U+315, U+31A, U+323, U+326, U+32C-333, U+338, U+33F, U+34D, U+428, U+448, U+606-608, U+1EA0-1EF9, U+E000, U+E007, U+E00C, U+E00F-E011, U+E018-E019, U+E01C-E020, U+E023-E024, U+E028, U+E033-E034, U+E036, U+E03D, U+E042, U+E04D-E04E, U+E057-E05A, U+E065, U+E06F, U+E076, U+E079-E07A, U+E089, U+E08E-E08F, U+E095-E0C6, U+E0CC-E0CE, U+E0D5-E0D6, U+E0D9-E0DD, U+E0E0-E0E1, U+E0E5, U+E0F0-E0F1, U+E0F3, U+E0FA, U+E0FF, U+E10A-E10B, U+E114-E117, U+E122, U+E12C, U+E133, U+E136-E137, U+E146, U+E14B-E14C, U+E152-E184, U+E30E-E311, U+E42D-E434, U+E439-E43C, U+E43E-E440, U+E442, U+E444, U+E446, U+E448-E44A, U+E44C, U+E44E, U+E450, U+E452-E454, U+E456, U+E458, U+E45A, U+E45C-E45E, U+E460, U+E462, U+E464, U+E466-E468, U+E46A, U+E46C, U+E46E, U+E470-E472, U+E474, U+E476, U+E478, U+E47A-E47C, U+E47E, U+E480, U+E482, U+EA54-EA55, U+EA57, U+EA59-EA69, U+EA6B-EB20, U+EB22, U+EB24-EB34, U+EB36-EBE9, U+FB00-FB04, U+FB29"
+    },
+    {
+      "file": "typlet-newcm-math-devanagari.woff2",
+      "bytes": 29368,
+      "glyphs": 385,
+      "characters": 128,
+      "unicodeRange": "U+900-97F, U+EBEC-ECEB"
+    },
+    {
+      "file": "typlet-newcm-math-arabic-math.woff2",
+      "bytes": 12304,
+      "glyphs": 149,
+      "characters": 146,
+      "unicodeRange": "U+EBEA-EBEB, U+1EE00-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1"
+    },
+    {
+      "file": "typlet-newcm-math-other.woff2",
+      "bytes": 920,
+      "glyphs": 5,
+      "characters": 4,
+      "unicodeRange": "U+306E, U+FE00-FE01, U+FEFF"
+    },
+    {
+      "file": "typlet-newcm-math-bold-latin.woff2",
+      "weight": "bold",
+      "bytes": 12376,
+      "glyphs": 192,
+      "unicodeRange": "U+20-7E, U+A0-FF"
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+{"display":true,"id":"tp-a318c24216","meta":{"category":"symbols/operators","tooltip":"Plus"},"src":"+"}
+{"display":true,"id":"tp-3973e022e9","meta":{"category":"symbols/operators","tooltip":"Minus"},"src":"-"}
+{"display":true,"id":"tp-2bf61a3bc8","meta":{"category":"symbols/operators","tooltip":"Times"},"src":"times"}
+{"display":true,"id":"tp-cd35a24260","meta":{"category":"symbols/operators","tooltip":"Divide"},"src":"div"}
+{"display":true,"id":"tp-0b57ed45ba","meta":{"category":"symbols/operators","tooltip":"Plus minus"},"src":"plus.minus"}
+{"display":true,"id":"tp-4b0ee09ca4","meta":{"category":"symbols/operators","tooltip":"Minus plus"},"src":"minus.plus"}
+{"display":true,"id":"tp-e392dad8b0","meta":{"category":"symbols/operators","tooltip":"Dot"},"src":"dot"}
+{"display":true,"id":"tp-db669af634","meta":{"category":"symbols/operators","tooltip":"Compose"},"src":"compose"}
+{"display":true,"id":"tp-d79987051a","meta":{"category":"symbols/operators","tooltip":"Infinity"},"src":"infinity"}
+{"display":true,"id":"tp-ab5df625bc","meta":{"category":"symbols/operators","tooltip":"Dots"},"src":"..."}
+{"display":true,"id":"tp-380918b946","meta":{"category":"symbols/relations","tooltip":"Equals"},"src":"="}
+{"display":true,"id":"tp-c10987bd7c","meta":{"category":"symbols/relations","tooltip":"Not equal"},"src":"!="}
+{"display":true,"id":"tp-dabd3aff76","meta":{"category":"symbols/relations","tooltip":"Less than"},"src":"<"}
+{"display":true,"id":"tp-62b67e1f68","meta":{"category":"symbols/relations","tooltip":"Greater than"},"src":">"}
+{"display":true,"id":"tp-b60080dc8b","meta":{"category":"symbols/relations","tooltip":"Less or equal"},"src":"<="}
+{"display":true,"id":"tp-92a00d7d91","meta":{"category":"symbols/relations","tooltip":"Greater or equal"},"src":">="}
+{"display":true,"id":"tp-4be261c018","meta":{"category":"symbols/relations","tooltip":"Much less"},"src":"<<"}
+{"display":true,"id":"tp-0f02c6bad0","meta":{"category":"symbols/relations","tooltip":"Much greater"},"src":">>"}
+{"display":true,"id":"tp-3fc7c96a56","meta":{"category":"symbols/relations","tooltip":"Approximately"},"src":"approx"}
+{"display":true,"id":"tp-785fda8687","meta":{"category":"symbols/relations","tooltip":"Equivalent"},"src":"equiv"}
+{"display":true,"id":"tp-e835d0bf51","meta":{"category":"symbols/relations","tooltip":"Proportional"},"src":"prop"}
+{"display":true,"id":"tp-8ed3f6ad68","meta":{"category":"symbols/greek","tooltip":"alpha"},"src":"alpha"}
+{"display":true,"id":"tp-f44e64e75f","meta":{"category":"symbols/greek","tooltip":"beta"},"src":"beta"}
+{"display":true,"id":"tp-be9d587def","meta":{"category":"symbols/greek","tooltip":"gamma"},"src":"gamma"}
+{"display":true,"id":"tp-4f4a9410ff","meta":{"category":"symbols/greek","tooltip":"delta"},"src":"delta"}
+{"display":true,"id":"tp-6ebf3c8d63","meta":{"category":"symbols/greek","tooltip":"epsilon"},"src":"epsilon"}
+{"display":true,"id":"tp-5cc10d9143","meta":{"category":"symbols/greek","tooltip":"zeta"},"src":"zeta"}
+{"display":true,"id":"tp-6397a1438f","meta":{"category":"symbols/greek","tooltip":"eta"},"src":"eta"}
+{"display":true,"id":"tp-973e223542","meta":{"category":"symbols/greek","tooltip":"theta"},"src":"theta"}
+{"display":true,"id":"tp-9604832cb6","meta":{"category":"symbols/greek","tooltip":"iota"},"src":"iota"}
+{"display":true,"id":"tp-6a30f630de","meta":{"category":"symbols/greek","tooltip":"kappa"},"src":"kappa"}
+{"display":true,"id":"tp-554e79e652","meta":{"category":"symbols/greek","tooltip":"lambda"},"src":"lambda"}
+{"display":true,"id":"tp-19503ea678","meta":{"category":"symbols/greek","tooltip":"mu"},"src":"mu"}
+{"display":true,"id":"tp-3086cf468c","meta":{"category":"symbols/greek","tooltip":"nu"},"src":"nu"}
+{"display":true,"id":"tp-1705701365","meta":{"category":"symbols/greek","tooltip":"xi"},"src":"xi"}
+{"display":true,"id":"tp-85b42e1702","meta":{"category":"symbols/greek","tooltip":"pi"},"src":"pi"}
+{"display":true,"id":"tp-0ddbc6c1d8","meta":{"category":"symbols/greek","tooltip":"rho"},"src":"rho"}
+{"display":true,"id":"tp-38de90475b","meta":{"category":"symbols/greek","tooltip":"sigma"},"src":"sigma"}
+{"display":true,"id":"tp-2bfcf64c38","meta":{"category":"symbols/greek","tooltip":"tau"},"src":"tau"}
+{"display":true,"id":"tp-fda2b2a268","meta":{"category":"symbols/greek","tooltip":"upsilon"},"src":"upsilon"}
+{"display":true,"id":"tp-7f754d3dbe","meta":{"category":"symbols/greek","tooltip":"phi"},"src":"phi"}
+{"display":true,"id":"tp-dffe602cd1","meta":{"category":"symbols/greek","tooltip":"chi"},"src":"chi"}
+{"display":true,"id":"tp-e3a7e30752","meta":{"category":"symbols/greek","tooltip":"psi"},"src":"psi"}
+{"display":true,"id":"tp-304b4a90a7","meta":{"category":"symbols/greek","tooltip":"omega"},"src":"omega"}
+{"display":true,"id":"tp-a8ab3d5805","meta":{"category":"symbols/greek","tooltip":"Gamma"},"src":"Gamma"}
+{"display":true,"id":"tp-18833da39f","meta":{"category":"symbols/greek","tooltip":"Delta"},"src":"Delta"}
+{"display":true,"id":"tp-e5828dae47","meta":{"category":"symbols/greek","tooltip":"Theta"},"src":"Theta"}
+{"display":true,"id":"tp-862a3f0fc3","meta":{"category":"symbols/greek","tooltip":"Lambda"},"src":"Lambda"}
+{"display":true,"id":"tp-6fa2cca6ad","meta":{"category":"symbols/greek","tooltip":"Xi"},"src":"Xi"}
+{"display":true,"id":"tp-4d87941d68","meta":{"category":"symbols/greek","tooltip":"Pi"},"src":"Pi"}
+{"display":true,"id":"tp-445edbc9f8","meta":{"category":"symbols/greek","tooltip":"Sigma"},"src":"Sigma"}
+{"display":true,"id":"tp-b043ca68d0","meta":{"category":"symbols/greek","tooltip":"Upsilon"},"src":"Upsilon"}
+{"display":true,"id":"tp-ec03de4aae","meta":{"category":"symbols/greek","tooltip":"Phi"},"src":"Phi"}
+{"display":true,"id":"tp-6538d1e9ff","meta":{"category":"symbols/greek","tooltip":"Psi"},"src":"Psi"}
+{"display":true,"id":"tp-1c945ea0c6","meta":{"category":"symbols/greek","tooltip":"Omega"},"src":"Omega"}
+{"display":true,"id":"tp-582967534d","meta":{"category":"symbols/sets","tooltip":"Element of"},"src":"in"}
+{"display":true,"id":"tp-d3cdd00a89","meta":{"category":"symbols/sets","tooltip":"Not element of"},"src":"in.not"}
+{"display":true,"id":"tp-daa5c360ed","meta":{"category":"symbols/sets","tooltip":"Subset"},"src":"subset"}
+{"display":true,"id":"tp-5ccfba3e44","meta":{"category":"symbols/sets","tooltip":"Superset"},"src":"supset"}
+{"display":true,"id":"tp-5ab93b5c9d","meta":{"category":"symbols/sets","tooltip":"Subset or equal"},"src":"subset.eq"}
+{"display":true,"id":"tp-9fdf4f9dbd","meta":{"category":"symbols/sets","tooltip":"Superset or equal"},"src":"supset.eq"}
+{"display":true,"id":"tp-ef3ff703d7","meta":{"category":"symbols/sets","tooltip":"Union"},"src":"union"}
+{"display":true,"id":"tp-f58329919f","meta":{"category":"symbols/sets","tooltip":"Intersection"},"src":"sect"}
+{"display":true,"id":"tp-9fcd4adb93","meta":{"category":"symbols/sets","tooltip":"Empty set"},"src":"emptyset"}
+{"display":true,"id":"tp-efc9e45486","meta":{"category":"symbols/sets","tooltip":"For all"},"src":"forall"}
+{"display":true,"id":"tp-ad5aabc97d","meta":{"category":"symbols/sets","tooltip":"Exists"},"src":"exists"}
+{"display":true,"id":"tp-254bb97b57","meta":{"category":"symbols/sets","tooltip":"Not"},"src":"not"}
+{"display":true,"id":"tp-6201111b83","meta":{"category":"symbols/sets","tooltip":"And"},"src":"and"}
+{"display":true,"id":"tp-7175517a37","meta":{"category":"symbols/sets","tooltip":"Or"},"src":"or"}
+{"display":true,"id":"tp-1ad321bd42","meta":{"category":"symbols/sets","tooltip":"Xor"},"src":"xor"}
+{"display":true,"id":"tp-71b37b9a8a","meta":{"category":"symbols/arrows","tooltip":"Right arrow"},"src":"->"}
+{"display":true,"id":"tp-4b305dbe4d","meta":{"category":"symbols/arrows","tooltip":"Left arrow"},"src":"<-"}
+{"display":true,"id":"tp-be53fd9804","meta":{"category":"symbols/arrows","tooltip":"Up arrow"},"src":"arrow.t"}
+{"display":true,"id":"tp-6bccb65ac8","meta":{"category":"symbols/arrows","tooltip":"Down arrow"},"src":"arrow.b"}
+{"display":true,"id":"tp-0c65e8970e","meta":{"category":"symbols/arrows","tooltip":"Left-right arrow"},"src":"<->"}
+{"display":true,"id":"tp-b310676102","meta":{"category":"symbols/arrows","tooltip":"Double right"},"src":"=>"}
+{"display":true,"id":"tp-1c491ecac2","meta":{"category":"symbols/arrows","tooltip":"Double left"},"src":"arrow.l.double"}
+{"display":true,"id":"tp-bf76f57507","meta":{"category":"symbols/arrows","tooltip":"Double left-right"},"src":"<=>"}
+{"display":true,"id":"tp-59a70146eb","meta":{"category":"symbols/arrows","tooltip":"Maps to"},"src":"|->"}
+{"display":true,"id":"tp-5d5b9de6d9","meta":{"category":"symbols/arrows","tooltip":"Long right"},"src":"-->"}
+{"display":true,"id":"tp-2f534895b4","meta":{"category":"symbols/arrows","tooltip":"Long left"},"src":"<--"}
+{"display":true,"id":"tp-0fb46e86a0","meta":{"category":"symbols/arrows","tooltip":"Long double right"},"src":"==>"}
+{"display":true,"id":"tp-d917a549d3","meta":{"category":"structures/fractions","tooltip":"Fraction"},"src":"a / b"}
+{"display":true,"id":"tp-9743c7b694","meta":{"category":"structures/fractions","tooltip":"Grouped fraction"},"src":"(a + b) / (c + d)"}
+{"display":true,"id":"tp-675c09c3b8","meta":{"category":"structures/fractions","tooltip":"Square root"},"src":"sqrt(x)"}
+{"display":true,"id":"tp-e7a781ec9f","meta":{"category":"structures/fractions","tooltip":"Cube root"},"src":"root(3, x)"}
+{"display":true,"id":"tp-e1e9a96678","meta":{"category":"structures/fractions","tooltip":"Nth root"},"src":"root(n, x)"}
+{"display":true,"id":"tp-5b029881cc","meta":{"category":"structures/scripts","tooltip":"Superscript"},"src":"x^2"}
+{"display":true,"id":"tp-4f0f1e4a31","meta":{"category":"structures/scripts","tooltip":"Subscript"},"src":"x_i"}
+{"display":true,"id":"tp-3c896304c9","meta":{"category":"structures/scripts","tooltip":"Both scripts"},"src":"x_i^n"}
+{"display":true,"id":"tp-df747fb76f","meta":{"category":"structures/scripts","tooltip":"Vector"},"src":"arrow(x)"}
+{"display":true,"id":"tp-b58dfac694","meta":{"category":"structures/scripts","tooltip":"Hat"},"src":"hat(x)"}
+{"display":true,"id":"tp-07caeb1233","meta":{"category":"structures/scripts","tooltip":"Overline"},"src":"overline(x)"}
+{"display":true,"id":"tp-4364295816","meta":{"category":"structures/scripts","tooltip":"Tilde"},"src":"tilde(x)"}
+{"display":true,"id":"tp-70af5f9c03","meta":{"category":"structures/scripts","tooltip":"Dot"},"src":"dot(x)"}
+{"display":true,"id":"tp-6364d486c4","meta":{"category":"structures/scripts","tooltip":"Double dot"},"src":"dot.double(x)"}
+{"display":true,"id":"tp-90d2812652","meta":{"category":"structures/scripts","tooltip":"Underbrace"},"src":"underbrace(x)"}
+{"display":true,"id":"tp-db21898a37","meta":{"category":"structures/scripts","tooltip":"Overbrace"},"src":"overbrace(x)"}
+{"display":true,"id":"tp-ec84ac6776","meta":{"category":"structures/brackets","tooltip":"Parentheses"},"src":"(x)"}
+{"display":true,"id":"tp-225893dd7e","meta":{"category":"structures/brackets","tooltip":"Square brackets"},"src":"[x]"}
+{"display":true,"id":"tp-d3ebeaf967","meta":{"category":"structures/brackets","tooltip":"Curly braces"},"src":"{x}"}
+{"display":true,"id":"tp-2fb978003d","meta":{"category":"structures/brackets","tooltip":"Absolute value"},"src":"abs(x)"}
+{"display":true,"id":"tp-0fa324d037","meta":{"category":"structures/brackets","tooltip":"Norm"},"src":"norm(x)"}
+{"display":true,"id":"tp-b87ca73cb3","meta":{"category":"structures/brackets","tooltip":"Angle brackets"},"src":"angle.l x angle.r"}
+{"display":true,"id":"tp-957ee6ae12","meta":{"category":"structures/brackets","tooltip":"Floor"},"src":"floor(x)"}
+{"display":true,"id":"tp-0e33770e3d","meta":{"category":"structures/brackets","tooltip":"Ceiling"},"src":"ceil(x)"}
+{"display":true,"id":"tp-fe9d9c99d7","meta":{"category":"structures/brackets","tooltip":"Auto-sized parens"},"src":"lr((x))"}
+{"display":true,"id":"tp-86d71ab0ca","meta":{"category":"structures/brackets","tooltip":"Auto-sized brackets"},"src":"lr([x])"}
+{"display":true,"id":"tp-587754836c","meta":{"category":"structures/matrices","tooltip":"2×2 matrix"},"src":"mat(a, b; c, d)"}
+{"display":true,"id":"tp-db5f4b9104","meta":{"category":"structures/matrices","tooltip":"3×3 matrix"},"src":"mat(a, b, c; d, e, f; g, h, i)"}
+{"display":true,"id":"tp-1b014de7ed","meta":{"category":"structures/matrices","tooltip":"Paren matrix"},"src":"mat(delim: \"(\", a, b; c, d)"}
+{"display":true,"id":"tp-2c0b42e349","meta":{"category":"structures/matrices","tooltip":"Bracket matrix"},"src":"mat(delim: \"[\", a, b; c, d)"}
+{"display":true,"id":"tp-2c7d69fea7","meta":{"category":"structures/matrices","tooltip":"Determinant"},"src":"mat(delim: \"|\", a, b; c, d)"}
+{"display":true,"id":"tp-53a3829559","meta":{"category":"structures/matrices","tooltip":"Column vector"},"src":"vec(a, b, c)"}
+{"display":true,"id":"tp-53293a8f83","meta":{"category":"structures/matrices","tooltip":"Cases"},"src":"cases(a &\"if\" b, c &\"if\" d)"}
+{"display":true,"id":"tp-1a20f6d551","meta":{"category":"functions/integrals","tooltip":"Integral"},"src":"integral"}
+{"display":true,"id":"tp-6f63877f99","meta":{"category":"functions/integrals","tooltip":"Definite integral"},"src":"integral_a^b"}
+{"display":true,"id":"tp-5687d86e06","meta":{"category":"functions/integrals","tooltip":"Double integral"},"src":"integral.double"}
+{"display":true,"id":"tp-8f959da5cc","meta":{"category":"functions/integrals","tooltip":"Triple integral"},"src":"integral.triple"}
+{"display":true,"id":"tp-8c26f7e833","meta":{"category":"functions/integrals","tooltip":"Contour integral"},"src":"integral.cont"}
+{"display":true,"id":"tp-9834a14ab9","meta":{"category":"functions/integrals","tooltip":"Partial derivative"},"src":"partial"}
+{"display":true,"id":"tp-a312976c6d","meta":{"category":"functions/integrals","tooltip":"Nabla"},"src":"nabla"}
+{"display":true,"id":"tp-e32ddb27a1","meta":{"category":"functions/integrals","tooltip":"Differential"},"src":"dif"}
+{"display":true,"id":"tp-09f5ffef28","meta":{"category":"functions/sums","tooltip":"Summation"},"src":"sum"}
+{"display":true,"id":"tp-52e75cb56c","meta":{"category":"functions/sums","tooltip":"Sum with limits"},"src":"sum_(i=0)^n"}
+{"display":true,"id":"tp-a8792157cb","meta":{"category":"functions/sums","tooltip":"Product"},"src":"product"}
+{"display":true,"id":"tp-19e556f4fe","meta":{"category":"functions/sums","tooltip":"Product with limits"},"src":"product_(i=1)^n"}
+{"display":true,"id":"tp-11f7d4deb4","meta":{"category":"functions/sums","tooltip":"Big direct sum"},"src":"plus.circle"}
+{"display":true,"id":"tp-107c6f72b8","meta":{"category":"functions/sums","tooltip":"Big tensor product"},"src":"times.circle"}
+{"display":true,"id":"tp-1e0afa83c8","meta":{"category":"functions/limits","tooltip":"Limit"},"src":"lim"}
+{"display":true,"id":"tp-d992ba5e97","meta":{"category":"functions/limits","tooltip":"Limit with subscript"},"src":"lim_(x -> 0)"}
+{"display":true,"id":"tp-ee0a46565a","meta":{"category":"functions/limits","tooltip":"Limit to infinity"},"src":"lim_(x -> infinity)"}
+{"display":true,"id":"tp-836ff184e7","meta":{"category":"functions/limits","tooltip":"Logarithm"},"src":"log"}
+{"display":true,"id":"tp-e545c2c24e","meta":{"category":"functions/limits","tooltip":"Natural log"},"src":"ln"}
+{"display":true,"id":"tp-ee5f9cc9f4","meta":{"category":"functions/limits","tooltip":"Log base a"},"src":"log_a"}
+{"display":true,"id":"tp-dd7a946de8","meta":{"category":"functions/limits","tooltip":"Exponential"},"src":"exp"}
+{"display":true,"id":"tp-bed6b57989","meta":{"category":"functions/limits","tooltip":"E to the x"},"src":"e^x"}
+{"display":true,"id":"tp-1f6fa6f69d","meta":{"category":"functions/limits","tooltip":"Minimum"},"src":"min"}
+{"display":true,"id":"tp-9baf3a4031","meta":{"category":"functions/limits","tooltip":"Maximum"},"src":"max"}
+{"display":true,"id":"tp-a39bec7c3d","meta":{"category":"functions/limits","tooltip":"Supremum"},"src":"sup"}
+{"display":true,"id":"tp-e99270c4fa","meta":{"category":"functions/limits","tooltip":"Infimum"},"src":"inf"}
+{"display":true,"id":"tp-cccc68c792","meta":{"category":"functions/trig","tooltip":"Sine"},"src":"sin"}
+{"display":true,"id":"tp-9be28bbe03","meta":{"category":"functions/trig","tooltip":"Cosine"},"src":"cos"}
+{"display":true,"id":"tp-0e5123df11","meta":{"category":"functions/trig","tooltip":"Tangent"},"src":"tan"}
+{"display":true,"id":"tp-29bb301734","meta":{"category":"functions/trig","tooltip":"Cotangent"},"src":"cot"}
+{"display":true,"id":"tp-add93534ee","meta":{"category":"functions/trig","tooltip":"Secant"},"src":"sec"}
+{"display":true,"id":"tp-cc0f38ba8c","meta":{"category":"functions/trig","tooltip":"Cosecant"},"src":"csc"}
+{"display":true,"id":"tp-1f1c301920","meta":{"category":"functions/trig","tooltip":"Arcsine"},"src":"arcsin"}
+{"display":true,"id":"tp-ef62b57ba0","meta":{"category":"functions/trig","tooltip":"Arccosine"},"src":"arccos"}
+{"display":true,"id":"tp-fd8911effb","meta":{"category":"functions/trig","tooltip":"Arctangent"},"src":"arctan"}
+{"display":true,"id":"tp-933a421881","meta":{"category":"functions/trig","tooltip":"Hyperbolic sine"},"src":"sinh"}
+{"display":true,"id":"tp-9b34fd93d0","meta":{"category":"functions/trig","tooltip":"Hyperbolic cosine"},"src":"cosh"}
+{"display":true,"id":"tp-fb7e8b7ab4","meta":{"category":"functions/trig","tooltip":"Hyperbolic tangent"},"src":"tanh"}
+{"display":true,"id":"tp-cb1af6f78a","meta":{"category":"templates/equations","tooltip":"Aligned equations"},"src":"a &= b + c \\\nx &= y + z"}
+{"display":true,"id":"tp-b34fa50dd4","meta":{"category":"templates/equations","tooltip":"Derivation steps"},"src":"(x + 1)^2 &= (x + 1)(x + 1) \\\n&= x^2 + 2 x + 1"}
+{"display":true,"id":"tp-0bafe8a1c4","meta":{"category":"templates/equations","tooltip":"Equations with notes"},"src":"x + 2 &= 5 && \"given\" \\\nx &= 3 && \"subtract 2\""}
+{"display":true,"id":"tp-b82727b74c","meta":{"category":"templates/equations","tooltip":"Piecewise function"},"src":"f(x) = cases(x^2 & \"if\" x >= 0, -x & \"otherwise\")"}
+{"display":true,"id":"tp-ddf2e5ed89","meta":{"category":"templates/equations","tooltip":"System of equations"},"src":"cases(a x + b y = c, d x + e y = f)"}
+{"display":true,"id":"tp-e5f5d6818f","meta":{"category":"templates/algebra","tooltip":"Quadratic formula"},"src":"x = (-b plus.minus sqrt(b^2 - 4 a c)) / (2 a)"}
+{"display":true,"id":"tp-042b60cf65","meta":{"category":"templates/algebra","tooltip":"Pythagorean theorem"},"src":"a^2 + b^2 = c^2"}
+{"display":true,"id":"tp-d97eea6c4f","meta":{"category":"templates/algebra","tooltip":"Binomial theorem"},"src":"(a + b)^n = sum_(k=0)^n binom(n, k) a^(n-k) b^k"}
+{"display":true,"id":"tp-779e17e6d1","meta":{"category":"templates/calculus","tooltip":"Integral with bounds"},"src":"integral_a^b f(x) dif x"}
+{"display":true,"id":"tp-47e1df82b7","meta":{"category":"templates/calculus","tooltip":"Derivative"},"src":"(dif f) / (dif x)"}
+{"display":true,"id":"tp-0a5927a339","meta":{"category":"templates/calculus","tooltip":"Partial derivative"},"src":"(partial f) / (partial x)"}
+{"display":true,"id":"tp-e3f0f2b2a8","meta":{"category":"templates/calculus","tooltip":"Higher-order derivative"},"src":"(dif^n f) / (dif x^n)"}
+{"display":true,"id":"tp-c4696a139e","meta":{"category":"templates/calculus","tooltip":"Mixed partial derivative"},"src":"(partial^2 f) / (partial x partial y)"}
+{"display":true,"id":"tp-5f7d9c4460","meta":{"category":"templates/calculus","tooltip":"Gradient"},"src":"nabla f = vec((partial f) / (partial x), (partial f) / (partial y), (partial f) / (partial z))"}
+{"display":true,"id":"tp-6989fbd802","meta":{"category":"templates/calculus","tooltip":"Standard limit"},"src":"lim_(x -> 0) (sin x) / x = 1"}
+{"display":true,"id":"tp-edfa597ef2","meta":{"category":"templates/calculus","tooltip":"Taylor series"},"src":"f(x) = sum_(n=0)^infinity (f^((n))(a)) / (n!) (x - a)^n"}
+{"display":true,"id":"tp-1b51069df1","meta":{"category":"templates/linearAlgebra","tooltip":"Matrix equation"},"src":"A = mat(a, b; c, d)"}
+{"display":true,"id":"tp-7e1558d481","meta":{"category":"templates/linearAlgebra","tooltip":"Identity matrix"},"src":"I_3 = mat(1, 0, 0; 0, 1, 0; 0, 0, 1)"}
+{"display":true,"id":"tp-877e1f2541","meta":{"category":"templates/linearAlgebra","tooltip":"Augmented matrix"},"src":"mat(a, b, c; d, e, f; augment: #2)"}
+{"display":true,"id":"tp-30cdb5bfcd","meta":{"category":"templates/linearAlgebra","tooltip":"General matrix"},"src":"A = mat(a_(1,1), ..., a_(1,n); dots.v, dots.down, dots.v; a_(m,1), ..., a_(m,n))"}
+{"display":true,"id":"tp-654e211223","meta":{"category":"templates/linearAlgebra","tooltip":"Vector equation"},"src":"bold(v) = vec(x, y, z)"}
+{"display":true,"id":"tp-cb1f35bf12","meta":{"category":"templates/linearAlgebra","tooltip":"Dot product"},"src":"bold(a) dot bold(b) = sum_(i=1)^n a_i b_i"}
+{"display":true,"id":"tp-5540fc48ce","meta":{"category":"templates/statistics","tooltip":"Sample mean"},"src":"overline(x) = 1 / n sum_(i=1)^n x_i"}
+{"display":true,"id":"tp-369f631ab0","meta":{"category":"templates/statistics","tooltip":"Sample variance"},"src":"s^2 = 1 / (n - 1) sum_(i=1)^n (x_i - overline(x))^2"}
+{"display":true,"id":"tp-8e65d8d419","meta":{"category":"templates/statistics","tooltip":"Standard deviation"},"src":"s = sqrt(1 / (n - 1) sum_(i=1)^n (x_i - overline(x))^2)"}
+{"display":true,"id":"tp-fa13d3db53","meta":{"category":"templates/probability","tooltip":"Bayes theorem"},"src":"P(A | B) = (P(B | A) P(A)) / P(B)"}
+{"display":true,"id":"tp-64741315e9","meta":{"category":"templates/probability","tooltip":"Expected value"},"src":"E[X] = sum_(i=1)^n x_i p_i"}
+{"display":true,"id":"tp-de4ca5c18b","meta":{"category":"templates/probability","tooltip":"Variance"},"src":"op(\"Var\")(X) = E[X^2] - E[X]^2"}
+{"display":true,"id":"tp-3b9b071326","meta":{"category":"templates/probability","tooltip":"Normal distribution"},"src":"f(x) = 1 / (sigma sqrt(2 pi)) e^(-(x - mu)^2 / (2 sigma^2))"}
+{"display":true,"id":"tp-23b04f9fbd","meta":{"category":"templates/probability","tooltip":"Binomial distribution"},"src":"P(X = k) = binom(n, k) p^k (1 - p)^(n - k)"}

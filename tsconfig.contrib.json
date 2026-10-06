@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": [],
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist/contrib",
+    "rootDir": "contrib",
+    "paths": {
+      "typlet": ["./dist/index.d.ts"]
+    }
+  },
+  "include": ["contrib"]
+}

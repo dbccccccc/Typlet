@@ -1,0 +1,44 @@
+{
+  "name": "markdown-it-typlet",
+  "version": "0.1.0",
+  "description": "markdown-it plugin that renders Typst math with Typlet",
+  "keywords": [
+    "markdown-it",
+    "markdown-it-plugin",
+    "math",
+    "typst",
+    "typlet"
+  ],
+  "homepage": "https://github.com/dbccccccc/Typlet/tree/main/packages/markdown-it-typlet#readme",
+  "bugs": {
+    "url": "https://github.com/dbccccccc/Typlet/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dbccccccc/Typlet.git",
+    "directory": "packages/markdown-it-typlet"
+  },
+  "license": "MIT",
+  "author": "dbcccc",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "dependencies": {
+    "typlet": "^0.1.0"
+  },
+  "peerDependencies": {
+    "markdown-it": ">=14"
+  }
+}

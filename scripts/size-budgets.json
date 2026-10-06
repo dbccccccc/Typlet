@@ -1,0 +1,10 @@
+{
+  "comment": "Brotli-compressed size limits in bytes (quality 11), explained in docs/DESIGN.md §7. typlet.min.js is the full browser bundle; mathml.js is the MathML-only entry point. Modules are bundled on their own, minified, to measure code the entry points don't include yet, such as the font metrics.",
+  "budgets": {
+    "dist/typlet.min.js": 122880,
+    "dist/mathml.js": 71680
+  },
+  "modules": {
+    "src/layout/font.ts": 40960
+  }
+}

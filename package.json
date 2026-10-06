@@ -1,0 +1,148 @@
+{
+  "name": "typlet",
+  "version": "0.1.0",
+  "description": "A lightweight, KaTeX-style renderer for Typst math.",
+  "keywords": [
+    "typst",
+    "math",
+    "mathml",
+    "typesetting",
+    "formula",
+    "equation",
+    "renderer",
+    "katex"
+  ],
+  "homepage": "https://github.com/dbccccccc/Typlet#readme",
+  "bugs": {
+    "url": "https://github.com/dbccccccc/Typlet/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dbccccccc/Typlet.git"
+  },
+  "license": "MIT",
+  "author": "dbcccc",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/typlet.min.js",
+  "jsdelivr": "./dist/typlet.min.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./mathml": {
+      "import": {
+        "types": "./dist/mathml.d.ts",
+        "default": "./dist/mathml.js"
+      },
+      "require": {
+        "types": "./dist/cjs/mathml.d.ts",
+        "default": "./dist/mathml.cjs"
+      }
+    },
+    "./contrib/auto-render": {
+      "import": {
+        "types": "./dist/contrib/auto-render.d.ts",
+        "default": "./dist/contrib/auto-render.js"
+      },
+      "require": {
+        "types": "./dist/cjs/contrib/auto-render.d.ts",
+        "default": "./dist/contrib/auto-render.cjs"
+      }
+    },
+    "./contrib/copy-typst": {
+      "import": {
+        "types": "./dist/contrib/copy-typst.d.ts",
+        "default": "./dist/contrib/copy-typst.js"
+      },
+      "require": {
+        "types": "./dist/cjs/contrib/copy-typst.d.ts",
+        "default": "./dist/contrib/copy-typst.cjs"
+      }
+    },
+    "./contrib/element": {
+      "import": {
+        "types": "./dist/contrib/element.d.ts",
+        "default": "./dist/contrib/element.js"
+      },
+      "require": {
+        "types": "./dist/cjs/contrib/element.d.ts",
+        "default": "./dist/contrib/element.cjs"
+      }
+    },
+    "./fonts/*": "./fonts/*",
+    "./dist/*": "./dist/*",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "typlet": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "fonts",
+    "LICENSE",
+    "LICENSES",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check:headers": "node scripts/check-headers.mjs",
+    "check:size": "node scripts/check-size.mjs",
+    "check:package": "node scripts/check-package.mjs",
+    "check": "npm run typecheck && npm run check:headers && npm test && npm run build && npm run check:size && npm run check:package && npm run check:budgets && npm run docs:check && npm run docs:build",
+    "check:budgets": "node scripts/check-budgets.mjs",
+    "oracle:build": "cd oracle && cargo build --release",
+    "corpus": "node tools/corpus/build.mjs",
+    "fixtures": "node tools/fixtures.mjs",
+    "fixtures:check": "node tools/fixtures.mjs --check",
+    "bench": "node bench/bench.mjs",
+    "fuzz": "node tools/fuzz-syntax.mjs",
+    "fuzz:eval": "node tools/fuzz-eval.mjs",
+    "codegen": "node tools/codegen/math-class.mjs && node tools/codegen/mathml.mjs && node tools/codegen/library.mjs && node tools/codegen/metrics.mjs",
+    "bench:parse": "node bench/parse.mjs",
+    "fonts": "node tools/fonts/build.mjs",
+    "test:browsers": "node test/browsers/baseline.mjs && node test/browsers/contrib.mjs",
+    "test:visual": "node test/browsers/visual.mjs",
+    "demo": "node tools/demo/serve.mjs",
+    "docs:features": "node tools/site/features.mjs",
+    "docs:check": "node tools/site/features.mjs --check",
+    "docs:build": "node tools/site/build.mjs",
+    "docs:serve": "node tools/site/serve.mjs",
+    "prepublishOnly": "npm run check"
+  },
+  "devDependencies": {
+    "@types/hast": "^3.0.5",
+    "@types/markdown-it": "^14.2.0",
+    "@types/node": "^26.6.4",
+    "esbuild": "^0.28.2",
+    "happy-dom": "^20.14.5",
+    "hast-util-from-html-isomorphic": "^2.0.0",
+    "hast-util-to-text": "^4.0.2",
+    "katex": "^0.19.0",
+    "markdown-it": "^15.0.2",
+    "playwright": "1.62.1",
+    "rehype-stringify": "^10.0.1",
+    "remark-math": "^6.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "typescript": "^7.0.2",
+    "unified": "^11.0.5",
+    "unist-util-visit-parents": "^6.0.2",
+    "vitest": "^5.0.3"
+  }
+}

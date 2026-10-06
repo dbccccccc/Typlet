@@ -1,0 +1,27 @@
+[package]
+name = "typlet-oracle"
+version = "0.1.0"
+edition = "2024"
+publish = false
+license = "MIT"
+description = "Reference outputs from the real Typst compiler, used as test fixtures for Typlet."
+
+# The Typst version every fixture is generated with. Bumping it is the first
+# step of a Typst upgrade (docs/DESIGN.md §9).
+[dependencies]
+typst = "=0.15.1"
+typst-html = "=0.15.1"
+typst-layout = "=0.15.1"
+typst-svg = "=0.15.1"
+typst-assets = { version = "=0.15.1", features = ["fonts"] }
+codex = "=0.3.0"
+comemo = "0.5.1"
+ttf-parser = "0.25"
+rustybuzz = "0.20"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[profile.release]
+opt-level = 3
+codegen-units = 16
+incremental = true

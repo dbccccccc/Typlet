@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typlet demo</title>
+<link rel="stylesheet" href="/fonts/typlet.css">
+<style>
+  /* Light only: Typst's SVG has a white page. */
+  :root { --bg: #fff; --fg: #111; --muted: #667; --line: #dde; color-scheme: light; }
+  body { margin: 0; padding: 16px; background: var(--bg); color: var(--fg); font: 15px/1.4 system-ui, sans-serif; }
+  header { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin-bottom: 12px; }
+  textarea { width: 100%; box-sizing: border-box; font: 15px ui-monospace, monospace; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; padding: 8px; }
+  .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding: 24px 0; border-bottom: 1px solid var(--line); align-items: start; }
+  .label { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+  .src { grid-column: 1 / -1; color: var(--muted); font: 12px ui-monospace, monospace; }
+  .out { font-size: var(--size, 32px); overflow-x: auto; }
+  .typst svg { display: block; }
+  .error { color: #c00; font-size: 13px; }
+</style>
+</head>
+<body>
+<header>
+  <strong>Typlet demo</strong>
+  <label>Size <input id="size" type="range" min="12" max="96" value="32"> <span id="size-value">32px</span></label>
+  <label><input id="display" type="checkbox"> Display</label>
+  <label>Gallery
+    <select id="gallery">
+      <option value="">—</option>
+      <option value="paired">paired</option>
+      <option value="features">features</option>
+      <option value="typst-docs">typst-docs</option>
+      <option value="typstpad">typstpad</option>
+      <option value="levels">levels</option>
+    </select>
+  </label>
+</header>
+<textarea id="input" rows="2">sum_(i=1)^n i = (n(n+1))/2</textarea>
+<textarea id="preamble" rows="2" placeholder="Preamble: #let and #set, such as #set math.equation(numbering: &quot;(1)&quot;)"></textarea>
+<div class="row" style="border-bottom: 0"><div class="label">Typst (SVG)</div><div class="label">Typlet HTML</div><div class="label">Typlet MathML</div></div>
+<div id="main"></div>
+<div id="list"></div>
+<script type="module">
+import { renderToString } from '/dist/index.js';
+
+const size = document.querySelector('#size');
+const sizeValue = document.querySelector('#size-value');
+const input = document.querySelector('#input');
+const display = document.querySelector('#display');
+const preambleInput = document.querySelector('#preamble');
+
+function setSize() {
+  document.body.style.setProperty('--size', `${size.value}px`);
+  sizeValue.textContent = `${size.value}px`;
+  for (const svg of document.querySelectorAll('.typst svg')) scale(svg);
+}
+
+// Typst's SVG is at 11pt; scale it to the chosen font size.
+function scale(svg) {
+  const factor = Number(size.value) / 11;
+  svg.setAttribute('width', `${parseFloat(svg.dataset.width) * factor}px`);
+  svg.setAttribute('height', `${parseFloat(svg.dataset.height) * factor}px`);
+}
+
+function row(src, isDisplay, preamble = preambleInput.value) {
+  const el = document.createElement('div');
+  el.className = 'row';
+  const typst = document.createElement('div');
+  typst.className = 'typst out';
+  fetch(`/typst.svg?display=${isDisplay ? 1 : 0}&src=${encodeURIComponent(src)}&preamble=${encodeURIComponent(preamble)}`)
+    .then((r) => (r.ok ? r.text() : Promise.reject(new Error('no SVG'))))
+    .then((text) => {
+      typst.innerHTML = text;
+      const svg = typst.querySelector('svg');
+      svg.style.overflow = 'visible';
+      svg.dataset.width = svg.getAttribute('width');
+      svg.dataset.height = svg.getAttribute('height');
+      scale(svg);
+    })
+    .catch(() => (typst.innerHTML = '<span class="error">no SVG</span>'));
+  const cell = (output) => {
+    const div = document.createElement('div');
+    div.className = 'out';
+    try {
+      div.innerHTML = renderToString(src, { output, displayMode: isDisplay, strict: 'ignore', trust: true, preamble });
+    } catch (e) {
+      div.innerHTML = `<span class="error"></span>`;
+      div.firstChild.textContent = e.message;
+    }
+    return div;
+  };
+  const source = document.createElement('div');
+  source.className = 'src';
+  source.textContent = src;
+  el.append(source, typst, cell('html'), cell('mathml'));
+  return el;
+}
+
+function update() {
+  const main = document.querySelector('#main');
+  main.replaceChildren(row(input.value, display.checked));
+}
+
+document.querySelector('#gallery').addEventListener('change', async (event) => {
+  const list = document.querySelector('#list');
+  list.replaceChildren();
+  if (!event.target.value) return;
+  const text = await (await fetch(`/test/corpus/${event.target.value}.jsonl`)).text();
+  for (const line of text.split('\n').filter((l) => l.trim())) {
+    const formula = JSON.parse(line);
+    list.append(row(formula.src, !!formula.display, formula.preamble ?? ''));
+  }
+});
+input.addEventListener('input', update);
+preambleInput.addEventListener('input', update);
+display.addEventListener('change', update);
+size.addEventListener('input', setSize);
+setSize();
+update();
+</script>
+</body>
+</html>
