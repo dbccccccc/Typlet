@@ -70,6 +70,6 @@ createServer((req, res) => {
   } catch {
     res.writeHead(404).end();
   }
-}).listen(port, () => {
+}).listen(port, '127.0.0.1', () => {
   console.log(`Typlet's documentation on http://localhost:${port}/`);
 });

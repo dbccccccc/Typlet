@@ -49,8 +49,8 @@ const server = createServer((req, res) => {
     res.writeHead(404).end();
   }
 });
-await new Promise((done) => server.listen(0, done));
-const url = `http://localhost:${server.address().port}/`;
+await new Promise((done) => server.listen(0, '127.0.0.1', done));
+const url = `http://127.0.0.1:${server.address().port}/`;
 
 /** Runs in the page: renders, copies, and reports what it finds. */
 async function check() {

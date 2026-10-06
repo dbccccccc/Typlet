@@ -106,7 +106,7 @@
     "check:package": "node scripts/check-package.mjs",
     "check": "npm run typecheck && npm run check:headers && npm test && npm run build && npm run check:size && npm run check:package && npm run check:budgets && npm run docs:check && npm run docs:build",
     "check:budgets": "node scripts/check-budgets.mjs",
-    "oracle:build": "cd oracle && cargo build --release",
+    "oracle:build": "cd oracle && cargo build --release --locked",
     "corpus": "node tools/corpus/build.mjs",
     "fixtures": "node tools/fixtures.mjs",
     "fixtures:check": "node tools/fixtures.mjs --check",
@@ -124,6 +124,11 @@
     "docs:build": "node tools/site/build.mjs",
     "docs:serve": "node tools/site/serve.mjs",
     "prepublishOnly": "npm run check"
+  },
+  "overrides": {
+    "micromark-extension-math": {
+      "katex": "^0.18.2"
+    }
   },
   "devDependencies": {
     "@types/hast": "^3.0.5",

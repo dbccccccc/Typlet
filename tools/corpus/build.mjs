@@ -5,7 +5,6 @@
 // Corpus files (committed):
 //   paired.jsonl       The 81 formulas of the paired corpus (paired.mjs).
 //   typst-docs.jsonl   Equations from the examples in Typst's math docs.
-//   typstpad.jsonl     TypstPad's symbol picker and templates.
 //   symbols.jsonl      One formula per variant of every Typst symbol.
 //   code.jsonl         Formulas exercising embedded code Level 1.
 //   levels.jsonl       Formulas exercising embedded code Levels 2 and 3.
@@ -17,16 +16,14 @@
 // training labels, into test/corpus/local/labels.jsonl. That directory is not
 // committed: the labels come from several datasets with different licenses.
 //
-// Sources that live outside this repository (Typst's source, TypstPad) are
-// optional; when one is missing its corpus file is left as it is.
+// Upstream examples come from the locked typst-library Cargo dependency.
+// Missing sources are an error; generation never silently keeps old data.
 
 import { createHash } from 'node:crypto';
-import { createReadStream, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { createReadStream, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { createInterface } from 'node:readline';
 import { pathToFileURL } from 'node:url';
-import { build } from 'esbuild';
 import { cratePath } from '../lib/cargo.mjs';
 import { writeJsonl } from '../lib/jsonl.mjs';
 import { runOracle } from '../lib/oracle.mjs';
@@ -38,6 +35,10 @@ import { syntaxCases } from './syntax-cases.mjs';
 const root = resolve(import.meta.dirname, '../..');
 const out = join(root, 'test/corpus');
 const args = parseArgs(process.argv.slice(2));
+const CORPORA = new Set(['paired', 'typst-docs', 'symbols', 'code', 'levels', 'features', 'expressions', 'syntax']);
+for (const name of args.only ?? []) {
+  if (!CORPORA.has(name)) throw new Error(`unknown corpus: ${name}`);
+}
 
 function parseArgs(argv) {
   const parsed = { only: null, labels: null, sample: 2000 };
@@ -107,14 +108,6 @@ async function paired() {
 
 // --- typst-docs.jsonl -----------------------------------------------------
 
-function typstLibraryDir() {
-  try {
-    return cratePath('typst-library');
-  } catch {
-    return null;
-  }
-}
-
 /** The ```example blocks in a Rust file's doc comments, compiled as Typst would. */
 function docExamples(rust) {
   const examples = [];
@@ -141,8 +134,7 @@ function docExamples(rust) {
 }
 
 function typstDocs() {
-  const dir = typstLibraryDir();
-  if (!dir) return null;
+  const dir = cratePath('typst-library');
   const mathDir = join(dir, 'src/math');
   const docs = readdirSync(mathDir)
     .filter((f) => f.endsWith('.rs'))
@@ -162,44 +154,6 @@ function typstDocs() {
       preamble: preambleOf(formula.preamble),
     })),
   );
-}
-
-// --- typstpad.jsonl -------------------------------------------------------
-
-async function typstpad() {
-  const dir = resolve(process.env.TYPSTPAD_DIR ?? join(root, '../../TypstPad'));
-  const entry = join(dir, 'src/data/mathPicker.ts');
-  if (!existsSync(entry)) return null;
-
-  // The picker data is TypeScript with helper functions; bundle it and read
-  // the real values instead of scraping the source.
-  const bundled = join(tmpdir(), `typlet-typstpad-${process.pid}.mjs`);
-  await build({ entryPoints: [entry], bundle: true, format: 'esm', platform: 'node', outfile: bundled, logLevel: 'error' });
-  const { mathPickerGroups } = await import(pathToFileURL(bundled).href);
-  const { mathSymbolCategories } = await import(pathToFileURL(bundled).href).catch(() => ({}));
-  rmSync(bundled, { force: true });
-
-  const seen = new Map();
-  const add = (category, symbol) => {
-    if (!symbol.code || seen.has(symbol.code)) return;
-    seen.set(symbol.code, { category, tooltip: symbol.tooltip });
-  };
-  for (const group of mathPickerGroups) {
-    for (const category of group.categories) {
-      for (const symbol of category.symbols) add(`${group.id}/${category.id}`, symbol);
-    }
-  }
-  for (const category of mathSymbolCategories ?? []) {
-    for (const symbol of category.symbols) add(`symbols/${category.id}`, symbol);
-  }
-
-  // TypstPad renders picker entries and simplified-mode input as display equations.
-  return [...seen].map(([code, meta]) => ({
-    id: `tp-${hash(code).slice(0, 10)}`,
-    src: code,
-    display: true,
-    meta,
-  }));
 }
 
 // --- symbols.jsonl --------------------------------------------------------
@@ -251,16 +205,7 @@ async function sampleLabels(file, count) {
 
 mkdirSync(out, { recursive: true });
 if (wanted('paired')) save('paired', await paired());
-if (wanted('typst-docs')) {
-  const records = typstDocs();
-  if (records) save('typst-docs', records);
-  else console.warn('typst-docs: typst-library source not found; skipped');
-}
-if (wanted('typstpad')) {
-  const records = await typstpad();
-  if (records) save('typstpad', records);
-  else console.warn('typstpad: TypstPad not found (set TYPSTPAD_DIR); skipped');
-}
+if (wanted('typst-docs')) save('typst-docs', typstDocs());
 if (wanted('symbols')) save('symbols', symbols());
 if (wanted('code')) save('code', code());
 if (wanted('levels')) save('levels', levelFormulas());

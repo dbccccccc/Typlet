@@ -1,0 +1,56 @@
+name: Typst releases
+
+# Opens an issue when Typst's latest release isn't the version Typlet
+# reproduces, with the steps of an upgrade (docs/DESIGN.md §9). One issue per
+# version: a closed one isn't opened again. Daily.
+
+on:
+  schedule:
+    - cron: '30 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: typst-releases
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Compare with Typst's latest release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ours=$(grep -o "typstVersion = '[^']*'" src/version.ts | cut -d "'" -f 2)
+          latest=$(gh api repos/typst/typst/releases/latest --jq .tag_name)
+          latest=${latest#v}
+          if [ -z "$ours" ] || [ -z "$latest" ]; then
+            echo "::error::Couldn't read the versions (Typlet's: '$ours', Typst's: '$latest')."
+            exit 1
+          fi
+          if [ "$latest" = "$ours" ]; then
+            echo "Typlet reproduces Typst $ours, the latest release."
+            exit 0
+          fi
+          title="Upgrade to Typst $latest"
+          if gh issue list --repo "$GITHUB_REPOSITORY" --state all --search "in:title $title" --json title --jq '.[].title' | grep -qxF "$title"; then
+            echo "The issue '$title' exists already."
+            exit 0
+          fi
+          cat > body.md <<'EOF'
+          Typst {latest} is out ([release notes](https://github.com/typst/typst/releases/tag/v{latest})), and Typlet reproduces Typst {ours}. To upgrade (docs/DESIGN.md §9):
+
+          1. Bump the oracle's typst crates in `oracle/Cargo.toml`.
+          2. Regenerate the fixtures (`npm run fixtures`). Their diff shows how Typst's behavior changed.
+          3. Regenerate the data (`npm run codegen`).
+          4. Port the upstream diff of the files listed in `docs/UPSTREAM.md`.
+          EOF
+          sed -i "s/{latest}/$latest/g; s/{ours}/$ours/g" body.md
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body-file body.md

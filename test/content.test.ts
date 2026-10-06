@@ -32,7 +32,7 @@ const simplify = (d: { severity: string; message: string; hints?: string[] }) =>
   ...(d.hints && d.hints.length > 0 ? { hints: d.hints } : {}),
 });
 
-describe.each(['paired', 'typst-docs', 'typstpad', 'symbols', 'code', 'features', 'levels'])('content of %s formulas', (name) => {
+describe.each(['paired', 'typst-docs', 'symbols', 'code', 'features', 'levels'])('content of %s formulas', (name) => {
   const fixtures = new Map(
     readJsonl<{ id: string; content?: unknown; diagnostics?: Diag[] }>(`${fixtureDir}/${name}.jsonl`).map((r) => [r.id, r]),
   );

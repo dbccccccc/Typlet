@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   pull_request:
+  # The release workflow runs CI on a release's tag before publishing it.
+  workflow_call:
 
 permissions:
   contents: read
@@ -16,13 +18,21 @@ concurrency:
 
 jobs:
   check:
-    # On the oldest Node the package supports, and on the one the other jobs use.
-    name: Type check, headers, tests, build, size, package (Node ${{ matrix.node }})
-    runs-on: ubuntu-latest
+    # On the oldest Node the package supports, the one the other jobs use and
+    # the newest; and on Windows and macOS, whose paths, file systems and
+    # runtime environments differ.
+    name: Type check, headers, tests, build, size, package (Node ${{ matrix.node }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        node: [22, 24]
+        os: [ubuntu-latest]
+        node: [22, 24, 26]
+        include:
+          - os: windows-latest
+            node: 24
+          - os: macos-latest
+            node: 24
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -44,11 +54,15 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: oracle
-      - run: cargo test --release
+      - run: cargo test --release --locked
 
   browsers:
-    name: Browser tests
-    runs-on: ubuntu-latest
+    name: Browser tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -107,3 +121,11 @@ jobs:
       # reproduce with `--seed`.
       - run: npm run fuzz -- --count 20000 --seed ${{ github.run_number }}
       - run: npm run fuzz:eval -- --count 2000 --seed ${{ github.run_number }}
+      # The fuzzers write the inputs that failed to the temp folder, and
+      # `npm run fuzz:eval -- --replay FILE` checks fuzz:eval's again.
+      - if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: fuzz-failures
+          path: /tmp/typlet-fuzz-*.json
+          if-no-files-found: ignore

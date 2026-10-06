@@ -1,4 +1,4 @@
-# Weekly pull requests that update GitHub Actions and the npm development
+# Weekday checks that update GitHub Actions and the npm development
 # dependencies. Cargo is left out: the oracle pins Typst's crates to the Typst
 # version Typlet reproduces, and moving them is a port of a new Typst version
 # (docs/DESIGN.md §9), not an update.
@@ -7,7 +7,12 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: daily
+    # Commit messages follow Conventional Commits, as CONTRIBUTING.md asks:
+    # "ci(deps): bump …" here, "build(deps-dev): bump …" for npm.
+    commit-message:
+      prefix: ci
+      include: scope
     groups:
       actions:
         patterns: ['*']
@@ -15,7 +20,10 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
+      interval: daily
+    commit-message:
+      prefix: build
+      include: scope
     # Minor and patch updates come together; each major update comes alone.
     groups:
       development:

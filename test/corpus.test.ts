@@ -4,7 +4,7 @@ import { corpusDir, corpusNames, type Expression, type Formula, readJsonl } from
 
 describe('corpus', () => {
   it('has the expected files', () => {
-    expect(corpusNames()).toEqual(['code', 'expressions', 'features', 'levels', 'paired', 'symbols', 'syntax', 'typst-docs', 'typstpad']);
+    expect(corpusNames()).toEqual(['code', 'expressions', 'features', 'levels', 'paired', 'symbols', 'syntax', 'typst-docs']);
   });
 
   it.each(corpusNames())('%s has unique ids', (name) => {

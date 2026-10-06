@@ -21,7 +21,7 @@ const simplify = (d: { severity: string; message: string; hints?: string[]; span
 const fromTyplet = (d: SourceDiagnostic) =>
   simplify({ ...d, span: d.span ? [d.span.start, d.span.end] : null });
 
-describe.each(['paired', 'typst-docs', 'typstpad', 'symbols', 'code', 'features', 'levels'])('MathML of %s formulas', (name) => {
+describe.each(['paired', 'typst-docs', 'symbols', 'code', 'features', 'levels'])('MathML of %s formulas', (name) => {
   const fixtures = new Map(readJsonl<Fixture>(`${fixtureDir}/${name}.jsonl`).map((r) => [r.id, r]));
   const formulas = readJsonl<Formula>(`${corpusDir}/${name}.jsonl`);
 

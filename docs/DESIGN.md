@@ -150,7 +150,7 @@ The font is under the GUST Font License, which allows modification and redistrib
 
 It also splits documents into formulas, dumps the codex symbols, and dumps the math font as Typst reads it (§4). Content trees use the technique of wrapping each formula in `#metadata($…$)` and reading the evaluated content back as JSON. Formulas can carry a preamble, for set rules and definitions (§6.3). [oracle/README.md](../oracle/README.md) documents the formats.
 
-Fixtures are committed per Typst version under `test/fixtures/typst-0.15.1/`, so ordinary CI never builds Typst. A separate workflow checks that they are current.
+Fixtures are committed per Typst version under `test/fixtures/typst-0.15.1/`, so the Node test suite uses them without compiling Typst. CI builds the oracle for Rust unit tests, visual comparisons and differential fuzzing. The Oracle workflow regenerates the corpus, fixtures and generated data to check that they are current.
 
 ### 5.2 The corpus
 
@@ -158,7 +158,6 @@ Fixtures are committed per Typst version under `test/fixtures/typst-0.15.1/`, so
 |---|---|
 | A paired corpus of 81 formulas, each written in Typst and in LaTeX for KaTeX | Headline coverage; benchmarks against KaTeX |
 | Examples in Typst's math docs | Per-function behavior, including set rules and `#let` |
-| TypstPad's symbol picker and templates | Realistic editor input |
 | Every variant of every Typst symbol | The symbol table and font coverage |
 | Formulas for each feature and each code level, and generated code expressions | Embedded code (§6.8) |
 
@@ -242,7 +241,7 @@ Typlet supports code in levels. It refuses everything else with a clear error.
 
 ### 6.4 Coverage
 
-Level 1 alone covers the sampled real-world formulas, whose code is `#none`, `#left` and `#right`, and TypstPad's templates, whose code is `augment: #2`. Of the paired corpus's 81 formulas, 19 use code, and Levels 1 to 3 render 78 of the 81; the other 3 use a loop (Level 4) and show rules.
+Level 1 alone covers the sampled real-world formulas, whose code is `#none`, `#left` and `#right`. Of the paired corpus's 81 formulas, 19 use code, and Levels 1 to 3 render 78 of the 81; the other 3 use a loop (Level 4) and show rules.
 
 ### 6.5 How the evaluator works
 

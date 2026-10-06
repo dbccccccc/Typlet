@@ -57,7 +57,7 @@ const SKIPPED = new Set(['levels/preamble-text']);
 
 // The formulas: the corpora's, where Typlet draws HTML.
 const formulas = [];
-for (const name of ['paired', 'features', 'typst-docs', 'typstpad', 'levels']) {
+for (const name of ['paired', 'features', 'typst-docs', 'levels']) {
   for (const line of readFileSync(join(root, `test/corpus/${name}.jsonl`), 'utf8').split('\n')) {
     if (!line.trim()) continue;
     const f = JSON.parse(line);

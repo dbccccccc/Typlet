@@ -22,12 +22,13 @@
 // downloads.
 
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { build } from 'esbuild';
 import { cratePath } from '../lib/cargo.mjs';
+import { fontPython } from '../lib/font-python.mjs';
 import { readJsonl } from '../lib/jsonl.mjs';
 import {
   codexCharacters,
@@ -41,6 +42,7 @@ import {
 
 const root = join(import.meta.dirname, '../..');
 const outDir = join(root, 'fonts');
+const python = fontPython(root);
 const FAMILY = 'Typlet NewCM Math';
 const FILE_PREFIX = 'typlet-newcm-math';
 
@@ -223,16 +225,6 @@ for (const name of PRIORITY) {
 
 // --- Fonts -------------------------------------------------------------------
 
-function python() {
-  const venv = join(root, '.venv', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python');
-  for (const candidate of [venv, 'python3', 'python']) {
-    if (candidate === venv && !existsSync(venv)) continue;
-    const probe = spawnSync(candidate, ['-c', 'import fontTools, brotli'], { encoding: 'utf8' });
-    if (probe.status === 0) return candidate;
-  }
-  throw new Error('Python with fontTools and brotli is required: see tools/fonts/build.mjs.');
-}
-
 mkdirSync(outDir, { recursive: true });
 for (const f of readdirSync(outDir)) if (f.endsWith('.woff2')) rmSync(join(outDir, f));
 
@@ -261,7 +253,7 @@ const plan = {
     },
   ],
 };
-const result = spawnSync(python(), [join(import.meta.dirname, 'subset.py')], {
+const result = spawnSync(python, [join(import.meta.dirname, 'subset.py')], {
   input: JSON.stringify(plan),
   encoding: 'utf8',
   maxBuffer: 64 * 1024 * 1024,

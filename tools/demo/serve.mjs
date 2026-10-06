@@ -8,7 +8,7 @@
 
 import { readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
-import { extname, join, normalize, resolve } from 'node:path';
+import { extname, join, normalize, resolve, sep } from 'node:path';
 import { oraclePath, runOracle } from '../lib/oracle.mjs';
 
 const root = resolve(import.meta.dirname, '../..');
@@ -42,12 +42,12 @@ createServer((req, res) => {
     const path = url.pathname === '/' ? '/tools/demo/index.html' : url.pathname;
     const file = normalize(join(root, path));
     const allowed = ['dist', 'fonts', 'tools/demo', 'test/corpus'].map((dir) => join(root, dir));
-    if (!allowed.some((dir) => file.startsWith(dir))) return res.writeHead(404).end();
+    if (!allowed.some((dir) => file.startsWith(dir + sep))) return res.writeHead(404).end();
     const body = readFileSync(file);
     res.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream' }).end(body);
   } catch {
     res.writeHead(404).end();
   }
-}).listen(port, () => {
+}).listen(port, '127.0.0.1', () => {
   console.log(`Typlet demo on http://localhost:${port}/ (oracle: ${oraclePath})`);
 });

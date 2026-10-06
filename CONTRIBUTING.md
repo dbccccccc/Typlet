@@ -36,6 +36,12 @@ Two parts of the repository need more:
 
 The browser tests need Playwright's browsers: `npx playwright install chromium firefox webkit`.
 
+Corpus and generated-data commands use the dependencies pinned by `oracle/Cargo.lock`. Build the oracle first; missing upstream sources are an error. These commands do not read adjacent projects. Local label files are read only when explicitly passed with `--labels FILE`.
+
+Font generation uses only this repository's `.venv` and checks that its dependencies match `tools/fonts/requirements.txt`. Local preview servers listen on `127.0.0.1`.
+
+The npm override for `micromark-extension-math` keeps its development-only KaTeX dependency above the vulnerable versions in GHSA-238p-pmpm-9mq7. Remove the override when the upstream dependency range includes the fix.
+
 ## The repository
 
 | Path | Contents |
@@ -85,9 +91,9 @@ npm run bench          # benchmark against KaTeX (after npm run build)
 
 Typlet is checked against the Typst compiler, not by eye:
 - **The corpus** (`test/corpus/`) holds formulas, and **the fixtures** (`test/fixtures/`) hold what the oracle produced for each: Typst's syntax tree, content tree, MathML, frames and diagnostics. The tests compare Typlet's with them.
-- **A fix for a formula starts with the formula.** Add it to a corpus source in `tools/corpus/`, run `npm run corpus` and `npm run fixtures`, and the tests then show how Typlet differs from Typst.
-- **Don't edit generated files by hand:** `test/corpus/*.jsonl`, `test/fixtures/`, `src/generated/` and `docs/supported.md` come from the commands above.
-- **The fuzzers** compare random inputs with Typst. A failure they report belongs in the corpus once it is fixed.
+- **A fix for a formula starts with the formula.** Add it to a corpus source in `tools/corpus/`, run `npm run corpus` and `npm run fixtures`, and the tests then show how Typlet differs from Typst. Without Rust, push the change to the corpus source: the Oracle workflow regenerates the corpus and the fixtures, and uploads what changed as a patch (the `regenerated` artifact) to apply with `git apply`.
+- **Don't edit generated files by hand:** `test/corpus/*.jsonl`, `test/fixtures/`, `src/generated/` and `docs/supported.md` come from the commands above, and CI checks that they are current.
+- **The fuzzers** compare random inputs with Typst. A failure they report belongs in the corpus once it is fixed. In CI, a failing run uploads the inputs that failed (the `fuzz-failures` artifact), and `npm run fuzz:eval -- --replay FILE` checks fuzz:eval's again.
 - **The visual tests** compare Typlet's HTML with Typst's SVG in three browsers. On Linux, where browsers hint fonts, they turn hinting off in Chromium and Firefox and allow WebKit, which can't, more difference (`test/browsers/visual.mjs` explains why). In CI, a failing run uploads the pictures of each mismatch.
 
 ## Code
@@ -113,9 +119,10 @@ Typlet is under the MIT License, and contributions are accepted under it. Code p
 
 ## Releasing
 
-For maintainers. Releases are tags on `main`:
-1. Set the version in `package.json`, `package-lock.json`, `src/version.ts`, the packages in `packages/` (and their dependency on `typlet`, when the minor version changes) and the README's install snippet. Rename the Unreleased section of `CHANGELOG.md` to the version.
+For maintainers. Releases are tags on `main`, and publishing one as a GitHub release publishes the packages:
+1. Set the version in `package.json`, `package-lock.json`, `src/version.ts`, the packages in `packages/` (and their dependency on `typlet`, when the minor version changes) and the README's install snippet. Rename the Unreleased section of `CHANGELOG.md` to the version. The tests check that these agree.
 2. Run `npm run check`, `npm run test:browsers` and `npm run test:visual`.
-3. Commit to `main`, tag the commit `v<version>`, and push both.
-4. Run `npm publish` here, which runs `npm run check` first, then in `packages/rehype-typlet` and `packages/markdown-it-typlet`. npm requires two-factor authentication to publish. A version published with `npm stage publish` instead waits, in `npm stage list`, until `npm stage approve <id>` releases it.
-5. Publish a GitHub release for the tag. That deploys the documentation site (`.github/workflows/docs.yml`).
+3. Commit to `main` and push.
+4. Publish a GitHub release of a new tag `v<version>` on that commit, as the latest release. The release workflow (`.github/workflows/release.yml`) runs CI on the tag, publishes `typlet`, `rehype-typlet` and `markdown-it-typlet` to npm, and then deploys the documentation site. A pre-release, or a release that isn't the latest, publishes nothing.
+
+npm trusts the release workflow to publish the three packages (trusted publishing), so it needs no token. A run that failed partway can be re-run, and skips the packages npm already has. The run uses the workflow of the tagged commit, so a fix to the workflow itself needs a new release.

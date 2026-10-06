@@ -1,17 +1,22 @@
 name: Oracle
 
-# Checks Typlet against the real Typst compiler: the committed fixtures must be
-# what the oracle produces for the committed corpus, and the parser must match
-# typst-syntax on 100,000 fuzzed inputs. It runs when the files the fixtures
-# come from change, and weekly; CI's own jobs use the oracle for its unit tests,
-# the visual diffs and shorter fuzzing.
+# Checks Typlet against the real Typst compiler, in two jobs:
+# - The first regenerates everything that comes from Typst or from the corpus
+#   sources: the corpus, the fixtures and the data in src/generated/. Nothing
+#   may change. If something does, it uploads the change as a patch, which a
+#   contributor without Rust can apply.
+# - The second fuzzes the parser against typst-syntax on 100,000 inputs, and in
+#   the weekly run also evaluation, MathML and layout on 200,000 formulas, a
+#   hundred times what CI runs on each push.
+# It runs when the files these come from change, and weekly. CI's own jobs use
+# the oracle for its unit tests, the visual diffs and shorter fuzzing.
 
 on:
   push:
     branches: [main]
-    paths: [oracle/**, test/corpus/**, test/fixtures/**, tools/**, src/syntax/**, src/utils/**, src/generated/**]
+    paths: [oracle/**, test/corpus/**, test/fixtures/**, tools/**, src/syntax/**, src/utils/**, src/generated/**, .github/workflows/fixtures.yml]
   pull_request:
-    paths: [oracle/**, test/corpus/**, test/fixtures/**, tools/**, src/syntax/**, src/utils/**, src/generated/**]
+    paths: [oracle/**, test/corpus/**, test/fixtures/**, tools/**, src/syntax/**, src/utils/**, src/generated/**, .github/workflows/fixtures.yml]
   schedule:
     - cron: '0 6 * * 1'
   workflow_dispatch:
@@ -24,8 +29,8 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  oracle:
-    name: Fixtures are current, parser matches typst-syntax
+  generated:
+    name: Corpus, fixtures and generated data are current
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -36,7 +41,50 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: oracle
+          shared-key: oracle
       - run: npm ci
       - run: npm run oracle:build
-      - run: npm run fixtures:check
+      - run: npm run corpus
+      - run: npm run fixtures
+      - run: npm run codegen
+      - name: Check that nothing changed
+        run: |
+          git add --all
+          if ! git diff --cached --quiet; then
+            git diff --cached --stat
+            git diff --cached > "$RUNNER_TEMP/regenerated.patch"
+            echo '::error::These files differ from what their sources produce. Run npm run corpus, npm run fixtures and npm run codegen, or apply the patch in the regenerated artifact with git apply.'
+            exit 1
+          fi
+      - if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: regenerated
+          path: ${{ runner.temp }}/regenerated.patch
+          if-no-files-found: ignore
+
+  fuzz:
+    name: Fuzzing against Typst
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: oracle
+          shared-key: oracle
+      - run: npm ci
+      - run: npm run oracle:build
       - run: npm run fuzz -- --count 100000 --seed ${{ github.run_number }}
+      - if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: npm run fuzz:eval -- --count 200000 --seed ${{ github.run_number }}
+      # The inputs that failed, as in CI.
+      - if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: fuzz-failures
+          path: /tmp/typlet-fuzz-*.json
+          if-no-files-found: ignore

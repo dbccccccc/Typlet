@@ -1,13 +1,12 @@
 name: Docs
 
-# Builds the documentation site and deploys it to GitHub Pages, when a
-# release is published, so that the site describes the released version. It
-# can also be run by hand. The repository's Pages settings must name GitHub
-# Actions as the source.
+# Builds the documentation site and deploys it to GitHub Pages. The release
+# workflow (release.yml) runs it once npm has the release, so that the site
+# describes the released version. It can also be run by hand. The
+# repository's Pages settings must name GitHub Actions as the source.
 
 on:
-  release:
-    types: [published]
+  workflow_call:
   workflow_dispatch:
 
 permissions:

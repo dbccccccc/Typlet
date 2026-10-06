@@ -1,0 +1,148 @@
+name: Release
+
+# Publishes typlet, rehype-typlet and markdown-it-typlet to npm, then deploys
+# the documentation site, when a release is published on GitHub as the latest
+# release. A pre-release, or a release that isn't the latest, publishes
+# nothing.
+#
+# The release's tag must be `v` and the version in package.json, on a commit
+# of main, and CI must pass on it. The packages are packed in a job of their
+# own, so the job that can publish runs no dependency's code. npm trusts this
+# workflow to publish them (trusted publishing), so it needs no token, and
+# each version gets provenance. A run that failed partway can be re-run: it
+# skips the packages npm already has.
+
+on:
+  release:
+    # Published as a release, or changed from a pre-release to one.
+    types: [released]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Latest release, tagged with the version
+    runs-on: ubuntu-latest
+    outputs:
+      latest: ${{ steps.latest.outputs.latest }}
+      version: ${{ steps.tag.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - id: latest
+        name: Check that the release is the latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          latest=$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tag_name)
+          if [ "$latest" = "$TAG" ]; then
+            echo 'latest=true' >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::$TAG is not the latest release ($latest is), so nothing is published."
+            echo 'latest=false' >> "$GITHUB_OUTPUT"
+          fi
+      - id: tag
+        name: Check the tag
+        if: steps.latest.outputs.latest == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          version=$(jq -r .version package.json)
+          if [ "$TAG" != "v$version" ]; then
+            echo "::error::The tag is $TAG, but the version in package.json is $version."
+            exit 1
+          fi
+          # The tagged commit must be main's latest, or an earlier one.
+          status=$(gh api "repos/$GITHUB_REPOSITORY/compare/main...$GITHUB_SHA" --jq .status)
+          if [ "$status" != identical ] && [ "$status" != behind ]; then
+            echo "::error::$TAG is not a commit of main."
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+  ci:
+    name: CI
+    needs: verify
+    if: needs.verify.outputs.latest == 'true'
+    uses: ./.github/workflows/ci.yml
+
+  pack:
+    name: Pack the packages
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          # No cache in a release: what it holds would go into the packages.
+          package-manager-cache: false
+      - run: npm ci
+      - run: npm run build
+      - run: |
+          mkdir packed
+          for dir in . packages/rehype-typlet packages/markdown-it-typlet; do
+            (cd "$dir" && npm pack --pack-destination "$GITHUB_WORKSPACE/packed")
+          done
+      - uses: actions/upload-artifact@v7
+        with:
+          name: packages
+          path: packed/
+          if-no-files-found: error
+
+  publish:
+    name: Publish to npm
+    needs: [verify, pack]
+    runs-on: ubuntu-latest
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/typlet/v/${{ needs.verify.outputs.version }}
+    permissions:
+      # For trusted publishing and provenance.
+      id-token: write
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - uses: actions/download-artifact@v8
+        with:
+          name: packages
+      - env:
+          VERSION: ${{ needs.verify.outputs.version }}
+        run: |
+          # typlet first, since the others depend on it.
+          packages='typlet rehype-typlet markdown-it-typlet'
+          # Check that every tarball is present before publishing any package.
+          for package in $packages; do
+            test -f "$package-$VERSION.tgz"
+          done
+          for package in $packages; do
+            if npm view "$package@$VERSION" version --json > "$RUNNER_TEMP/version.json"; then
+              echo "$package@$VERSION is on npm already."
+            elif [ "$(jq -r '.error.code // empty' "$RUNNER_TEMP/version.json")" = E404 ]; then
+              npm publish "./$package-$VERSION.tgz" --provenance
+            else
+              echo "::error::Could not check $package@$VERSION on npm; publishing stopped."
+              exit 1
+            fi
+          done
+
+  docs:
+    name: Docs
+    needs: publish
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/docs.yml

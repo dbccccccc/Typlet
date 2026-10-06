@@ -2,6 +2,12 @@
 
 What each release of Typlet changes. The versions follow [semantic versioning](https://semver.org/): while they start with 0, a minor release may change the API, and each Typlet version reproduces one Typst version. `rehype-typlet` and `markdown-it-typlet` are released with Typlet, under the same version.
 
+## Unreleased
+
+- Remove externally sourced editor corpus data and implicit sibling-project access from test generation.
+- Fail on missing upstream sources, use the locked Cargo dependencies, and verify the font toolchain's dependency versions.
+- Bind local preview and benchmark servers to the loopback interface.
+
 ## 0.1.0
 
 The first public release. It reproduces Typst 0.15.1.

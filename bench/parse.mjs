@@ -17,7 +17,7 @@ const load = (name) =>
     .map((l) => JSON.parse(l));
 
 const ITERATIONS = 200;
-for (const name of ['paired', 'typstpad', 'typst-docs', 'symbols']) {
+for (const name of ['paired', 'typst-docs', 'symbols']) {
   const formulas = load(name).map((f) => f.src);
   for (let k = 0; k < 20; k++) for (const src of formulas) parse(`${src} + z_(${k})`); // warm up
 

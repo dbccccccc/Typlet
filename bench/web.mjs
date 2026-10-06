@@ -12,7 +12,7 @@
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { createRequire } from 'node:module';
-import { dirname, extname, join, normalize, resolve } from 'node:path';
+import { dirname, extname, join, normalize, resolve, sep } from 'node:path';
 import { brotliCompressSync, constants } from 'node:zlib';
 import { chromium } from 'playwright';
 
@@ -107,10 +107,14 @@ const compressible = new Set(['.html', '.js', '.css', '.ttf']);
 const cache = new Map();
 function file(path) {
   const p = decodeURIComponent(path).replace(/^\/v\/[^/]+/, '');
-  if (p.startsWith('/katex/')) return normalize(join(katexDir, 'dist', p.slice('/katex/'.length)));
+  if (p.startsWith('/katex/')) {
+    const directory = join(katexDir, 'dist');
+    const f = normalize(join(directory, p.slice('/katex/'.length)));
+    return f.startsWith(directory + sep) ? f : null;
+  }
   if (p.startsWith('/typlet/')) {
     const f = normalize(join(root, p.slice('/typlet/'.length)));
-    return f.startsWith(join(root, 'dist')) || f.startsWith(join(root, 'fonts')) ? f : null;
+    return ['dist', 'fonts'].some((directory) => f.startsWith(join(root, directory) + sep)) ? f : null;
   }
   return null;
 }
@@ -139,8 +143,8 @@ const server = createServer((req, res) => {
   res.writeHead(200, headers);
   res.end(body);
 });
-await new Promise((done) => server.listen(0, done));
-const origin = `http://localhost:${server.address().port}`;
+await new Promise((done) => server.listen(0, '127.0.0.1', done));
+const origin = `http://127.0.0.1:${server.address().port}`;
 
 const median = (values) => [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
 const kb = (bytes) => (bytes / 1024).toFixed(0);

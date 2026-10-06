@@ -19,7 +19,7 @@ const KNOWN_DIFFERENCES = new Set([
   'levels/preamble-text',
 ]);
 
-describe.each(['paired', 'typst-docs', 'typstpad', 'symbols', 'code', 'features', 'levels'])('layout of %s formulas', (name) => {
+describe.each(['paired', 'typst-docs', 'symbols', 'code', 'features', 'levels'])('layout of %s formulas', (name) => {
   const fixtures = new Map(readJsonl<Fixture>(`${fixtureDir}/${name}.jsonl`).map((r) => [r.id, r]));
   const formulas = readJsonl<Formula>(`${corpusDir}/${name}.jsonl`);
 
