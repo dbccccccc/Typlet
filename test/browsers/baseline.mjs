@@ -177,7 +177,9 @@ for (const name of names) {
   await browser.close();
 
   console.log(`${name}: font ascent ${ascent[0]} px, descent ${ascent[1]} px (expected ${em(806)}, ${em(194)})`);
-  if (Math.abs(ascent[0] - em(806)) > 0.5 || Math.abs(ascent[1] - em(194)) > 0.5) failures++;
+  // Browsers report these in whole pixels, rounded either way (Firefox on
+  // macOS rounds up), so allow anything short of a pixel.
+  if (Math.abs(ascent[0] - em(806)) >= 1 || Math.abs(ascent[1] - em(194)) >= 1) failures++;
   for (const probe of probes) {
     const ink = inkBox(image, probe.left - SPACING / 2 + 20, probe.left + SPACING / 2 + 20);
     const off = ink ? ink.map((v, i) => v - probe.expected[i]) : null;
