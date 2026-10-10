@@ -13,22 +13,24 @@ Renders a Typst formula to HTML and MathML. The formula comes from the
 argument, the --input file, or standard input.
 
 Options:
-  -d, --display-mode           render a display formula
-  -F, --format <format>        htmlAndMathml (the default), html or mathml
-  -i, --input <file>           read the formula from a file
-  -o, --output <file>          write the result to a file instead of standard output
-  -p, --preamble <code>        Typst code before the formula, such as #let and #set
-  -P, --preamble-file <file>   read the preamble from a file
-  -t, --no-throw-on-error      render an invalid formula's source in the error color
-  -c, --error-color <color>    the color of invalid formulas (default: #cc0000)
-  -S, --strict <mode>          what warnings do: ignore, warn (the default) or error
-  -T, --trust                  draw links
-      --max-calls <n>          the most function calls (default: 30000)
-      --max-elements <n>       the most content elements (default: 10000)
-      --max-size <n>           the largest size, in em (default: 1000)
-      --max-output-size <n>    the longest output, in characters (default: 1000000)
-  -V, --version                print the version
-  -h, --help                   print this help
+  -d, --display-mode             render a display formula
+  -F, --format <format>          htmlAndMathml (the default), html or mathml
+  -i, --input <file>             read the formula from a file
+  -o, --output <file>            write the result to a file instead of standard output
+  -p, --preamble <code>          Typst code before the formula, such as #let and #set
+  -P, --preamble-file <file>     read the preamble from a file
+  -t, --no-throw-on-error        render an invalid formula's source in the error color
+  -c, --error-color <color>      the color of invalid formulas (default: #cc0000)
+  -S, --strict <mode>            what warnings do: ignore, warn (the default) or error
+  -T, --trust                    draw links
+      --max-calls <n>            the most function calls (default: 30000)
+      --max-collection-size <n>  the most items in an array or dictionary (default: 10000)
+      --max-string-length <n>    the most characters in a string (default: 100000)
+      --max-elements <n>         the most content elements (default: 10000)
+      --max-size <n>             the largest size, in em (default: 1000)
+      --max-output-size <n>      the longest output, in characters (default: 1000000)
+  -V, --version                  print the version
+  -h, --help                     print this help
 `;
 
 /** Where the command reads and writes, so tests can run it without a process. */
@@ -76,6 +78,8 @@ export function main(args: readonly string[], io: Io = processIo): number {
         strict: { type: 'string', short: 'S' },
         trust: { type: 'boolean', short: 'T' },
         'max-calls': { type: 'string' },
+        'max-collection-size': { type: 'string' },
+        'max-string-length': { type: 'string' },
         'max-elements': { type: 'string' },
         'max-size': { type: 'string' },
         'max-output-size': { type: 'string' },
@@ -109,7 +113,9 @@ export function main(args: readonly string[], io: Io = processIo): number {
   if (!STRICTNESS.includes(strict as Strictness)) return fail(`unknown strict mode ${strict}: expected ignore, warn or error`);
   if (values.preamble !== undefined && values['preamble-file'] !== undefined) return fail('give the preamble with --preamble or --preamble-file, not both');
 
-  const number = (name: 'max-calls' | 'max-elements' | 'max-size' | 'max-output-size'): number | undefined | null => {
+  const number = (
+    name: 'max-calls' | 'max-collection-size' | 'max-string-length' | 'max-elements' | 'max-size' | 'max-output-size',
+  ): number | undefined | null => {
     const value = values[name];
     if (value === undefined) return undefined;
     const n = Number(value);
@@ -117,6 +123,8 @@ export function main(args: readonly string[], io: Io = processIo): number {
   };
   const budgets = {
     maxCalls: number('max-calls'),
+    maxCollectionSize: number('max-collection-size'),
+    maxStringLength: number('max-string-length'),
     maxElements: number('max-elements'),
     maxSize: number('max-size'),
     maxOutputSize: number('max-output-size'),

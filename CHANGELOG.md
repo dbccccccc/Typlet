@@ -4,9 +4,7 @@ What each release of Typlet changes. The versions follow [semantic versioning](h
 
 ## Unreleased
 
-- Remove externally sourced editor corpus data and implicit sibling-project access from test generation.
-- Fail on missing upstream sources, use the locked Cargo dependencies, and verify the font toolchain's dependency versions.
-- Bind local preview and benchmark servers to the loopback interface.
+- The `typlet` command takes `--max-collection-size` and `--max-string-length`, the two budgets it lacked.
 
 ## 0.1.0
 

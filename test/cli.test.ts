@@ -79,15 +79,18 @@ describe('the typlet command', () => {
   });
 
   it('applies budgets', () => {
-    const { code, stderr } = run(['#h(20em)', '--max-size', '10']);
-    expect(code).toBe(1);
-    expect(stderr).toContain('limit error');
+    const limit = { code: 1, stderr: expect.stringContaining('limit error') };
+    expect(run(['#h(20em)', '--max-size', '10'])).toMatchObject(limit);
+    expect(run(['#f(30)', '-p', '#let f(n) = if n == 0 { 0 } else { f(n - 1) + f(n - 1) }', '--max-calls', '100'])).toMatchObject(limit);
+    expect(run(['#((1,) * 100)', '--max-collection-size', '10'])).toMatchObject(limit);
+    expect(run(['#("x" * 100)', '--max-string-length', '10'])).toMatchObject(limit);
   });
 
   it('rejects bad options', () => {
     expect(run(['x', '-F', 'svg'])).toMatchObject({ code: 2, stderr: expect.stringContaining('unknown format svg') });
     expect(run(['x', 'y'])).toMatchObject({ code: 2, stderr: expect.stringContaining('at most one formula') });
     expect(run(['--max-calls', 'many'])).toMatchObject({ code: 2, stderr: expect.stringContaining('--max-calls expects a positive number') });
+    expect(run(['--max-string-length', '0'])).toMatchObject({ code: 2, stderr: expect.stringContaining('--max-string-length expects a positive number') });
     expect(run(['--unknown'])).toMatchObject({ code: 2, stderr: expect.stringContaining('Usage: typlet') });
     expect(run(['-i', 'missing.typ'])).toMatchObject({ code: 2, stderr: expect.stringContaining('ENOENT') });
   });
