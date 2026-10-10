@@ -60,8 +60,9 @@ describe('fonts', () => {
     expect(ambiguous).toEqual([]);
   });
 
-  // The 74 formulas of the benchmark page that both Typst and KaTeX render
-  // (test/corpus/web-page.json). KaTeX loads 200 KB of fonts for them.
+  // The 73 formulas of the benchmark page that both Typst and KaTeX render
+  // (test/corpus/web-page.json, which test/corpus.test.ts checks). KaTeX
+  // loads 200 KB of fonts for them.
   const ids = new Set<string>(
     JSON.parse(readFileSync(join(corpusDir, 'web-page.json'), 'utf8')).ids,
   );
@@ -82,8 +83,8 @@ describe('fonts', () => {
     return [...used].reduce((sum, f) => sum + f.bytes, 0);
   };
 
-  it('loads at most 250 KB for the 74-formula page in MathML', () => {
-    expect(page).toHaveLength(74);
+  it('loads at most 250 KB for the 73-formula page in MathML', () => {
+    expect(page).toHaveLength(73);
     const cps = new Set<number>();
     for (const f of page) {
       const mathml = renderToString(f.src, { displayMode: f.display, strict: 'ignore', throwOnError: false });
@@ -93,7 +94,7 @@ describe('fonts', () => {
     expect(loaded(cps)).toBeLessThanOrEqual(250 * 1024);
   });
 
-  it('loads at most 250 KB for the 74-formula page drawn as Typst lays it out', () => {
+  it('loads at most 250 KB for the 73-formula page drawn as Typst lays it out', () => {
     const cps = new Set<number>();
     const boldCps = new Set<number>();
     for (const f of page) {

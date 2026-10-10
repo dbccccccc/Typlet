@@ -1,5 +1,5 @@
 {
-  "description": "The 74 formulas of paired.jsonl that both Typst and KaTeX render, as on the benchmark page bench/web.mjs serves. test/fonts.test.ts measures the fonts they load.",
+  "description": "The 73 formulas of paired.jsonl that both Typst and KaTeX render, as on the benchmark page bench/web.mjs serves. test/fonts.test.ts measures the fonts they load, and test/corpus.test.ts checks the list.",
   "ids": [
     "sup-sub",
     "euler",
@@ -73,7 +73,6 @@
     "einstein",
     "stirling",
     "cd",
-    "mhchem",
     "href"
   ]
 }
