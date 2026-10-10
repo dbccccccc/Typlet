@@ -62,7 +62,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        # Linux is pinned to an image: its text rendering is what the browser
+        # tests see (test/browsers/visual.mjs explains), so a newer Ubuntu is
+        # adopted on purpose, here and in the visual job, not by a label moving.
+        os: [ubuntu-24.04, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -78,7 +81,8 @@ jobs:
   # jobs, sharing its build cache, so that one failing doesn't hide the other.
   visual:
     name: Visual diffs against Typst
-    runs-on: ubuntu-latest
+    # Pinned with the browser tests' Linux runner, above.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
