@@ -22,7 +22,7 @@ The first public release. It reproduces Typst 0.15.1.
 
 ### How it was checked
 
-- Of the 1,823 formulas of the test corpus that Typst renders, Typlet lays out 1,658, draws 158 as MathML with a warning, and refuses 7. The tests compare the frames it lays out with Typst's: all but three, which differ by design, match to a thousandth of a point.
+- Of the 1,644 formulas of the test corpus that Typst renders, Typlet lays out 1,479, draws 158 as MathML with a warning, and refuses 7. The tests compare the frames it lays out with Typst's: all but three, which differ by design, match to a thousandth of a point.
 - Its HTML is compared with Typst's SVG in Chromium, Firefox and WebKit, and its parser and evaluation with Typst's on random formulas.
 - [SECURITY.md](SECURITY.md) describes the review for untrusted input.
 

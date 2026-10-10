@@ -125,7 +125,7 @@ Formulas from untrusted users are safe to render with the default options: the f
 
 ### Fonts
 
-Typst sets math in New Computer Modern Math. Typlet ships it as "Typlet NewCM Math", split into woff2 files that browsers load as a page's characters need them: the benchmark page of 74 formulas loads 202 to 214 KB, about what KaTeX loads for it. Glyphs that have no code point of their own, such as size variants and script-size digits, are mapped to private code points. `typlet.css` declares the fonts and carries the styles of the HTML output and Typst's styles for MathML, all scoped under `.typlet`:
+Typst sets math in New Computer Modern Math. Typlet ships it as "Typlet NewCM Math", split into woff2 files that browsers load as a page's characters need them: the benchmark page of 73 formulas loads 202 to 214 KB, about what KaTeX loads for it. Glyphs that have no code point of their own, such as size variants and script-size digits, are mapped to private code points. `typlet.css` declares the fonts and carries the styles of the HTML output and Typst's styles for MathML, all scoped under `.typlet`:
 
 ```html
 <link rel="stylesheet" href="node_modules/typlet/fonts/typlet.css">

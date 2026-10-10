@@ -16,7 +16,7 @@ A formula that Typlet refuses as `unsupported`, or draws as MathML with a warnin
 
 ## Setting up
 
-You need Node 22.12 or newer.
+You need Node 22.12 or newer: the package runs on Node 22, but Vitest, which runs the tests, needs 22.12.
 
 ```bash
 npm install
