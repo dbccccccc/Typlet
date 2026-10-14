@@ -88,13 +88,16 @@ const EXPECTED_REFUSALS: Record<string, string[]> = {
     // Level 4.
     'loop-matrix: Typlet does not support the `range` function',
     // Never supported.
-    'show-rule: Typlet does not support `show` rules',
-    'math-font: Typlet does not support `show` rules',
+    'show-rule: Typlet does not support `show` rules for text',
   ],
   levels: [
     'content-heading: Typlet does not support headings',
     'loop-refused: Typlet does not support loops',
-    'show-refused: Typlet does not support `show` rules',
-    'preamble-show: Typlet does not support `show` rules',
+    'show-refused: Typlet does not support `show` rules for text',
+    // Show rules other than show-set rules for equations.
+    'preamble-show-function: Typlet does not support `show` rules with a function',
+    'preamble-show-strong: Typlet does not support `show` rules for `strong`',
+    'preamble-show-where-field: Typlet does not support `where()` with the field `numbering`',
+    'preamble-show-where-unknown: Typlet does not support `where()` with the field `foo`',
   ],
 };

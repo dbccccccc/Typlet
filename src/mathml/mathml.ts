@@ -5,6 +5,7 @@
 import { ElementBudget, type SourceDiagnostic, type Span, warning } from '../eval/diag.js';
 import type { Em } from '../eval/layout.js';
 import { rustDisplayFloat } from '../eval/repr.js';
+import { equationShowSetStyles } from '../elements/mod.js';
 import { MathSize } from '../elements/style.js';
 import { FRAC_PADDING } from '../elements/frac.js';
 import {
@@ -268,7 +269,7 @@ class MathContext {
       equation: (equation, styles) => {
         const block = equation.block ?? false;
         const size = property('equation', 'size', block ? MathSize.Display : MathSize.Text);
-        const nested = chain(styles, [size]);
+        const nested = chain(styles, [size, ...equationShowSetStyles(styles, block)]);
         const item = resolveEquation(equation.body, nested, deferred, 'html');
         const math = elem('math', convertMathToNodes(item, block, deferred, trust, quoter, nested, decorations));
         if (block) math.attrs.push(['display', 'block']);

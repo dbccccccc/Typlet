@@ -12,7 +12,7 @@ Typlet renders Typst math in the browser and in Node, the way KaTeX renders LaTe
 - **Good output:** accessible, selectable, themeable, with no global styles (§2).
 
 **Not goals.**
-- Documents, packages, show rules, introspection and file access (§6.3).
+- Documents, packages, show rules other than show-set rules for equations, introspection and file access (§6.3).
 - Pixel-identical output in every case.
 - LaTeX input.
 - Raster output such as PNG.
@@ -109,7 +109,7 @@ source
 Typst resolves an equation into an IR of `MathItem`s (Group, Fenced, Fraction, Scripts, Table, Accent, Glyph and others) in `typst-library/src/math/ir`, and both of its backends consume it: `typst-layout/src/math` for paged output and `typst-html/src/mathml.rs` for MathML. Typlet ports each of these files, and [UPSTREAM.md](UPSTREAM.md) records which file each module ports and the version it was last synced with.
 
 Two simplifications keep the port small:
-- **Styles are Typst's, without show rules.** Each style property sets one field of one element, and a chain links lists of properties from the innermost outward, as in `styles.rs`. Show rules and revocations are left out (§6.3).
+- **Styles are Typst's, with show-set rules only.** Each style property sets one field of one element, and a chain links lists of properties from the innermost outward, as in `styles.rs`. A show-set rule for equations travels in the chain as a property of its own and is applied where an equation is realized; other show rules and revocations are left out (§6.3).
 - **Content is plain data.** Math elements are nodes with typed fields, with no general element system.
 
 **The runtime is TypeScript with no dependencies.** Compiling typst-syntax to WASM was considered and rejected: it would bring back a WASM download, async initialization and `'wasm-unsafe-eval'` under a strict Content Security Policy; typst-syntax alone weighs about 112 KB brotli as WASM; and it would only reuse the parser, which is the cheap part, since resolution and layout depend on typst-library's `Engine`, `StyleChain` and `Content` and must be rewritten in any language. Everything that changes as data is generated from the Rust crates at build time instead (`npm run codegen`): symbols, alphanumeric styling, math classes, the MathML operator dictionary, and the names and signatures of Typst's scopes.
@@ -123,7 +123,7 @@ HTML can only address characters, but OpenType MATH size variants and assembly p
 3. **Normalize the vertical metrics.** Set the hhea, typo and win metrics to the same values and turn on `USE_TYPO_METRICS`, so every browser places the baseline at the same offset. The HTML output's positioning depends on this.
 4. **Split** into woff2 files with `unicode-range`, so a page downloads only what it uses: a file per math alphabet style, a `main` file with the characters most formulas use, and files for the rest of each Unicode block.
 5. **Convert the outlines** from CFF to unhinted TrueType curves, within one font unit. In woff2 they are a third smaller. Typst's own output is unhinted too.
-6. **Generate the metrics module** (`tools/codegen/metrics.mjs`). It holds the MATH constants and, per glyph: advance and bounds, italic correction and top accent attachment, math kerning, variants and assemblies, and how shaping with `ssty` and `dtls` maps characters to glyphs. The core module covers the math blocks and every symbol's characters; rarer scripts, such as Devanagari, are in a separate module.
+6. **Generate the metrics module** (`tools/codegen/metrics.mjs`). It holds the MATH constants and, per glyph: advance and bounds, italic correction and top accent attachment, math kerning, variants and assemblies, and how shaping with `ssty` and `dtls` maps characters to glyphs. The core module covers the Latin and Greek blocks, the math blocks and every symbol's characters; the rest, such as Devanagari, which needs shaping, and box-drawing characters, is in a separate module that Typlet doesn't load.
 7. **Generate `typlet.css`** with the `@font-face` rules and base styles, including Typst's styles for MathML.
 
 The metrics are generated from the oracle's dump of the font as Typst reads it, through ttf-parser and rustybuzz, and the tests check them against it. Text runs such as `"if"` or `argmax` use the extracted advances and kerning pairs, and the browser shapes them. Bold text needs New Computer Modern Math Bold, so the pipeline adds a small Latin subset of it, declared with `font-weight: bold`, which browsers load only when a page shows bold text.
@@ -228,20 +228,21 @@ Typlet supports code in levels. It refuses everything else with a clear error.
 - `#let` for values and functions, with positional and named parameters and defaults, plus arrow closures. Functions defined this way work in math: `norm(x)`.
 - `if`/`else` expressions and code blocks `#{ … }`. Recursion is allowed within the budgets (§6.6).
 - `set` rules for math elements and text: `#set math.mat(delim: "[")`, and likewise for `math.vec` and `math.cases`; `#set math.equation(numbering: "(1)")`; `#set text(fill: blue, size: 1.2em)`. As in Typst, a set rule in a formula goes in a content or code block, such as `#[#set text(fill: red); $x$]`, and styles the rest of the block. Directly in math, it is an error.
+- Show-set rules for equations: `#show math.equation: set text(fill: blue)`, and `#show math.equation.where(block: true): set …` for display or inline equations alone. Their styles apply inside each equation, after its own show-set rule and over the set rules around it, as in Typst's realization, so they win over a set rule that comes later. Other selectors and transformations are refused.
 - **The `preamble` option:** Typst code with `let` and `set` statements, evaluated once. Its definitions and settings apply to every formula rendered with the same options. It replaces KaTeX's `macros`.
 - **Equation numbers** come from a counter that the caller controls. Auto-render numbers a page's equations in order.
 
 **Level 4, collections and loops (planned, if users ask).** `for` and `while` loops, `range`, and methods on arrays, dictionaries and strings, such as `map`, `join`, `at` and `len`, under the same budgets.
 
 **Never supported.**
-- **`show` rules.** They rewrite content during layout and need Typst's realization engine. The two common uses map to options instead: an equation color maps to CSS `color`, and a math font would map to a font option.
+- **Other `show` rules.** Rules with a function or content rewrite content during layout and need Typst's realization engine, and show-set rules for elements other than equations would need matching at every element. The common uses have other routes: an equation color maps to CSS `color`, and a math font would map to a font option.
 - **Introspection:** `context`, `state`, `counter`, `query`, `locate`, `measure` and `here`. These need multi-pass document layout.
 - **I/O and nondeterminism:** `import`, `include`, packages, `read`, data loaders such as `json` and `csv`, `plugin`, `eval`, `sys.inputs` and `datetime.today`.
 - **Document elements:** `heading`, `figure`, `ref`, `footnote`, `page`, `grid`, `table`, `place` and `block`.
 
 ### 6.4 Coverage
 
-Level 1 alone covers the sampled real-world formulas, whose code is `#none`, `#left` and `#right`. Of the paired corpus's 81 formulas, 19 use code, and Levels 1 to 3 render 78 of the 81; the other 3 use a loop (Level 4) and show rules.
+Level 1 alone covers the sampled real-world formulas, whose code is `#none`, `#left` and `#right`. Of the paired corpus's 81 formulas, 19 use code, and Levels 1 to 3 render 79 of the 81; the other 2 use a loop (Level 4) and a show rule for text.
 
 ### 6.5 How the evaluator works
 
@@ -287,7 +288,7 @@ Typst has no budget on calls. Computation that Typst would finish slowly fails i
 
 ## 7. Size and startup
 
-**Size budgets.** CI checks the brotli size of each entry point against `scripts/size-budgets.json`: 120 KB for the full browser bundle and 70 KB for `typlet/mathml`, which leaves out the layout and metrics. KaTeX's script is about 61 KB, plus its CSS. Typlet's extra size is mostly the parser for all of Typst's syntax, Typst's error messages, embedded code and the font metrics.
+**Size budgets.** CI checks the brotli size of each entry point against `scripts/size-budgets.json`: 125 KB for the full browser bundle and 70 KB for `typlet/mathml`, which leaves out the layout and metrics. KaTeX's script is about 61 KB, plus its CSS. Typlet's extra size is mostly the parser for all of Typst's syntax, Typst's error messages, embedded code and the font metrics.
 
 **Compact metrics.** The metrics of the 7,500 glyphs Typst reaches are columns of characters, decoded as glyphs are used: numbers are two base-92 digits per glyph, read where they are, and the tables few glyphs have are comma-separated fields, found by skipping from the nearest of a column's steps. Nothing is decoded at import.
 

@@ -32,6 +32,8 @@ $ #text(fill: blue)[blue] + #box(stroke: 0.5pt, inset: 2pt, $x^2$) + #highlight[
 
 $ #{ let sq(x) = $#x^2$; set math.mat(delim: "["); $mat(sq(a), sq(b))$ } $
 
+Show-set rules for equations work too, most usefully in a preamble: `#show math.equation: set text(fill: blue)` styles every formula, and `#show math.equation.where(block: true): set text(size: 1.2em)` only display formulas. Their styles apply inside each equation, over the set rules around it, as in Typst. Other show rules are refused.
+
 ## Preambles
 
 The `preamble` option holds code that comes before every formula, like the start of a document: definitions and set rules that formulas share. It replaces KaTeX's `macros`. Typlet evaluates a preamble once for each set of options.
@@ -63,7 +65,7 @@ renderToString('#link("https://typst.app")[Typst]', { trust: ({ protocol }) => p
 
 ## What Typlet refuses
 
-Code that needs Typst's document engine raises a `TypletError` of kind `unsupported`: `show` rules, loops, introspection such as `context` and `counter`, imports and file access, and document elements such as headings. The `fallback` option can render those formulas another way, for example with Typst compiled to WebAssembly, loaded only when a formula needs it:
+Code that needs Typst's document engine raises a `TypletError` of kind `unsupported`: `show` rules other than `show math.equation: set …`, loops, introspection such as `context` and `counter`, imports and file access, and document elements such as headings. The `fallback` option can render those formulas another way, for example with Typst compiled to WebAssembly, loaded only when a formula needs it:
 
 ```js
 render(source, element, { fallback: (source, error) => renderWithTypst(source) });

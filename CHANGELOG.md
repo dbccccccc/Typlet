@@ -2,9 +2,16 @@
 
 What each release of Typlet changes. The versions follow [semantic versioning](https://semver.org/): while they start with 0, a minor release may change the API, and each Typlet version reproduces one Typst version. `rehype-typlet` and `markdown-it-typlet` are released with Typlet, under the same version.
 
-## Unreleased
+## 0.1.1
 
+A patch release. It reproduces Typst 0.15.1, like 0.1.0.
+
+- Show-set rules for equations: `#show math.equation: set text(fill: blue)` and `#show math.equation.where(block: true): set …`, in the preamble and in content and code blocks, apply as in Typst. Other show rules are still refused.
+- Text in Latin letters beyond Latin-1, such as `"Erdős"` or `"Việt"`, in ligature characters such as `ﬁ`, and in Arabic mathematical alphabetic symbols is laid out as HTML. The metrics of these characters were in a module that nothing loaded, so such formulas fell back to MathML. They are now part of the core metrics, which grows the browser bundle by about 3 KB brotli; Devanagari, which needs shaping, still falls back.
 - The `typlet` command takes `--max-collection-size` and `--max-string-length`, the two budgets it lacked.
+- The tests and the fuzzer compare warnings with Typst's regardless of their order, which Typst doesn't keep to the source's.
+
+Of the 1,668 formulas of the test corpus that Typst renders, Typlet now lays out 1,500, draws 159 as MathML with a warning, and refuses 9.
 
 ## 0.1.0
 

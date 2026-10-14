@@ -3,16 +3,17 @@
 // Evaluates a parsed formula to content, as Typst evaluates `$…$`, after an
 // optional preamble of definitions and set rules.
 
+import { equationShowSetStyles } from '../elements/mod.js';
 import { LinkedNode, exprs } from '../syntax/ast.js';
 import { SyntaxKind } from '../syntax/kind.js';
 import type { SyntaxNode } from '../syntax/node.js';
 import { evalDisplay, evalExpr } from './code.js';
 import { type Content, type EquationElem, sequence } from './content.js';
-import { type SourceDiagnostic, SourceError, unsupported } from './diag.js';
+import { type SourceDiagnostic, SourceError } from './diag.js';
 import { DEFAULT_LIMITS, type Limits, callFunc, newEngine } from './func.js';
 import { LIBRARY } from './library.js';
 import { setCollectionLimits } from './ops.js';
-import { evalSetRule } from './rules.js';
+import { evalSetRule, evalShowRule } from './rules.js';
 import type { Scope } from './scope.js';
 import { EMPTY_CHAIN, type Property, type Styles, chain, get } from './styles.js';
 import { type Numbering, applyNumbering } from './numbering.js';
@@ -53,7 +54,7 @@ export function evalPreamble(root: SyntaxNode, limits: Limits = DEFAULT_LIMITS):
   const styles: Property[] = [];
   for (const expr of markupExprs(new LinkedNode(root, 0, 'preamble'))) {
     if (expr.kind === K.SetRule) styles.push(...evalSetRule(vm, expr));
-    else if (expr.kind === K.ShowRule) unsupported(expr.span, '`show` rules');
+    else if (expr.kind === K.ShowRule) styles.push(...evalShowRule(vm, expr));
     else evalExpr(vm, expr);
     if (vm.flow) throw new SourceError([forbidden(vm.flow)]);
   }
@@ -104,7 +105,9 @@ export function evalFormula(
  * counter's next value, or 1, in the numbering, like `Counter::display_at`.
  */
 function equationNumber(vm: Vm, styles: Styles, counter: { value: number } | null): Content | null {
-  const numbering = get<Numbering | null>(chain(EMPTY_CHAIN, styles), 'equation', 'numbering', null);
+  const around = chain(EMPTY_CHAIN, styles);
+  const own = chain(around, equationShowSetStyles(around, true));
+  const numbering = get<Numbering | null>(own, 'equation', 'numbering', null);
   if (!numbering) return null;
   const n = counter ? ++counter.value : 1;
   const value = applyNumbering(numbering, [n], vm.engine, null, (func, args) => callFunc(func, vm.engine, args));

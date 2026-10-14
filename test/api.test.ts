@@ -238,8 +238,8 @@ describe('embedded code Levels 2 and 3', () => {
 
   it('hands refused formulas to the fallback', () => {
     const fallback = (source: string, error: TypletError) => `<img alt="${source}" title="${error.message}">`;
-    // A show rule is refused in a content block; directly in math, it is an error in Typst too.
-    expect(renderToString('#[#show "x": "y"\nx]', { fallback })).toBe('<img alt="#[#show "x": "y"\nx]" title="Typlet does not support `show` rules">');
+    // A show rule for text is refused in a content block; directly in math, it is an error in Typst too.
+    expect(renderToString('#[#show "x": "y"\nx]', { fallback })).toBe('<img alt="#[#show "x": "y"\nx]" title="Typlet does not support `show` rules for text">');
     // Errors in Typst's own terms don't go to the fallback.
     expect(() => renderToString('foo', { fallback })).toThrow('unknown variable: foo');
   });
@@ -254,6 +254,6 @@ describe('embedded code Levels 2 and 3', () => {
     await Promise.resolve();
     expect(element.innerHTML).toBe('<svg></svg>');
     // `renderToString` can't wait for it.
-    expect(() => renderToString('#[#show "x": "y"\nx]', { fallback })).toThrow('Typlet does not support `show` rules');
+    expect(() => renderToString('#[#show "x": "y"\nx]', { fallback })).toThrow('Typlet does not support `show` rules for text');
   });
 });

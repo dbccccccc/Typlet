@@ -18,7 +18,7 @@ import type { Color } from '../eval/color.js';
 import { FRAC_PADDING } from '../elements/frac.js';
 import { DELIM_SHORT_FALL } from '../elements/lr.js';
 import { BRACE, DEFAULT_ALIGN, DEFAULT_COL_GAP_REL, DEFAULT_ROW_GAP_REL, PAREN } from '../elements/matrix.js';
-import type { LeftRightAlternator } from '../elements/mod.js';
+import { type LeftRightAlternator, equationShowSetStyles } from '../elements/mod.js';
 import {
   MathSize,
   equationBold,
@@ -150,15 +150,19 @@ const BLACK = NAMED_COLORS.black!;
 
 /**
  * The styles of an equation: those around it, such as a preamble's set
- * rules, then its math size, as its show rule sets it.
+ * rules, then its math size, as its show rule sets it, and the styles of the
+ * show-set rules around it for equations, which come last and so take
+ * precedence, as in Typst's realization.
  */
 export function equationStyles(block: boolean, outer: Styles = []): StyleChain {
-  return chain(chain(EMPTY_CHAIN, outer), [
+  const around = chain(EMPTY_CHAIN, outer);
+  return chain(around, [
     // Block equations are centered.
     ...(block ? [property('align', 'alignment', 'center')] : []),
     property('equation', 'size', block ? MathSize.Display : MathSize.Text),
     property('text', 'weight', 450),
     property('text', 'font', MATH_FAMILIES),
+    ...equationShowSetStyles(around, block),
   ]);
 }
 
