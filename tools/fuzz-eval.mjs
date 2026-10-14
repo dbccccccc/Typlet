@@ -37,7 +37,7 @@ await build({
   stdin: {
     contents: `
       export { renderToString, TypletError } from './src/index.ts';
-      export { evalCorpusFormula, isPreambleWarning } from './test/eval-helpers.ts';
+      export { evalCorpusFormula, isPreambleWarning, sortDiagnostics } from './test/eval-helpers.ts';
       export { equationToMathml } from './src/mathml/index.ts';
       export { SourceError } from './src/eval/diag.ts';
       export { frameDiff, layoutFlat } from './test/layout-helpers.ts';
@@ -138,11 +138,11 @@ function typletMathml(formula) {
     const result = T.evalCorpusFormula(formula);
     warnings.push(...result.warnings.filter((d) => !T.isPreambleWarning(d)));
     const mathml = [T.equationToMathml(result.equation, warnings, undefined, result.styles)];
-    return { mathml, diagnostics: warnings.map(fromTyplet) };
+    return { mathml, diagnostics: T.sortDiagnostics(warnings.map(fromTyplet)) };
   } catch (e) {
     if (!(e instanceof T.SourceError)) return { crash: e.stack ?? String(e) };
     if (e.diagnostics.some((d) => d.kind === 'unsupported')) return 'unsupported';
-    return { mathml: null, diagnostics: e.diagnostics.map(fromTyplet) };
+    return { mathml: null, diagnostics: T.sortDiagnostics(e.diagnostics.map(fromTyplet)) };
   }
 }
 
@@ -194,7 +194,7 @@ for (let done = 0; done < count; done += BATCH) {
     if (want.mathml == null) stats.typstErrors++;
     const expected = JSON.stringify({
       mathml: want.mathml ?? null,
-      diagnostics: (want.mathmlDiagnostics ?? []).filter((d) => d.at === 'src' || d.severity === 'error').map(simplify),
+      diagnostics: T.sortDiagnostics((want.mathmlDiagnostics ?? []).filter((d) => d.at === 'src' || d.severity === 'error').map(simplify)),
     });
     const actual = JSON.stringify(got);
     if (actual !== expected) {

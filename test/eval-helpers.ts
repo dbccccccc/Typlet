@@ -93,3 +93,20 @@ export function evalCorpusFormula(formula: Formula): Evaluated {
 
 /** Whether a diagnostic is a warning in the preamble, which fixtures of formulas leave out. */
 export const isPreambleWarning = (d: SourceDiagnostic): boolean => d.severity === 'warning' && d.span?.file === 'preamble';
+
+/**
+ * Orders simplified diagnostics by span, then message, for comparisons that
+ * shouldn't depend on the order: Typst reports some warnings in the order it
+ * realizes content, such as the attachments of `attach`, which isn't always
+ * the order of the source Typlet evaluates them in.
+ */
+export function sortDiagnostics<T extends { readonly message: string; readonly span?: readonly [number, number] | null }>(
+  list: readonly T[],
+): T[] {
+  return [...list].sort(
+    (a, b) =>
+      (a.span?.[0] ?? -1) - (b.span?.[0] ?? -1) ||
+      (a.span?.[1] ?? -1) - (b.span?.[1] ?? -1) ||
+      (a.message < b.message ? -1 : a.message > b.message ? 1 : 0),
+  );
+}

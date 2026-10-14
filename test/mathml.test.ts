@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { SourceError, type SourceDiagnostic } from '../src/eval/diag.js';
-import { evalCorpusFormula, isPreambleWarning } from './eval-helpers.js';
+import { evalCorpusFormula, isPreambleWarning, sortDiagnostics } from './eval-helpers.js';
 import { equationToMathml } from '../src/mathml/index.js';
 import { parseMath } from '../src/syntax/parser.js';
 import { type Formula, corpusDir, fixtureDir, readJsonl } from './helpers.js';
@@ -47,9 +47,9 @@ describe.each(['paired', 'typst-docs', 'symbols', 'code', 'features', 'levels'])
       compared++;
       const want = JSON.stringify({
         mathml: fixture.mathml ?? null,
-        diagnostics: (fixture.mathmlDiagnostics ?? []).filter((d) => d.at === 'src' || d.severity === 'error').map(simplify),
+        diagnostics: sortDiagnostics((fixture.mathmlDiagnostics ?? []).filter((d) => d.at === 'src' || d.severity === 'error').map(simplify)),
       });
-      const got = JSON.stringify({ mathml, diagnostics: warnings.map(fromTyplet) });
+      const got = JSON.stringify({ mathml, diagnostics: sortDiagnostics(warnings.map(fromTyplet)) });
       if (got !== want) failures.push(`${formula.id}: ${formula.src}
   want ${want}
   got  ${got}`);
