@@ -15,6 +15,12 @@ const inline = [
   ['text-newline', '"line one\nline two"'],
   // Pairs that fonts kern.
   ['text-kerning', '"AVATAR" + "Typst" + "To" + "f."'],
+  // Letters beyond Latin-1 that New Computer Modern Math has.
+  ['text-latin-extended', '"Erdős" + "Łukasiewicz"'],
+  ['text-vietnamese', '"Việt Nam"'],
+  ['text-ligature-chars', '"ﬁ" + "ﬂ"'],
+  ['op-latin-extended', 'op("Ŝ") x'],
+  ['arabic-math-letters', '𞸀 + 𞸁'],
   ['space-symbol', 'a space b'],
   ['spacings', 'a thin b med c thick d quad e wide f'],
   ['h-weak', 'a #h(1em, weak: true) #h(2em, weak: true) b'],

@@ -83,17 +83,24 @@ export function reachableGlyphs(font, texts) {
   return [...reached].sort((a, b) => a - b);
 }
 
-// The Unicode blocks of the core metrics: Latin-1, combining marks, Greek,
+// The Unicode blocks of the core metrics: Latin through Latin Extended-B,
+// modifier letters, combining marks and Greek; Latin Extended Additional;
 // punctuation through letterlike symbols and number forms, arrows,
 // operators, technical and miscellaneous math symbols, supplemental arrows
-// and operators, and the math alphanumerics.
+// and operators; the alphabetic presentation forms, which are ligatures as
+// characters; the math alphanumerics; and the Arabic mathematical alphabetic
+// symbols. Each character of these blocks shapes to one glyph. Scripts that
+// need more, such as Devanagari, and symbols outside the math blocks are
+// left to the extended metrics.
 const CORE_BLOCKS = [
-  [0x20, 0xff],
-  [0x300, 0x3ff],
+  [0x20, 0x3ff],
+  [0x1e00, 0x1eff],
   [0x2000, 0x23ff],
   [0x27c0, 0x27ff],
   [0x2900, 0x2aff],
+  [0xfb00, 0xfb4f],
   [0x1d400, 0x1d7ff],
+  [0x1ee00, 0x1eeff],
 ];
 
 /** The characters of every symbol in Typst's `sym` module, from src/generated/symbols.ts. */

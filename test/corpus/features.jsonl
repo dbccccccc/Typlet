@@ -7,6 +7,11 @@
 {"display":false,"id":"text-tab","src":"\"a\tb\""}
 {"display":false,"id":"text-newline","src":"\"line one\nline two\""}
 {"display":false,"id":"text-kerning","src":"\"AVATAR\" + \"Typst\" + \"To\" + \"f.\""}
+{"display":false,"id":"text-latin-extended","src":"\"Erdős\" + \"Łukasiewicz\""}
+{"display":false,"id":"text-vietnamese","src":"\"Việt Nam\""}
+{"display":false,"id":"text-ligature-chars","src":"\"ﬁ\" + \"ﬂ\""}
+{"display":false,"id":"op-latin-extended","src":"op(\"Ŝ\") x"}
+{"display":false,"id":"arabic-math-letters","src":"𞸀 + 𞸁"}
 {"display":false,"id":"space-symbol","src":"a space b"}
 {"display":false,"id":"spacings","src":"a thin b med c thick d quad e wide f"}
 {"display":false,"id":"h-weak","src":"a #h(1em, weak: true) #h(2em, weak: true) b"}

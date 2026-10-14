@@ -123,7 +123,7 @@ HTML can only address characters, but OpenType MATH size variants and assembly p
 3. **Normalize the vertical metrics.** Set the hhea, typo and win metrics to the same values and turn on `USE_TYPO_METRICS`, so every browser places the baseline at the same offset. The HTML output's positioning depends on this.
 4. **Split** into woff2 files with `unicode-range`, so a page downloads only what it uses: a file per math alphabet style, a `main` file with the characters most formulas use, and files for the rest of each Unicode block.
 5. **Convert the outlines** from CFF to unhinted TrueType curves, within one font unit. In woff2 they are a third smaller. Typst's own output is unhinted too.
-6. **Generate the metrics module** (`tools/codegen/metrics.mjs`). It holds the MATH constants and, per glyph: advance and bounds, italic correction and top accent attachment, math kerning, variants and assemblies, and how shaping with `ssty` and `dtls` maps characters to glyphs. The core module covers the math blocks and every symbol's characters; rarer scripts, such as Devanagari, are in a separate module.
+6. **Generate the metrics module** (`tools/codegen/metrics.mjs`). It holds the MATH constants and, per glyph: advance and bounds, italic correction and top accent attachment, math kerning, variants and assemblies, and how shaping with `ssty` and `dtls` maps characters to glyphs. The core module covers the Latin and Greek blocks, the math blocks and every symbol's characters; the rest, such as Devanagari, which needs shaping, and box-drawing characters, is in a separate module that Typlet doesn't load.
 7. **Generate `typlet.css`** with the `@font-face` rules and base styles, including Typst's styles for MathML.
 
 The metrics are generated from the oracle's dump of the font as Typst reads it, through ttf-parser and rustybuzz, and the tests check them against it. Text runs such as `"if"` or `argmax` use the extracted advances and kerning pairs, and the browser shapes them. Bold text needs New Computer Modern Math Bold, so the pipeline adds a small Latin subset of it, declared with `font-weight: bold`, which browsers load only when a page shows bold text.
@@ -287,7 +287,7 @@ Typst has no budget on calls. Computation that Typst would finish slowly fails i
 
 ## 7. Size and startup
 
-**Size budgets.** CI checks the brotli size of each entry point against `scripts/size-budgets.json`: 120 KB for the full browser bundle and 70 KB for `typlet/mathml`, which leaves out the layout and metrics. KaTeX's script is about 61 KB, plus its CSS. Typlet's extra size is mostly the parser for all of Typst's syntax, Typst's error messages, embedded code and the font metrics.
+**Size budgets.** CI checks the brotli size of each entry point against `scripts/size-budgets.json`: 125 KB for the full browser bundle and 70 KB for `typlet/mathml`, which leaves out the layout and metrics. KaTeX's script is about 61 KB, plus its CSS. Typlet's extra size is mostly the parser for all of Typst's syntax, Typst's error messages, embedded code and the font metrics.
 
 **Compact metrics.** The metrics of the 7,500 glyphs Typst reaches are columns of characters, decoded as glyphs are used: numbers are two base-92 digits per glyph, read where they are, and the tables few glyphs have are comma-separated fields, found by skipping from the nearest of a column's steps. Nothing is decoded at import.
 

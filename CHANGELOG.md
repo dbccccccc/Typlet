@@ -4,6 +4,7 @@ What each release of Typlet changes. The versions follow [semantic versioning](h
 
 ## Unreleased
 
+- Text in Latin letters beyond Latin-1, such as `"Erdős"` or `"Việt"`, in ligature characters such as `ﬁ`, and in Arabic mathematical alphabetic symbols is laid out as HTML. The metrics of these characters were in a module that nothing loaded, so such formulas fell back to MathML. They are now part of the core metrics, which grows the browser bundle by about 3 KB brotli; Devanagari, which needs shaping, still falls back.
 - The `typlet` command takes `--max-collection-size` and `--max-string-length`, the two budgets it lacked.
 
 ## 0.1.0
