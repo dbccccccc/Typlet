@@ -11,7 +11,7 @@ import { SyntaxKind, isStmt } from '../syntax/kind.js';
 import { evalExpr } from './code.js';
 import { type Content, type LinkElem, type RawElem, sequence, styled, textElem } from './content.js';
 import { type Span, bailAt, unsupported } from './diag.js';
-import { evalSetRule } from './rules.js';
+import { evalSetRule, evalShowRule } from './rules.js';
 import { singleSymbol } from './symbol.js';
 import { type Value, display } from './value.js';
 import type { Vm } from './vm.js';
@@ -43,13 +43,12 @@ function evalMarkupFrom(vm: Vm, list: LinkedNode[], start: number): Content {
   const seq: Content[] = [];
   for (let i = start; i < list.length; i++) {
     const expr = list[i]!;
-    if (expr.kind === K.SetRule) {
-      const styles = evalSetRule(vm, expr);
+    if (expr.kind === K.SetRule || expr.kind === K.ShowRule) {
+      const styles = expr.kind === K.SetRule ? evalSetRule(vm, expr) : evalShowRule(vm, expr);
       if (vm.flow) break;
       seq.push(styled(evalMarkupFrom(vm, list, i + 1), styles));
       break;
     }
-    if (expr.kind === K.ShowRule) unsupported(expr.span, '`show` rules');
     const value = evalExpr(vm, expr);
     if (value.type === 'label') attachLabel(vm, seq, value.v, expr.span);
     else seq.push(display(value, expr.span));

@@ -9,6 +9,7 @@ import { type Cast, boolCast, castError, contentCast, enumCast, mapCast, optionC
 import { bail } from '../eval/diag.js';
 import { type Alignment, type Em, reprAlignment } from '../eval/layout.js';
 import { numberingCast } from '../eval/numbering.js';
+import { type StyleChain, type Styles, showSetStyles } from '../eval/styles.js';
 import { AUTO, FALSE, MATH_CLASS_NAMES, NONE } from '../eval/value.js';
 import type { MathClass } from '../utils/math-class.js';
 import { elemFunc } from './elem.js';
@@ -72,6 +73,15 @@ export const equation = elemFunc('equation', [
   { name: 'alt', cast: optionCast(strCast), kind: 'named', default: () => NONE },
   { name: 'body', cast: contentCast, kind: 'required' },
 ]);
+
+/**
+ * The styles the show-set rules around an equation give it: `show
+ * math.equation: set …`, and the `where(block: …)` rules whose `block`
+ * matches (docs/DESIGN.md §6.3).
+ */
+export function equationShowSetStyles(styles: StyleChain, block: boolean): Styles {
+  return showSetStyles(styles, 'equation', (field, value) => field === 'block' && value === block);
+}
 
 /** Alternates between left and right alignment, starting with `start`. */
 export type LeftRightAlternator = 'none' | 'left' | 'right';

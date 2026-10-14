@@ -4,8 +4,9 @@
 
 // Typst's styles are lists of properties, each setting one field of one
 // element, such as `equation.size`. A style chain links such lists from the
-// innermost outward. Typlet keeps that model but drops show rules (recipes)
-// and revocations, which it does not support.
+// innermost outward. Typlet keeps that model, carries show-set rules as
+// properties of their own, and drops other show rules (recipes) and
+// revocations, which it does not support.
 
 /** One style property: the value of an element's field. */
 export interface Property {
@@ -32,6 +33,46 @@ export const EMPTY_CHAIN: StyleChain = { head: [], tail: null };
 /** Adds `styles` in front of the chain, unless they are empty. */
 export function chain(base: StyleChain, styles: Styles): StyleChain {
   return styles.length === 0 ? base : { head: styles, tail: base };
+}
+
+/**
+ * A show-set rule, `show selector: set elem(..)`: styles for the elements
+ * the selector matches, like a `Recipe` whose transformation is a `Style`.
+ * Typlet supports them for equations (docs/DESIGN.md §6.3).
+ */
+export interface ShowSet {
+  /** The element the selector matches, such as `equation`. */
+  readonly elem: string;
+  /** The field values `where()` asks for, such as `block: true`. */
+  readonly fields: readonly (readonly [string, unknown])[];
+  readonly styles: Styles;
+}
+
+/** The element name of the properties that carry show-set rules. */
+export const SHOW_SET = '#show';
+
+/** A show-set rule as a property, so that it travels with the styles of a block or a preamble. */
+export function showSet(rule: ShowSet): Property {
+  return { elem: SHOW_SET, field: rule.elem, value: rule };
+}
+
+/**
+ * The styles the chain's show-set rules give an element whose fields
+ * `matches` accepts, from the outermost rule to the innermost, so that later
+ * rules take precedence, as Typst's realization collects them.
+ */
+export function showSetStyles(chain: StyleChain, elem: string, matches: (field: string, value: unknown) => boolean): Styles {
+  const links: Styles[] = [];
+  for (let link: StyleChain | null = chain; link; link = link.tail) links.push(link.head);
+  const out: Property[] = [];
+  for (let i = links.length - 1; i >= 0; i--) {
+    for (const p of links[i]!) {
+      if (p.elem !== SHOW_SET || p.field !== elem) continue;
+      const rule = p.value as ShowSet;
+      if (rule.fields.every(([field, value]) => matches(field, value))) out.push(...rule.styles);
+    }
+  }
+  return out;
 }
 
 /** The innermost value of a field, or `fallback` if no style sets it. */

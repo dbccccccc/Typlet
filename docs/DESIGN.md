@@ -12,7 +12,7 @@ Typlet renders Typst math in the browser and in Node, the way KaTeX renders LaTe
 - **Good output:** accessible, selectable, themeable, with no global styles (§2).
 
 **Not goals.**
-- Documents, packages, show rules, introspection and file access (§6.3).
+- Documents, packages, show rules other than show-set rules for equations, introspection and file access (§6.3).
 - Pixel-identical output in every case.
 - LaTeX input.
 - Raster output such as PNG.
@@ -109,7 +109,7 @@ source
 Typst resolves an equation into an IR of `MathItem`s (Group, Fenced, Fraction, Scripts, Table, Accent, Glyph and others) in `typst-library/src/math/ir`, and both of its backends consume it: `typst-layout/src/math` for paged output and `typst-html/src/mathml.rs` for MathML. Typlet ports each of these files, and [UPSTREAM.md](UPSTREAM.md) records which file each module ports and the version it was last synced with.
 
 Two simplifications keep the port small:
-- **Styles are Typst's, without show rules.** Each style property sets one field of one element, and a chain links lists of properties from the innermost outward, as in `styles.rs`. Show rules and revocations are left out (§6.3).
+- **Styles are Typst's, with show-set rules only.** Each style property sets one field of one element, and a chain links lists of properties from the innermost outward, as in `styles.rs`. A show-set rule for equations travels in the chain as a property of its own and is applied where an equation is realized; other show rules and revocations are left out (§6.3).
 - **Content is plain data.** Math elements are nodes with typed fields, with no general element system.
 
 **The runtime is TypeScript with no dependencies.** Compiling typst-syntax to WASM was considered and rejected: it would bring back a WASM download, async initialization and `'wasm-unsafe-eval'` under a strict Content Security Policy; typst-syntax alone weighs about 112 KB brotli as WASM; and it would only reuse the parser, which is the cheap part, since resolution and layout depend on typst-library's `Engine`, `StyleChain` and `Content` and must be rewritten in any language. Everything that changes as data is generated from the Rust crates at build time instead (`npm run codegen`): symbols, alphanumeric styling, math classes, the MathML operator dictionary, and the names and signatures of Typst's scopes.
@@ -228,20 +228,21 @@ Typlet supports code in levels. It refuses everything else with a clear error.
 - `#let` for values and functions, with positional and named parameters and defaults, plus arrow closures. Functions defined this way work in math: `norm(x)`.
 - `if`/`else` expressions and code blocks `#{ … }`. Recursion is allowed within the budgets (§6.6).
 - `set` rules for math elements and text: `#set math.mat(delim: "[")`, and likewise for `math.vec` and `math.cases`; `#set math.equation(numbering: "(1)")`; `#set text(fill: blue, size: 1.2em)`. As in Typst, a set rule in a formula goes in a content or code block, such as `#[#set text(fill: red); $x$]`, and styles the rest of the block. Directly in math, it is an error.
+- Show-set rules for equations: `#show math.equation: set text(fill: blue)`, and `#show math.equation.where(block: true): set …` for display or inline equations alone. Their styles apply inside each equation, after its own show-set rule and over the set rules around it, as in Typst's realization, so they win over a set rule that comes later. Other selectors and transformations are refused.
 - **The `preamble` option:** Typst code with `let` and `set` statements, evaluated once. Its definitions and settings apply to every formula rendered with the same options. It replaces KaTeX's `macros`.
 - **Equation numbers** come from a counter that the caller controls. Auto-render numbers a page's equations in order.
 
 **Level 4, collections and loops (planned, if users ask).** `for` and `while` loops, `range`, and methods on arrays, dictionaries and strings, such as `map`, `join`, `at` and `len`, under the same budgets.
 
 **Never supported.**
-- **`show` rules.** They rewrite content during layout and need Typst's realization engine. The two common uses map to options instead: an equation color maps to CSS `color`, and a math font would map to a font option.
+- **Other `show` rules.** Rules with a function or content rewrite content during layout and need Typst's realization engine, and show-set rules for elements other than equations would need matching at every element. The common uses have other routes: an equation color maps to CSS `color`, and a math font would map to a font option.
 - **Introspection:** `context`, `state`, `counter`, `query`, `locate`, `measure` and `here`. These need multi-pass document layout.
 - **I/O and nondeterminism:** `import`, `include`, packages, `read`, data loaders such as `json` and `csv`, `plugin`, `eval`, `sys.inputs` and `datetime.today`.
 - **Document elements:** `heading`, `figure`, `ref`, `footnote`, `page`, `grid`, `table`, `place` and `block`.
 
 ### 6.4 Coverage
 
-Level 1 alone covers the sampled real-world formulas, whose code is `#none`, `#left` and `#right`. Of the paired corpus's 81 formulas, 19 use code, and Levels 1 to 3 render 78 of the 81; the other 3 use a loop (Level 4) and show rules.
+Level 1 alone covers the sampled real-world formulas, whose code is `#none`, `#left` and `#right`. Of the paired corpus's 81 formulas, 19 use code, and Levels 1 to 3 render 79 of the 81; the other 2 use a loop (Level 4) and a show rule for text.
 
 ### 6.5 How the evaluator works
 

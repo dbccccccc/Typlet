@@ -130,4 +130,28 @@
 {"display":false,"id":"preamble-several","preamble":"#let norm(x) = $||#x||$\n#set text(fill: maroon)","src":"f(norm(x))"}
 {"display":false,"id":"preamble-error","preamble":"#let f(x) = x\n#f()","src":"x"}
 {"display":false,"id":"preamble-show","preamble":"#show math.equation: set text(fill: blue)","src":"x"}
+{"display":true,"id":"preamble-show-block","preamble":"#show math.equation.where(block: true): set text(fill: red)","src":"x + y"}
+{"display":false,"id":"preamble-show-block-inline","preamble":"#show math.equation.where(block: true): set text(fill: red)","src":"x + y"}
+{"display":false,"id":"preamble-show-inline","preamble":"#show math.equation.where(block: false): set text(fill: red)","src":"x + y"}
+{"display":false,"id":"preamble-show-over-set","preamble":"#set text(fill: red)\n#show math.equation: set text(fill: blue)","src":"x"}
+{"display":false,"id":"preamble-show-under-set","preamble":"#show math.equation: set text(fill: blue)\n#set text(fill: red)","src":"x"}
+{"display":false,"id":"preamble-show-twice","preamble":"#show math.equation: set text(fill: blue)\n#show math.equation: set text(fill: red)","src":"x"}
+{"display":false,"id":"preamble-show-size","preamble":"#show math.equation: set text(size: 1.5em)","src":"x^2"}
+{"display":false,"id":"preamble-show-size-box","preamble":"#show math.equation: set text(size: 2em)","src":"x #box[$y$]"}
+{"display":false,"id":"preamble-show-mat","preamble":"#show math.equation: set math.mat(delim: \"[\")","src":"mat(1, 2; 3, 4)"}
+{"display":true,"id":"preamble-show-numbering","preamble":"#show math.equation.where(block: true): set math.equation(numbering: \"(1)\")","src":"a + b"}
+{"display":false,"id":"preamble-show-set-if","preamble":"#show math.equation: set text(fill: blue) if false","src":"x"}
+{"display":false,"id":"preamble-show-function","preamble":"#show math.equation: it => it","src":"x"}
+{"display":false,"id":"preamble-show-bad-transform","preamble":"#show math.equation: 1","src":"x"}
+{"display":false,"id":"preamble-show-strong","preamble":"#show strong: set text(fill: red)","src":"#strong[x]"}
+{"display":false,"id":"preamble-show-closure","preamble":"#let f(x) = x\n#show f: set text(fill: red)","src":"x"}
+{"display":false,"id":"preamble-show-where-closure","preamble":"#let f(x) = x\n#show f.where(block: true): set text(fill: red)","src":"x"}
+{"display":false,"id":"preamble-show-where-field","preamble":"#show math.equation.where(numbering: none): set text(fill: red)","src":"x"}
+{"display":false,"id":"preamble-show-where-unknown","preamble":"#show math.equation.where(foo: 1): set text(fill: red)","src":"x"}
+{"display":false,"id":"preamble-show-where-positional","preamble":"#show math.equation.where(1): set text(fill: red)","src":"x"}
+{"display":true,"id":"preamble-show-where-string","preamble":"#show math.equation.where(block: \"yes\"): set text(fill: red)","src":"x"}
+{"display":false,"id":"show-in-content","src":"#[#show math.equation: set text(fill: blue); $x$] y"}
+{"display":false,"id":"show-in-content-box","src":"#box[#show math.equation: set text(fill: blue); $x$] y"}
+{"display":false,"id":"show-in-code","src":"#{ show math.equation: set text(fill: blue); $x$ }"}
+{"display":false,"id":"show-in-math","src":"#show math.equation: set text(fill: blue) x"}
 {"display":false,"id":"preamble-text","preamble":"Some text before.","src":"x"}

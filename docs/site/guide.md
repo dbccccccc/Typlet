@@ -42,7 +42,7 @@ renderToString('x + foo');
 Its `kind` says why it failed:
 - `syntax`: the formula has a syntax error.
 - `eval`: evaluation failed, as it would in Typst.
-- `unsupported`: Typst supports the feature, and Typlet doesn't, such as a `show` rule.
+- `unsupported`: Typst supports the feature, and Typlet doesn't, such as a loop.
 - `limit`: a budget ran out.
 
 Its `diagnostics` list every error, each with a `span` in the source, in UTF-16 code units, and `in`, which says whether the span is in the formula or in the `preamble`.

@@ -105,6 +105,9 @@ const PREAMBLES = [
   '#set math.equation(numbering: "(1)")',
   '#let f(x) = x + 1\n#let c = 3',
   '#set text(tracking: 1pt)',
+  '#show math.equation: set text(fill: blue)',
+  '#show math.equation.where(block: true): set text(size: 1.2em)',
+  '#set text(fill: red)\n#show math.equation: set math.mat(delim: "[")',
 ];
 
 function expr(depth) {

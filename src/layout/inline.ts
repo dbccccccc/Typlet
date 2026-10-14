@@ -14,6 +14,7 @@ import type { BoxElem, Content, Corners, Sides, Stroke, TextEdge } from '../eval
 import { ElementBudget, type SourceDiagnostic, type Span, unsupported } from '../eval/diag.js';
 import { type Abs, type Length, REL_ONE, type RelLength, ZERO_LENGTH, emAt, lengthAt } from '../eval/layout.js';
 import { type StyleChain, chain, get, property } from '../eval/styles.js';
+import { equationShowSetStyles } from '../elements/mod.js';
 import { MathSize } from '../elements/style.js';
 import { MATH_FAMILIES } from '../elements/text.js';
 import { SmartQuoter, isRtlLanguage, smartQuotesIn } from '../mathml/external.js';
@@ -182,6 +183,7 @@ function collect(content: Content, styles: StyleChain, c: Collector): void {
         property('equation', 'size', MathSize.Text),
         property('text', 'weight', 450),
         property('text', 'font', MATH_FAMILIES),
+        ...equationShowSetStyles(styles, false),
       ]);
       const item = resolveEquation(content.body, eqStyles, c.warnings);
       for (const piece of layoutInline(item, c.warnings, eqStyles, c.region)) {

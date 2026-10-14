@@ -98,6 +98,6 @@ Typlet refuses what it doesn't support with a `TypletError` of kind `unsupported
 - **Modules:** `calc`, `sys`, `emoji`, `pdf`.
 - **Directions:** `ltr`, `rtl`, `ttb`, `btt`.
 
-Nor are show rules, loops, methods of values, assignments, imports, and the markup of documents: headings, lists, references and figures. Loops, `range` and methods are the planned Level 4 (docs/DESIGN.md §6.3); show rules, introspection and file access are not planned.
+Nor are loops, methods of values, assignments, imports, show rules other than `show math.equation: set …`, with or without `where(block: …)`, and the markup of documents: headings, lists, references and figures. Loops, `range` and methods are the planned Level 4 (docs/DESIGN.md §6.3); other show rules, introspection and file access are not planned.
 
 The HTML output also refuses what it can't draw yet, and draws those formulas as MathML with a warning: characters New Computer Modern Math lacks, raw text, fonts other than New Computer Modern Math, the Regular weight, bold math letters, text strokes, OpenType features, right-to-left text with punctuation at its ends, text that wraps in a box, clipped boxes, and boxes with sizes relative to the page.

@@ -26,7 +26,7 @@ import { evalClosure } from './closure.js';
 import { INTERNAL_FIELDS, type Content, spaceElem, spanned, styled } from './content.js';
 import { evalConditional, evalLoopControl, evalReturn } from './flow.js';
 import { evalContentBlock, evalMarkupExpr } from './markup.js';
-import { evalSetRule } from './rules.js';
+import { evalSetRule, evalShowRule } from './rules.js';
 import { type Span, SourceError, at, bail, bailAt, unsupported, rethrowAt } from './diag.js';
 import { absCm, absIn, absMm, absPt, angleDeg, length } from './layout.js';
 import {
@@ -232,14 +232,12 @@ export function evalCode(vm: Vm, list: LinkedNode[], start: number): Value {
     const expr = list[i]!;
     let value: Value;
     let last = false;
-    if (expr.kind === K.SetRule) {
-      const styles = evalSetRule(vm, expr);
+    if (expr.kind === K.SetRule || expr.kind === K.ShowRule) {
+      const styles = expr.kind === K.SetRule ? evalSetRule(vm, expr) : evalShowRule(vm, expr);
       if (vm.flow) break;
       const tail = display(evalCode(vm, list, i + 1));
       value = contentValue(styled(tail, styles));
       last = true;
-    } else if (expr.kind === K.ShowRule) {
-      return unsupported(expr.span, '`show` rules');
     } else {
       value = evalExpr(vm, expr);
     }

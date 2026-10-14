@@ -80,7 +80,7 @@ renderToString('x + foo');
 Typlet evaluates Typst code in formulas, as Typst does:
 - **Values:** literals, operators, arrays and dictionaries, colors, alignments, strokes, and calls such as `#h(-1em/6)` and `mat(delim: "[", augment: #2, ..rows)`.
 - **Content and styling:** content blocks with markup (`#[*bold* and _emphasized_ text]`), `text` (fill, size, weight, style, tracking, spacing, baseline, and the language, which chooses the quotes), `strong`, `emph`, `highlight`, `hide`, `box` (size, baseline, fill, stroke, radius, inset, outset) and `link`. Links are drawn only when the `trust` option allows them: `true`, or a function of the URL and its protocol, such as `({ protocol }) => protocol === 'https'`. Settings the HTML can't draw yet, such as other fonts or text strokes, fall back to MathML with a warning.
-- **Definitions and settings:** `#let` values and functions, with named parameters, defaults, destructuring and recursion; `if`/`else`; code blocks; and set rules such as `#set math.mat(delim: "[")` and `#set text(fill: blue)`, which apply to the rest of the formula.
+- **Definitions and settings:** `#let` values and functions, with named parameters, defaults, destructuring and recursion; `if`/`else`; code blocks; set rules such as `#set math.mat(delim: "[")` and `#set text(fill: blue)`, which apply to the rest of the formula; and show-set rules for equations, `#show math.equation: set text(fill: blue)`, with or without `.where(block: true)`.
 
 The `preamble` option holds code that comes before every formula, like the start of a document. It replaces KaTeX's `macros`. Typlet evaluates it once per set of options. Display equations that its set rules number take their numbers from `equationCounter`:
 
@@ -94,7 +94,7 @@ renderToString('norm(v) <= 1', options);                     // numbered (1)
 renderToString('norm(u + v) <= norm(u) + norm(v)', options); // numbered (2)
 ```
 
-Typlet refuses what needs Typst's document engine: `show` rules, loops, introspection such as `context` and `counter`, file access, and document elements such as headings. These throw a `TypletError` of kind `unsupported`. The `fallback` option can render them another way, for example with Typst compiled to WebAssembly, loaded only when needed:
+Typlet refuses what needs Typst's document engine: `show` rules other than `show math.equation: set …`, loops, introspection such as `context` and `counter`, file access, and document elements such as headings. These throw a `TypletError` of kind `unsupported`. The `fallback` option can render them another way, for example with Typst compiled to WebAssembly, loaded only when needed:
 
 ```js
 // renderWithTypst is your own function, for example one built on typst.ts.
@@ -143,7 +143,7 @@ The fonts are under the GUST Font License; see [fonts/MANIFEST-typlet-newcm-math
 
 Typlet 0.1 draws most formulas as Typst does, and says so when it can't:
 - **Some formulas are drawn as MathML, with a warning,** by the browser and not by Typst's layout. These are formulas with a symbol that New Computer Modern Math lacks, with text in a script it lacks, such as Cyrillic, Hebrew or Arabic, or in Devanagari, which needs shaping, with raw text, or with text settings such as another font or a stroke.
-- **Code that needs Typst's document engine is refused,** with a `TypletError` of kind `unsupported`: loops, `show` rules, `context`, counters and file access. The `fallback` option can render such formulas another way.
+- **Code that needs Typst's document engine is refused,** with a `TypletError` of kind `unsupported`: loops, `show` rules other than show-set rules for equations, `context`, counters and file access. The `fallback` option can render such formulas another way.
 - **One math font.** Formulas are set in New Computer Modern Math, Typst's default.
 - **Speed.** Typlet renders a formula about as fast as KaTeX once its code is warm, and a page's first formulas more slowly. The documentation site's comparison page measures both in your browser.
 
