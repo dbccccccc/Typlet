@@ -1,7 +1,7 @@
 // Typlet original: not ported from Typst.
 
 /** Typlet's own version. Kept equal to `package.json` by a test. */
-export const version = '0.1.0';
+export const version = '0.1.1';
 
 /**
  * The Typst version whose behavior Typlet reproduces. Kept equal to the

@@ -1,6 +1,6 @@
 {
   "name": "markdown-it-typlet",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "markdown-it plugin that renders Typst math with Typlet",
   "keywords": [
     "markdown-it",

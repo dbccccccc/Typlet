@@ -21,8 +21,8 @@ npm install typlet
 Or load it in a page, with its stylesheet:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typlet@0.1.0/fonts/typlet.css">
-<script src="https://cdn.jsdelivr.net/npm/typlet@0.1.0/dist/typlet.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typlet@0.1.1/fonts/typlet.css">
+<script src="https://cdn.jsdelivr.net/npm/typlet@0.1.1/dist/typlet.min.js"></script>
 <script>
   typlet.render('sum_(i=1)^n i = (n(n+1))/2', document.getElementById('formula'), { displayMode: true });
 </script>
