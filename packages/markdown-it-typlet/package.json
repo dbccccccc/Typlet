@@ -1,6 +1,6 @@
 {
   "name": "markdown-it-typlet",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "markdown-it plugin that renders Typst math with Typlet",
   "keywords": [
     "markdown-it",
@@ -36,7 +36,7 @@
     "index.d.ts"
   ],
   "dependencies": {
-    "typlet": "^0.1.0"
+    "typlet": "^0.2.0"
   },
   "peerDependencies": {
     "markdown-it": ">=14"
