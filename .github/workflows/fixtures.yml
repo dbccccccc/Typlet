@@ -2,9 +2,9 @@ name: Oracle
 
 # Checks Typlet against the real Typst compiler, in two jobs:
 # - The first regenerates everything that comes from Typst or from the corpus
-#   sources: the corpus, the fixtures and the data in src/generated/. Nothing
-#   may change. If something does, it uploads the change as a patch, which a
-#   contributor without Rust can apply.
+#   sources: the corpus, the fixtures, the data in src/generated/ and the
+#   fonts. Nothing may change. If something does, it uploads the change as a
+#   patch, which a contributor without Rust or Python can apply.
 # - The second fuzzes the parser against typst-syntax on 100,000 inputs, and in
 #   the weekly run also evaluation, MathML and layout on 200,000 formulas, a
 #   hundred times what CI runs on each push.
@@ -14,9 +14,9 @@ name: Oracle
 on:
   push:
     branches: [main]
-    paths: [oracle/**, test/corpus/**, test/fixtures/**, tools/**, src/syntax/**, src/utils/**, src/generated/**, .github/workflows/fixtures.yml]
+    paths: [oracle/**, test/corpus/**, test/fixtures/**, tools/**, src/syntax/**, src/utils/**, src/generated/**, fonts/**, .github/workflows/fixtures.yml]
   pull_request:
-    paths: [oracle/**, test/corpus/**, test/fixtures/**, tools/**, src/syntax/**, src/utils/**, src/generated/**, .github/workflows/fixtures.yml]
+    paths: [oracle/**, test/corpus/**, test/fixtures/**, tools/**, src/syntax/**, src/utils/**, src/generated/**, fonts/**, .github/workflows/fixtures.yml]
   schedule:
     - cron: '0 6 * * 1'
   workflow_dispatch:
@@ -30,7 +30,7 @@ concurrency:
 
 jobs:
   generated:
-    name: Corpus, fixtures and generated data are current
+    name: Corpus, fixtures, generated data and fonts are current
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -38,6 +38,9 @@ jobs:
         with:
           node-version: 24
           cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: oracle
@@ -47,13 +50,20 @@ jobs:
       - run: npm run corpus
       - run: npm run fixtures
       - run: npm run codegen
+      # The fonts come from the typst-assets crate, which building the oracle
+      # downloaded, through the pinned fontTools (CONTRIBUTING.md).
+      - name: Rebuild the fonts
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install --quiet -r tools/fonts/requirements.txt
+          npm run fonts
       - name: Check that nothing changed
         run: |
           git add --all
           if ! git diff --cached --quiet; then
             git diff --cached --stat
             git diff --cached > "$RUNNER_TEMP/regenerated.patch"
-            echo '::error::These files differ from what their sources produce. Run npm run corpus, npm run fixtures and npm run codegen, or apply the patch in the regenerated artifact with git apply.'
+            echo '::error::These files differ from what their sources produce. Run npm run corpus, npm run fixtures, npm run codegen and npm run fonts, or apply the patch in the regenerated artifact with git apply.'
             exit 1
           fi
       - if: failure()
