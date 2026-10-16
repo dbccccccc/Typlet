@@ -282,7 +282,7 @@ function escapeChar(text: string): string {
 
 /** Reads a binding, emitting its deprecation warning, like `Binding::read_checked`. */
 export function readBinding(vm: Vm, binding: { value: Value; deprecation: string | null }, span: Span): Value {
-  if (binding.deprecation !== null) vm.warn(span, binding.deprecation);
+  if (binding.deprecation !== null) vm.deprecated(span, binding.deprecation);
   return binding.value;
 }
 
@@ -443,7 +443,7 @@ export function accessField(vm: Vm, target: Value, field: string, fieldSpan: Spa
     switch (target.type) {
       case 'symbol': {
         const [symbol, deprecation] = symbolModified(target.v, field);
-        if (deprecation !== null) vm.warn(fieldSpan, deprecation);
+        if (deprecation !== null) vm.deprecated(fieldSpan, deprecation);
         return { type: 'symbol', v: symbol };
       }
       case 'module':

@@ -90,7 +90,7 @@ One standalone SVG per formula, built from the same layout as the HTML, with gly
 
 ### 2.5 Programmatic results
 
-`parse(src)` returns the syntax tree, with typst-syntax's kinds and spans, for editors and linters. A `layout(src)` that returns the frame of positioned glyphs and rules is planned.
+`renderToResult(src)` returns the markup with what drew the formula (`html`, `mathml`, `fallback` or `error`), the warnings, each with a kind, and the equation number, so that an integration such as an editor's preview needs no string matching. `parse(src)` returns the syntax tree, with typst-syntax's kinds and spans, for editors and linters. A `layout(src)` that returns the frame of positioned glyphs and rules is planned.
 
 ## 3. Pipeline
 

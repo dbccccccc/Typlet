@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { kindName, parse, render, renderToString, type RenderOptions, SyntaxKind, TypletError } from '../src/index.js';
+import { kindName, parse, render, renderToResult, renderToString, type RenderOptions, SyntaxKind, TypletError } from '../src/index.js';
 import * as mathmlEntry from '../src/mathml.js';
 
 describe('parse', () => {
@@ -96,7 +96,8 @@ describe('renderToString', () => {
     expect(out).toMatch(/^<span class="typlet"><math>/);
     expect(seen).toHaveLength(1);
     expect(seen[0]).toMatch(/drawn as MathML$/);
-    expect(() => renderToString('#left', { output: 'html' })).toThrow(TypletError);
+    // The `html` output falls back the same way.
+    expect(renderToString('#left', { output: 'html', strict: 'ignore' })).toMatch(/^<span class="typlet"><math>/);
   });
 
   it('reports syntax errors with Typst’s message and span', () => {
@@ -152,6 +153,39 @@ describe('renderToString', () => {
     const element = { innerHTML: '' };
     render('x', element, { output: 'mathml' });
     expect(element.innerHTML).toContain('<mi>𝑥</mi>');
+  });
+});
+
+describe('renderToResult', () => {
+  it('says what drew the formula, with the warnings and their kinds', () => {
+    const html = renderToResult('x^2');
+    expect(html.markup).toBe(renderToString('x^2'));
+    expect(html).toMatchObject({ drawnAs: 'html', warnings: [], number: null });
+    const fallback = renderToResult('#left', { strict: 'ignore' });
+    expect(fallback.drawnAs).toBe('mathml');
+    expect(fallback.warnings).toHaveLength(1);
+    expect(fallback.warnings[0]).toMatchObject({ severity: 'warning', kind: 'fallback' });
+    expect(fallback.warnings[0]!.message).toMatch(/drawn as MathML$/);
+    expect(renderToResult('x', { output: 'mathml' }).drawnAs).toBe('mathml');
+    expect(mathmlEntry.renderToResult('x').drawnAs).toBe('mathml');
+    expect(renderToResult('gt.tri', { strict: 'ignore' }).warnings[0]).toMatchObject({ kind: 'deprecation' });
+    expect(renderToResult('#[#link("https://typst.app")[t]]', { strict: 'ignore' }).warnings[0]).toMatchObject({ kind: 'other' });
+  });
+
+  it('gives the number of a numbered display equation', () => {
+    const options = { displayMode: true, preamble: '#set math.equation(numbering: "(1)")', equationCounter: { value: 0 } };
+    expect(renderToResult('x', options).number).toBe('(1)');
+    expect(renderToResult('y', options).number).toBe('(2)');
+    expect(renderToResult('y', { ...options, displayMode: false }).number).toBeNull();
+  });
+
+  it('reports the fallback option’s markup and errors rendered in place', () => {
+    const fallback = () => '<svg></svg>';
+    expect(renderToResult('#[#show "x": "y"\nx]', { fallback })).toEqual({ markup: '<svg></svg>', drawnAs: 'fallback', warnings: [], number: null });
+    const error = renderToResult('foo', { throwOnError: false });
+    expect(error.drawnAs).toBe('error');
+    expect(error.markup).toMatch(/^<span class="typlet-error"/);
+    expect(() => renderToResult('foo')).toThrow(TypletError);
   });
 });
 

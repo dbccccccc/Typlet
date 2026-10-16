@@ -4,6 +4,8 @@
 
 `renderToString(source, options)` returns a formula as a string of HTML, and `render(source, element, options)` renders it into an element, replacing the element's content. The source is the formula without its dollar signs, as in Typst: `x^2`, not `$x^2$`.
 
+`renderToResult(source, options)` returns the same markup with what drew the formula, the warnings and the equation number: `{ markup, drawnAs, warnings, number }`. `drawnAs` is `'html'` for Typlet's layout, `'mathml'` for the browser's, which the `mathml` output asks for and which the HTML falls back to when it can't draw a formula, `'fallback'` for the `fallback` option's markup, and `'error'` for a formula rendered in the error color.
+
 The `typlet/mathml` entry point renders MathML alone. It leaves out the layout engine and the font metrics, so it is about half the size, and it suits EPUB, tools that consume MathML, and pages where size matters most.
 
 `parse(source)` returns Typst's syntax tree for a formula, with the same node kinds, error recovery and messages as Typst's parser, for editors and linters.
@@ -52,10 +54,10 @@ Its `diagnostics` list every error, each with a `span` in the source, in UTF-16 
 Typst warns about some formulas, for example about deprecated symbols, and Typlet gives the same warnings. They go to `console.warn` by default. The `strict` option ignores them, makes them errors, or decides for each warning:
 
 ```js
-renderToString(source, { strict: (warning) => (warning.message.startsWith('Typlet left out') ? 'ignore' : 'warn') });
+renderToString(source, { strict: (warning) => (warning.kind === 'deprecation' ? 'ignore' : 'warn') });
 ```
 
-When the HTML can't draw a formula yet, for example a character New Computer Modern Math lacks, Typlet draws that formula as MathML and warns.
+Each warning has a `kind`: `fallback` when the HTML can't draw a formula yet, for example one with a character New Computer Modern Math lacks, and Typlet draws it as MathML instead; `deprecation` for a deprecated name; and `other` for the rest, such as a link left out for lack of `trust`.
 
 ## Styling
 
