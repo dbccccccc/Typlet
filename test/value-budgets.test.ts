@@ -258,6 +258,39 @@ describe('value comparison budgets', () => {
 });
 
 describe('representation formatting boundaries', () => {
+  it('preserves Unicode and whitespace dictionary keys at the exact string boundary', () => {
+    const value = dictValue(new Map([
+      ['é', intValue(1n)], ['two words', intValue(2n)], ['😀', intValue(3n)], ['\t', intValue(4n)],
+    ]));
+    const expected = '(é: 1, "two words": 2, "😀": 3, "\\t": 4)';
+    withValueBudget(new ValueBudget(expected.length), () => expect(repr(value)).toBe(expected));
+    expect(() => withValueBudget(new ValueBudget(expected.length - 1), () => repr(value))).toThrow('string longer than');
+  });
+
+  it('counts multiline dictionary formatting before returning the string', () => {
+    const value = dictValue(new Map([
+      [' spaced ', strValue('a'.repeat(51))], ['é', arrayValue([intValue(1n), intValue(2n)])],
+    ]));
+    const expected = '(\n  " spaced ": "' + 'a'.repeat(51) + '",\n  é: (1, 2),\n)';
+    withValueBudget(new ValueBudget(expected.length), () => expect(repr(value)).toBe(expected));
+    expect(() => withValueBudget(new ValueBudget(expected.length - 1), () => repr(value))).toThrow('string longer than');
+  });
+
+  it('checks accumulated dictionary fields before reading the next value', () => {
+    let readLast = false;
+    const last: Value = { type: 'int', get v() { readLast = true; return 3n; } };
+    const value = dictValue(new Map([['a', intValue(1n)], ['b', intValue(2n)], ['c', last]]));
+    expect(() => withValueBudget(new ValueBudget(9), () => repr(value))).toThrow('string longer than 9');
+    expect(readLast).toBe(false);
+  });
+
+  it('preserves dictionary insertion order and the 40-pair omission marker', () => {
+    const value = dictValue(new Map(Array.from({ length: 41 }, (_, i) => [`key${i + 1}`, intValue(BigInt(i + 1))])));
+    const expected = '(\n  ' + Array.from({ length: 40 }, (_, i) => `key${i + 1}: ${i + 1},\n  `).join('') + '.. (1 pairs omitted),\n)';
+    withValueBudget(new ValueBudget(expected.length), () => expect(repr(value)).toBe(expected));
+    expect(() => withValueBudget(new ValueBudget(expected.length - 1), () => repr(value))).toThrow('string longer than');
+  });
+
   it.each([
     [['a'.repeat(50)], 'a'.repeat(50)],
     [['é'.repeat(25)], 'é'.repeat(25)],

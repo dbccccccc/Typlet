@@ -149,7 +149,9 @@ function reprValue(value: Value, budget: ValueBudget, depth: number): string {
 }
 
 function reprField(name: string, value: Value, budget: ValueBudget, depth: number): string {
-  return joinRepr([name, ': ', reprValue(value, budget, depth + 1)]);
+  const child = reprValue(value, budget, depth + 1);
+  budget.checkString(name.length + 2 + child.length);
+  return name + ': ' + child;
 }
 
 function reprInner(value: Value, budget: ValueBudget, depth: number): string {
@@ -182,16 +184,17 @@ function reprInner(value: Value, budget: ValueBudget, depth: number): string {
     }
     case 'dictionary': {
       if (value.v.size === 0) return '(:)';
-      function* pieces() {
-        const dict = (value as Extract<Value, { type: 'dictionary' }>).v;
-        let count = 0;
-        for (const [key, child] of dict) {
-          if (count++ === 40) break;
-          yield reprField(isIdent(key) ? key : reprStr(key), child, budget, depth);
-        }
-        if (dict.size > 40) yield `.. (${dict.size - 40} pairs omitted)`;
+      const pieces: string[] = [];
+      let length = 0;
+      for (const [key, child] of value.v) {
+        if (pieces.length === 40) break;
+        const piece = reprField(isIdent(key) ? key : reprStr(key), child, budget, depth);
+        length += piece.length + (pieces.length ? 2 : 0);
+        budget.checkString(length);
+        pieces.push(piece);
       }
-      return prettyArrayLike(pieces(), false);
+      if (value.v.size > 40) pieces.push(`.. (${value.v.size - 40} pairs omitted)`);
+      return prettyArrayLike(pieces, false);
     }
     case 'function': return value.v.name ?? '(..) => ..';
     case 'arguments': {

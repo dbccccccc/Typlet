@@ -91,6 +91,11 @@ describe('raw syntax depth budget', () => {
     expect(sourceLimit(() => checkSyntaxDepth(root, 'preamble')).diagnostics[0]?.span).toEqual({ start: 3, end: 4, file: 'preamble' });
   });
 
+  it('resets sibling traversal frames and their absolute offsets', () => {
+    const root = SyntaxNode.inner(K.Markup, [tree(255), SyntaxNode.leaf(K.Text, '😀a'), tree(256)]);
+    expect(sourceLimit(() => checkSyntaxDepth(root, 'preamble')).diagnostics[0]?.span).toEqual({ start: 4, end: 5, file: 'preamble' });
+  });
+
   it('guards a direct formula evaluation entry', () => {
     sourceLimit(() => evalFormula(tree(257), false));
   });
@@ -133,6 +138,17 @@ describe('iterative syntax traversal', () => {
       { severity: 'warning', message: 'last warning', hints: [], start: 10, end: 11 },
       { severity: 'error', message: 'last error', hints: [], start: 10, end: 11 },
     ]);
+  });
+
+  it('finds sibling errors and observes later syntax mutations', () => {
+    const first = SyntaxNode.inner(K.Binary, [SyntaxNode.leaf(K.Ident, 'x'), SyntaxNode.leaf(K.Ident, 'y')]);
+    const last = SyntaxNode.inner(K.Binary, [SyntaxNode.leaf(K.Ident, 'z')]);
+    const root = SyntaxNode.inner(K.Code, [first, last]);
+    expect(root.erroneous()).toBe(false);
+    last.children[0]!.convertToError('later error');
+    expect(root.erroneous()).toBe(true);
+    last.children[0] = SyntaxNode.leaf(K.Ident, 'z');
+    expect(root.erroneous()).toBe(false);
   });
 
   it('clones deep syntax nodes and metadata containers independently', () => {
@@ -183,6 +199,14 @@ describe('syntax budget entry points', () => {
     const result = evalExpression(flat + '+');
     expect(result.value).toBeNull();
     expect(result.diagnostics).toEqual([{ severity: 'error', message: 'expected expression' }]);
+  });
+
+  it('reports a later syntax error before an earlier valid subtree depth limit', () => {
+    const source = '#(' + flat + ') #(1 +)';
+    const error = failure(source);
+    expect(error.kind).toBe('syntax');
+    expect(error.message).toBe('expected expression');
+    expect(error.span).toEqual({ start: source.length - 1, end: source.length - 1 });
   });
 
   it('converts formula rejection to a typed public error', () => {

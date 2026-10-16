@@ -179,15 +179,21 @@ export class SyntaxNode {
   /** Whether this node or one of its descendants is an error. */
   erroneous(): boolean {
     if (this.kind === SyntaxKind.Error) return true;
-    // This query needs no source offsets or yielded records. Keep its stack
-    // proportional to depth, and avoid allocating a frame for every leaf.
+    // This query needs no source offsets or yielded records. Reuse frames at
+    // each depth across sibling branches, without caching mutable node state.
     const stack = [{ node: this as SyntaxNode, next: 0 }];
-    while (stack.length) {
-      const frame = stack[stack.length - 1]!;
-      if (frame.next === frame.node.children.length) { stack.pop(); continue; }
+    let depth = 0;
+    while (depth >= 0) {
+      const frame = stack[depth]!;
+      if (frame.next === frame.node.children.length) { depth--; continue; }
       const node = frame.node.children[frame.next++]!;
       if (node.kind === SyntaxKind.Error) return true;
-      if (node.children.length) stack.push({ node, next: 0 });
+      if (node.children.length) {
+        depth++;
+        const next = stack[depth];
+        if (next) { next.node = node; next.next = 0; }
+        else stack.push({ node, next: 0 });
+      }
     }
     return false;
   }

@@ -1593,7 +1593,7 @@ class Parser {
   /** Eats the current token into `nodes` and lexes the next one. */
   eat(): void {
     this.nodes.push(this.token.node);
-    this.token = Parser.lex(this.nodes, this.lexer, this.nlMode);
+    this.token = Parser.lex(this.nodes, this.lexer, this.nlMode, this.token);
   }
 
   /** Detaches the parsed trivia from this token, so that wrapping includes it. */
@@ -1607,7 +1607,13 @@ class Parser {
     const to = this.beforeTrivia();
     const start = Math.min(from, to);
     const children = this.nodes.slice(start, to);
-    this.nodes.splice(start, to - start, SyntaxNode.inner(kind, children));
+    const inner = SyntaxNode.inner(kind, children);
+    if (to === this.nodes.length) {
+      this.nodes.length = start;
+      this.nodes.push(inner);
+    } else {
+      this.nodes.splice(start, to - start, inner);
+    }
   }
 
   /** Wraps the nodes from a marker up to (excluding) the current token in an error node. */
@@ -1628,7 +1634,7 @@ class Parser {
       this.lexer.mode = previous;
       this.lexer.jump(this.token.prevEnd);
       this.nodes.length -= this.token.nTrivia;
-      this.token = Parser.lex(this.nodes, this.lexer, this.nlMode);
+      this.token = Parser.lex(this.nodes, this.lexer, this.nlMode, this.token);
     }
   }
 
@@ -1646,7 +1652,7 @@ class Parser {
   }
 
   /** Moves the lexer forward and prepares the current token, possibly as a fake `End`. */
-  static lex(nodes: SyntaxNode[], lexer: Lexer, nlMode: AtNewline): Token {
+  static lex(nodes: SyntaxNode[], lexer: Lexer, nlMode: AtNewline, token?: Token): Token {
     const prevEnd = lexer.cursor();
     let start = prevEnd;
     let [kind, node] = lexer.next();
@@ -1672,7 +1678,15 @@ class Parser {
       if (stopAt(nlMode, newline, kind)) kind = K.End;
     }
 
-    return { kind, node, nTrivia, newline, start, prevEnd };
+    if (!token) return { kind, node, nTrivia, newline, start, prevEnd };
+    // Only reuse the current token after lexing; checkpoints retain their clones.
+    token.kind = kind;
+    token.node = node;
+    token.nTrivia = nTrivia;
+    token.newline = newline;
+    token.start = start;
+    token.prevEnd = prevEnd;
+    return token;
   }
 
   // --- Memoization ---------------------------------------------------------

@@ -37,6 +37,7 @@ export function checkContentDepth(root: Content): void {
     const depth = frame.depth;
     if (depth > 256) limit(content.span, 'Typlet stopped at a content depth of more than 256');
     if (++visits > 100_000) limit(content.span, 'Typlet stopped after 100000 content visits');
+    if (content.func === 'text' || content.func === 'symbol' || content.func === 'space') continue;
     if ((depths.get(content) ?? -1) >= depth) continue;
     depths.set(content, depth);
     stack.push({ items: children(content), depth: depth + 1 });
@@ -55,6 +56,7 @@ export function checkContentExpansion(root: Content, budget: ElementBudget): voi
     if (!('func' in value) || typeof value.func !== 'string') continue;
     const content = value as Content;
     budget.visit(content.span);
+    if (content.func === 'space') continue;
     if (content.func === 'text' || content.func === 'symbol' || content.func === 'raw') {
       budget.consume(content.text.length, content.span);
       continue;
