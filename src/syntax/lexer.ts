@@ -119,6 +119,12 @@ export class Lexer {
 
   /** Returns the next token: its kind and its node. */
   next(): [SyntaxKind, SyntaxNode] {
+    const node = this.nextNode();
+    return [node.kind, node];
+  }
+
+  /** Returns the next token node without a transient transport tuple. */
+  nextNode(): SyntaxNode {
     const start = this.s.cursor;
     this.newline = false;
 
@@ -138,12 +144,12 @@ export class Lexer {
       kind = this.error('unexpected end of block comment');
       this.hint('consider escaping the `*` with a backslash or opening the block comment with `/*`');
     } else if (c === BACKTICK && this.mode !== SyntaxMode.Math) {
-      return this.raw();
+      return this.raw()[1];
     } else if (this.mode === SyntaxMode.Markup) {
       kind = this.markup(start, c);
     } else if (this.mode === SyntaxMode.Math) {
       const [mathKind, node] = this.math(start, c);
-      if (node) return [mathKind, node];
+      if (node) return node;
       kind = mathKind;
     } else {
       kind = this.code(start, c);
@@ -153,7 +159,7 @@ export class Lexer {
     const err = this.err;
     this.err = null;
     const node = err ? SyntaxNode.error(err.message, text).withHints(err.hints) : SyntaxNode.leaf(kind, text);
-    return [kind, node];
+    return node;
   }
 
   /** Eats whitespace characters greedily. */

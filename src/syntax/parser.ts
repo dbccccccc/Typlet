@@ -1655,7 +1655,8 @@ class Parser {
   static lex(nodes: SyntaxNode[], lexer: Lexer, nlMode: AtNewline, token?: Token): Token {
     const prevEnd = lexer.cursor();
     let start = prevEnd;
-    let [kind, node] = lexer.next();
+    let node = lexer.nextNode();
+    let kind = node.kind;
     let nTrivia = 0;
     let hadNewline = false;
     let parbreak = false;
@@ -1666,7 +1667,8 @@ class Parser {
       nTrivia += 1;
       nodes.push(node);
       start = lexer.cursor();
-      [kind, node] = lexer.next();
+      node = lexer.nextNode();
+      kind = node.kind;
     }
 
     let newline: Newline | null = null;
