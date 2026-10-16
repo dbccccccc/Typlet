@@ -16,6 +16,7 @@ import { pathToFileURL } from 'node:url';
 import { build } from 'esbuild';
 import katex from 'katex';
 import MarkdownIt from 'markdown-it';
+import { checkSiteLicenses, licenseFiles } from '../../scripts/check-licenses.mjs';
 
 const root = resolve(import.meta.dirname, '../..');
 const out = join(root, 'site');
@@ -74,7 +75,7 @@ function page(name, title, body, scripts = '', typletStyles = true) {
 <main>
 ${body}
 </main>
-<footer>Typlet is an independent project, not affiliated with Typst GmbH. Rendered with Typlet ${escape(typlet.version)} for Typst ${escape(typlet.typstVersion)}.</footer>
+<footer>Typlet is an independent project, not affiliated with Typst GmbH. Rendered with Typlet ${escape(typlet.version)} for Typst ${escape(typlet.typstVersion)}. <a href="LICENSE">License</a> · <a href="THIRD_PARTY_NOTICES.md">Third-party notices</a>.</footer>
 ${scripts}
 </body>
 </html>
@@ -281,6 +282,13 @@ for (const file of readdirSync(join(root, 'fonts'))) {
 }
 copyFileSync(join(root, 'dist/typlet.min.js'), join(out, 'js/typlet.min.js'));
 for (const name of ['auto-render', 'copy-typst', 'element']) copyFileSync(join(root, `dist/contrib/${name}.min.js`), join(out, `js/${name}.min.js`));
+// The root footer and each browser bundle's relative notice have complete materials.
+for (const target of [out, join(out, 'js')]) {
+  for (const file of licenseFiles(root).filter((file) => !file.startsWith('fonts/'))) {
+    mkdirSync(dirname(join(target, file)), { recursive: true });
+    copyFileSync(join(root, file), join(target, file));
+  }
+}
 writeFileSync(join(out, 'site.css'), SITE_CSS);
 
 // The comparison page: its script and formulas, and KaTeX as its package
@@ -312,3 +320,6 @@ for (const [name, title, source] of PAGES) {
   writeFileSync(join(out, `${name}.html`), page(name, title, body, scripts, name !== 'compare'));
 }
 console.log(`Built site/ with ${PAGES.length} pages.`);
+
+const licenses = checkSiteLicenses(root, out);
+console.log('License artifacts ok (' + licenses.files + ' files, ' + licenses.pages + ' pages).');

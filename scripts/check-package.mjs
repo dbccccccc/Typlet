@@ -9,6 +9,7 @@ import { copyFileSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from '
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
+import { checkLicenseBytes } from './check-licenses.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const consumer = join(root, 'scripts/consumer');
@@ -26,6 +27,7 @@ const ALLOWED = /^(dist\/|fonts\/|LICENSES\/|LICENSE$|README\.md$|THIRD_PARTY_NO
 const REQUIRED = [
   'LICENSE',
   'LICENSES/Apache-2.0.txt',
+  'LICENSES/W3C-2023.txt',
   'README.md',
   'THIRD_PARTY_NOTICES.md',
   'dist/index.js',
@@ -38,6 +40,7 @@ const REQUIRED = [
   'dist/cli.js',
   'fonts/typlet.css',
   'fonts/GUST-FONT-LICENSE.txt',
+  'fonts/MANIFEST-typlet-newcm-math.txt',
 ];
 
 const project = mkdtempSync(join(tmpdir(), 'typlet-package-'));
@@ -54,6 +57,8 @@ try {
   // The package has no dependencies, so it installs without the registry.
   writeFileSync(join(project, 'package.json'), '{ "name": "typlet-consumer", "private": true, "type": "module" }\n');
   npm(['install', '--offline', '--no-audit', '--no-fund', '--ignore-scripts', `./${packed.filename}`], project);
+  const licenses = checkLicenseBytes(root, join(project, 'node_modules/typlet'));
+  console.log('ok    installed legal materials: ' + licenses + ' files match source bytes');
 
   for (const file of ['use.mjs', 'esm.ts', 'cjs.cts']) copyFileSync(join(consumer, file), join(project, file));
   execFileSync(process.execPath, ['use.mjs'], { cwd: project, stdio: 'inherit' });
