@@ -77,6 +77,37 @@ try {
     execFileSync(process.execPath, [tsc, ...flags, '--module', module, '--moduleResolution', moduleResolution, ...sources], { cwd: project, stdio: 'inherit' });
     console.log(`ok    types with moduleResolution ${moduleResolution}: ${sources.join(', ')}`);
   }
+
+  // Check the integration's published declaration against both supported type
+  // surfaces: DefinitelyTyped for markdown-it 14 and native types for 15.
+  const [plugin] = JSON.parse(npm(['pack', '--json', '--pack-destination', project], join(root, 'packages/markdown-it-typlet')));
+  npm(['install', '--offline', '--no-audit', '--no-fund', '--ignore-scripts', '--legacy-peer-deps', `./${plugin.filename}`], project);
+  copyFileSync(join(consumer, 'markdown-it.mts'), join(project, 'markdown-it.mts'));
+  const mdPackage = JSON.parse(readFileSync(join(root, 'node_modules/markdown-it/package.json'), 'utf8'));
+  const peers = [
+    ['14', join(root, 'node_modules/@types/markdown-it/index.d.ts')],
+    ['15', join(root, 'node_modules/markdown-it', mdPackage.exports['.'].import.types)],
+  ];
+  for (const [version, types] of peers) {
+    for (const moduleResolution of ['nodenext', 'bundler']) {
+      const config = `markdown-it-${version}-${moduleResolution}.json`;
+      writeFileSync(join(project, config), JSON.stringify({
+        compilerOptions: {
+          noEmit: true, strict: true, target: 'es2022', lib: ['es2022', 'dom'], skipLibCheck: false,
+          module: moduleResolution === 'bundler' ? 'esnext' : 'nodenext', moduleResolution,
+          paths: {
+            'markdown-it': [types],
+            // markdown-it 14 uses linkify-it 5's DefinitelyTyped surface;
+            // the installed markdown-it 15 uses linkify-it 6's native types.
+            ...(version === '14' ? { 'linkify-it': [join(root, 'node_modules/@types/linkify-it/index.d.ts')] } : {}),
+          },
+        },
+        files: ['markdown-it.mts'],
+      }));
+      execFileSync(process.execPath, [tsc, '-p', config], { cwd: project, stdio: 'inherit' });
+      console.log(`ok    packed markdown-it-typlet types with markdown-it ${version}, ${moduleResolution}`);
+    }
+  }
 } finally {
   rmSync(project, { recursive: true, force: true });
 }
