@@ -5,11 +5,10 @@
 import { type LinkedNode, firstExpr, isExpr, lastExpr, lastOfKind } from '../syntax/ast.js';
 import { SyntaxKind } from '../syntax/kind.js';
 import { evalArgs } from './call.js';
-import { boolCast, castError, contentCast, typeInfo, union } from './cast.js';
+import { boolCast, castError, contentCast, funcCast, typeInfo, union } from './cast.js';
 import { evalExpr } from './code.js';
 import { HintedError, type Span, at, bail, bailAt, unsupported } from './diag.js';
 import type { Func } from './func.js';
-import { funcCast } from './library.js';
 import { type ShowSet, type Styles, showSet } from './styles.js';
 import { typeOf } from './value.js';
 import type { Vm } from './vm.js';

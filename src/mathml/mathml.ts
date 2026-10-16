@@ -2,7 +2,8 @@
 // Copyright The Typst Project Developers. Licensed under Apache-2.0.
 // Modified for Typlet. See THIRD_PARTY_NOTICES.md.
 
-import { ElementBudget, type SourceDiagnostic, type Span, warning } from '../eval/diag.js';
+import { getExpansionBudget, withExpansionBudget } from '../eval/expansion-budget.js';
+import { ElementBudget, type SourceDiagnostic, type Span, warn, warning } from '../eval/diag.js';
 import type { Em } from '../eval/layout.js';
 import { rustDisplayFloat } from '../eval/repr.js';
 import { equationShowSetStyles } from '../elements/mod.js';
@@ -206,12 +207,14 @@ export function convertMathToNodes(
   styles: StyleChain = EMPTY_CHAIN,
   decorations = false,
 ): HtmlNode[] {
-  const ctx = new MathContext(block, warnings, trust, quoter, styles, decorations);
-  const nodes = ctx.handleIntoNodes(item);
-  // Typst converts content that isn't math to HTML after all of the math:
-  // its warnings come after the math's.
-  warnings.push(...ctx.deferred);
-  return nodes;
+  return withExpansionBudget(getExpansionBudget(), () => {
+    const ctx = new MathContext(block, warnings, trust, quoter, styles, decorations);
+    const nodes = ctx.handleIntoNodes(item);
+    // Typst converts content that isn't math to HTML after all of the math:
+    // its warnings come after the math's.
+    for (const deferred of ctx.deferred) warn(warnings, deferred);
+    return nodes;
+  });
 }
 
 /** One node, or several in an `mrow`. */
@@ -220,6 +223,7 @@ function intoContent(nodes: HtmlNode[]): HtmlNode {
 }
 
 class MathContext {
+  readonly expansion = getExpansionBudget();
   content: HtmlNode[] = [];
   embellishment: Embellishment | null = null;
   css: CssContext;
@@ -290,6 +294,10 @@ class MathContext {
   }
 
   handleIntoNodes(item: MathItem, only: Form | null = null): HtmlNode[] {
+    return this.expansion.depth.withDepth(item.type === 'component' ? item.props.span : null, () => this.handleIntoNodesInner(item, only));
+  }
+
+  private handleIntoNodesInner(item: MathItem, only: Form | null): HtmlNode[] {
     const prev = this.content;
     this.content = [];
     try {
@@ -401,6 +409,7 @@ function handleKind(comp: ComponentItem, ctx: MathContext, props: MathProperties
   const kind = comp.kind;
   switch (kind.tag) {
     case 'glyph':
+      ctx.expansion.consume(kind.text.length, props.span);
       return handleGlyph(kind, ctx, props, position);
     case 'radical':
       return handleRadical(kind, ctx);
@@ -409,14 +418,17 @@ function handleKind(comp: ComponentItem, ctx: MathContext, props: MathProperties
     case 'scripts':
       return handleScripts(kind, ctx);
     case 'primes':
+      ctx.expansion.consume(kind.count, props.span);
       return makeMo(PRIME_CHAR.repeat(kind.count), ctx, props, position, 'postfix', false, false, false, null);
     case 'table':
       return handleTable(kind, ctx);
     case 'fraction':
       return handleFraction(kind, ctx);
     case 'text':
+      ctx.expansion.consume(kind.text.length, props.span);
       return handleText(kind.text, ctx, props, position);
     case 'number':
+      ctx.expansion.consume(kind.text.length, props.span);
       return elem('mn', convertChildren([kind.text]));
     case 'fenced':
       return handleFenced(kind, ctx);
@@ -797,7 +809,7 @@ function hasLimits(item: MathItem): boolean {
 }
 
 function ignoredMathItem(ctx: MathContext, body: MathItem, span: Span, name: string): HtmlNode {
-  ctx.warnings.push(warning(span, `${name} was ignored during MathML export`));
+  warn(ctx.warnings, warning(span, `${name} was ignored during MathML export`));
   return ctx.handleIntoNode(body);
 }
 

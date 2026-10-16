@@ -12,6 +12,7 @@ import type { StyleChain } from '../eval/styles.js';
 import { styleDtls, styleFlac, equationBold, equationItalic, equationVariant } from '../elements/style.js';
 import { chain } from '../eval/styles.js';
 import { emAt } from '../eval/layout.js';
+import { getExpansionBudget } from '../eval/expansion-budget.js';
 import type { ComponentItem, GlyphKind, MathProperties } from '../ir/item.js';
 import { fontSize, textFill, textShift } from '../ir/resolve.js';
 import { MathClass } from '../utils/math-class.js';
@@ -42,6 +43,7 @@ export function layoutText(text: string, ctx: MathContext, styles: StyleChain, p
 
 /** Lays out a number, digit by digit, like `layout_number`. */
 export function layoutNumber(text: string, ctx: MathContext, styles: StyleChain, props: MathProperties): void {
+  getExpansionBudget().consume(text.length, props.span);
   const fragments = [...text].map((c) => GlyphFragment.synthetic(styles, c, props.span));
   ctx.push(new FrameFragment(props, styles, runIntoFrame(fragments)).withTextLike(true));
 }
@@ -68,6 +70,7 @@ export function layoutGlyph(
   styles: StyleChain,
   props: MathProperties,
 ): void {
+  ctx.expansion.consume(kind.text.length, props.span);
   let glyphStyles = kind.flac ? chain(styles, [styleFlac()]) : styles;
   let text = kind.text;
   // New Computer Modern has the `dtls` feature: dotless letters become

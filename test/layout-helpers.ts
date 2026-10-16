@@ -131,6 +131,19 @@ export function frameDiff(got: FlatFrame, want: FrameFixture): string | null {
     if (g[1] !== w[1]) return `glyph ${i} (${w[5]}): id ${g[1]} vs ${w[1]}`;
     if (!near(g[2], w[2]) || !near(g[3], w[3])) return `glyph ${i} (${w[5]}): at ${g[2]},${g[3]} vs ${w[2]},${w[3]}`;
     if (!near(g[4], w[4])) return `glyph ${i}: size ${g[4]} vs ${w[4]}`;
+    const fill = g[6] ?? '#000000';
+    const wantFill = w[6] ?? '#000000';
+    if (fill !== wantFill) return `glyph ${i}: fill ${fill} vs ${wantFill}`;
+    const transform = g[7] === undefined ? [1, 0, 0, 1] : g[7];
+    const wantTransform = w[7] === undefined ? [1, 0, 0, 1] : w[7];
+    if (!Array.isArray(transform) || transform.length !== 4 || !Array.isArray(wantTransform) || wantTransform.length !== 4) {
+      return `glyph ${i}: transform must contain four finite numbers`;
+    }
+    for (let j = 0; j < 4; j++) {
+      if (!Number.isFinite(transform[j]) || !Number.isFinite(wantTransform[j]) || !near(transform[j], wantTransform[j])) {
+        return `glyph ${i}: transform[${j}] ${transform[j]} vs ${wantTransform[j]}`;
+      }
+    }
   }
   if (got.shapes.length !== want.shapes.length) return `${got.shapes.length} shapes vs ${want.shapes.length}`;
   for (let i = 0; i < want.shapes.length; i++) {

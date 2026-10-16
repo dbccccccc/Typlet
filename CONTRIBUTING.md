@@ -14,6 +14,12 @@ Open an issue with:
 
 A formula that Typlet refuses as `unsupported`, or draws as MathML with a warning, is a known limit, not a bug. [The README](README.md#limitations) lists them, and an issue is still welcome if one of them blocks you.
 
+## Formula language scope
+
+The supported evaluator intentionally keeps the v0.1.1 formula language: math, macros, basic arrays/dictionaries, content and styles. General loops, mutation, collection/string methods, `calc`, constructors and inspection functions are outside this scope. New language features need a concrete authoring use case and bounded work; do not add a parallel general runtime.
+
+Keep full-Typst corpus and oracle records as references, including unsupported examples. `test/expression-scope.json` and `test/formula-scope.json` lock reviewed refusals by ID and reason; every other retained expression must still match the oracle. Visual changes require reviewing each existing manifest record while preserving source hashes and exclusions. Resource stress belongs in the bounded child runner, with unchanged heap, timeout and median gates.
+
 ## Setting up
 
 You need Node 22.12 or newer: the package runs on Node 22, but Vitest, which runs the tests, needs 22.12.
@@ -82,10 +88,15 @@ npm run fuzz:eval      # compare evaluation, MathML and layout with Typst on 5,0
 npm run demo           # a page that shows Typst's SVG, Typlet's HTML and its MathML
                        # side by side, on http://localhost:5174/
 npm run docs:features  # regenerate docs/supported.md from the library
-npm run docs:build     # build the documentation site into site/ (after npm run build)
+npm run docs:build     # build site/ and verify its license materials (after npm run build)
+npm run check:licenses # recheck built site license bytes and legal footer links
 npm run docs:serve     # serve it on http://localhost:5175/
 npm run bench          # benchmark against KaTeX (after npm run build)
 ```
+
+License verification compares the installed npm package's `LICENSE`, `THIRD_PARTY_NOTICES.md`, all `LICENSES/` files and the font license/manifest with the repository bytes. `docs:build` also checks the site's copies, the browser bundles' relative notices, KaTeX's license and the legal links on every page; `check:licenses` reruns that check without rebuilding. When a vendored asset changes, retain its complete upstream notice, source and modification record before running these checks.
+
+The type check includes declarations with `skipLibCheck: false`. The package check also installs the packed markdown-it plugin offline and compiles a consumer against markdown-it 14's DefinitelyTyped declarations and markdown-it 15's native declarations, under NodeNext and bundler resolution.
 
 ## How Typlet is tested
 
@@ -95,6 +106,10 @@ Typlet is checked against the Typst compiler, not by eye:
 - **Don't edit generated files by hand:** `test/corpus/*.jsonl`, `test/fixtures/`, `src/generated/` and `docs/supported.md` come from the commands above, and CI checks that they are current.
 - **The fuzzers** compare random inputs with Typst. A failure they report belongs in the corpus once it is fixed. In CI, a failing run uploads the inputs that failed (the `fuzz-failures` artifact), and `npm run fuzz:eval -- --replay FILE` checks fuzz:eval's again.
 - **The visual tests** compare Typlet's HTML with Typst's SVG in three browsers. On Linux, where browsers hint fonts, they turn hinting off in Chromium and Firefox and allow WebKit, which can't, more difference (`test/browsers/visual.mjs` explains why). In CI, a failing run uploads the pictures of each mismatch.
+
+The visual sample contract in `test/browsers/visual-contract.json` lists every formula in the four visual corpora, including expected MathML results, errors and exclusions with reasons. The visual test validates IDs, source hashes, drawing modes and error kinds before asking the oracle for the HTML samples; missing or duplicate SVGs fail the run. Unit tests lock the reviewed counts and source/mode digests.
+
+When adding a formula or intentionally changing its support, review the manifest diff separately: check the formula's source, display mode, full preamble, expected drawing mode or error kind, and the reason for any exclusion. Calculate source hashes as SHA256 of the UTF-8 `JSON.stringify([id, src, Boolean(display), preamble?.trim() ? preamble : ''])`, with IDs prefixed by the corpus name. Keep manifest IDs in JavaScript string order. Update the fixed test digests only after reviewing that change: the source digest hashes the sorted `[id, sourceHash]` list, and the mode digest hashes `[id, expected, errorKind ?? null]`. Do not delete records, broaden exclusions or update digests just to silence a failure. There is no automatic accept/update mode.
 
 ## Code
 

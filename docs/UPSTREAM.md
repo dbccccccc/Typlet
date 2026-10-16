@@ -25,21 +25,21 @@ When a file is ported, its row's "Synced at" names the version.
 | Typlet module | Upstream file | Synced at | Status |
 |---|---|---|---|
 | `math.ts` | `crates/typst-eval/src/math.rs` | 0.15.1 | Ported |
-| `call.ts` | `crates/typst-eval/src/call.rs` | 0.15.1 | Partly ported: calls in code and math, arguments, calls on non-functions. Methods come with Level 4 |
+| `call.ts` | `crates/typst-eval/src/call.rs` | 0.15.1 | Ported: calls in code and math, arguments, calls on non-functions and explicit method refusals |
 | `closure.ts` | `crates/typst-eval/src/call.rs` | 0.15.1 | Closures, their captured variables and their calls |
 | `closure.ts` | `crates/typst-library/src/foundations/func.rs` | 0.15.1 | Calls of closures |
-| `binding.ts` | `crates/typst-eval/src/binding.rs` | 0.15.1 | Ported: `let` and destructuring, without assignments |
+| `binding.ts` | `crates/typst-eval/src/binding.rs` | 0.15.1 | Ported: `let` and destructuring bindings |
 | `binding.ts` | `crates/typst-syntax/src/ast.rs` | 0.15.1 | Patterns and `let` bindings |
-| `flow.ts` | `crates/typst-eval/src/flow.rs` | 0.15.1 | `if`, `return`, `break` and `continue`; loops come with Level 4 |
-| `rules.ts` | `crates/typst-eval/src/rules.rs` | 0.15.1 | Set rules; show rules are refused |
+| `flow.ts` | `crates/typst-eval/src/flow.rs` | 0.15.1 | Ported: `if` and `return`; standalone `break` and `continue` retain their control-flow errors; loops are refused |
+| `rules.ts` | `crates/typst-eval/src/rules.rs` | 0.15.1 | Set rules and equation show-set rules, including `where(block: ...)`; other show rules are refused |
 | `rules.ts` | `crates/typst-eval/src/vm.rs` | 0.15.1 | The hint for a shadowed function of the standard library |
 | `markup.ts` | `crates/typst-eval/src/markup.rs` | 0.15.1 | Ported, with labels; references, headings and lists are refused |
 | `markup.ts` | `crates/typst-syntax/src/ast.rs` | 0.15.1 | Shorthands, raw text and links in markup |
 | `markup.ts` | `crates/typst-library/src/model/link.rs` | 0.15.1 | Links from URLs |
 | `numbering.ts` | `crates/typst-library/src/model/numbering.rs` | 0.15.1 | Numbering patterns and functions |
 | `numeral.ts` | codex 0.3.0, `src/numeral_systems.rs` | 0.3.0 | Ported, without Chinese numerals |
-| `code.ts` | `crates/typst-eval/src/code.rs` | 0.15.1 | Ported for Levels 1 to 3 (docs/DESIGN.md §6.3): code blocks with set rules, content blocks; context expressions are refused |
-| `code.ts` | `crates/typst-eval/src/ops.rs` | 0.15.1 | Ported, without assignments |
+| `code.ts` | `crates/typst-eval/src/code.rs` | 0.15.1 | Ported for Levels 1 to 3 (docs/DESIGN.md §6.3): code blocks with set and show-set rules, content blocks; loops, assignments, context expressions and imports are refused |
+| `code.ts` | `crates/typst-eval/src/ops.rs` | 0.15.1 | Ported operators; assignments refused |
 | `code.ts` | `crates/typst-library/src/foundations/fields.rs` | 0.15.1 | Fields of lengths, relative lengths and alignments |
 | `vm.ts` | `crates/typst-eval/src/vm.rs` | 0.15.1 | Partly ported |
 | `vm.ts` | `crates/typst-eval/src/flow.rs` | 0.15.1 | Control flow events |
@@ -49,7 +49,7 @@ When a file is ported, its row's "Synced at" names the version.
 | `repr.ts` | `crates/typst-utils/src/round.rs` | 0.15.1 | `round_with_precision` |
 | `cast.ts` | `crates/typst-library/src/foundations/cast.rs` | 0.15.1 | `CastInfo` and the casts of Typlet's parameter types |
 | `cast.ts` | `crates/typst-library/src/foundations/int.rs` | 0.15.1 | Integer casts |
-| `args.ts` | `crates/typst-library/src/foundations/args.rs` | 0.15.1 | Ported, without the `arguments` methods |
+| `args.ts` | `crates/typst-library/src/foundations/args.rs` | 0.15.1 | Internal arguments for math calls and macro sinks |
 | `func.ts` | `crates/typst-library/src/foundations/func.rs` | 0.15.1 | Native and element functions |
 | `func.ts` | `crates/typst-library/src/engine.rs` | 0.15.1 | Warnings and budgets only |
 | `scope.ts` | `crates/typst-library/src/foundations/scope.rs` | 0.15.1 | Scopes, bindings and the unknown-variable errors |
@@ -57,7 +57,7 @@ When a file is ported, its row's "Synced at" names the version.
 | `symbol.ts` | `crates/typst-library/src/foundations/symbol.rs` | 0.15.1 | Ported, without the `symbol` constructor |
 | `symbol.ts` | `crates/typst-library/src/symbols.rs` | 0.15.1 | Ported |
 | `content.ts` | `crates/typst-library/src/foundations/content/mod.rs` | 0.15.1 | Content as plain objects with Typst's field names |
-| `styles.ts` | `crates/typst-library/src/foundations/styles.rs` | 0.15.1 | Style lists and chains, without show rules |
+| `styles.ts` | `crates/typst-library/src/foundations/styles.rs` | 0.15.1 | Style lists and chains, including equation show-set properties |
 | `layout.ts` | Eight files in `crates/typst-library/src/layout/`, listed below the table | 0.15.1 | The quantities and their arithmetic |
 | `color.ts` | `crates/typst-library/src/visualize/color.rs` | 0.15.1 | Grayscale and sRGB colors, named colors, `rgb` and `luma` |
 | `library.ts` | `crates/typst-library/src/lib.rs` | 0.15.1 | The parts of the global scope Levels 1 to 3 need |

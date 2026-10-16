@@ -9,6 +9,7 @@ import { destructure, isPattern, letParts, patternBindings, sinkIdent } from './
 import { valueCast } from './cast.js';
 import { evalExpr } from './code.js';
 import { SourceError } from './diag.js';
+import { appendCollection, checkCollectionSize } from './ops.js';
 import type { Engine, Func } from './func.js';
 import { type Binding, type Library, Scope, Scopes } from './scope.js';
 import { type Value, NONE, funcValue } from './value.js';
@@ -58,6 +59,8 @@ export function evalClosure(vm: Vm, node: LinkedNode): Value {
   const func: Func = {
     name: name?.text ?? null,
     params: [],
+    span: node.span,
+    closure: { node, defaults, captured },
     call: (engine, args) => callClosure(func, engine, library, name, params, defaults, numPosParams, body, captured, args),
   };
   return funcValue(func);
@@ -100,7 +103,10 @@ function callClosure(
       }
     } else if (param.kind === 'spread') {
       sink = param.sink;
-      if (sinkSize !== null) sinkPosValues = args.consume(sinkSize);
+      if (sinkSize !== null) {
+        checkCollectionSize(sinkSize);
+        sinkPosValues = args.consume(sinkSize);
+      }
     } else {
       const value = args.named(param.name.text, valueCast) ?? defaults[d]!;
       d++;
@@ -112,7 +118,7 @@ function callClosure(
     // The remaining arguments go to the sink, whether or not it is named.
     const remaining = args.take();
     if (sink !== null) {
-      if (sinkPosValues) remaining.items.push(...sinkPosValues);
+      appendCollection(remaining.items, sinkPosValues ?? []);
       vm.define(sink.text, sink.span, { type: 'arguments', v: remaining });
     }
   }

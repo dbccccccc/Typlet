@@ -5,7 +5,10 @@ import { LinkedNode } from '../src/syntax/ast.js';
 import { SyntaxKind } from '../src/syntax/kind.js';
 import { parse, parseCode, parseMath } from '../src/syntax/parser.js';
 import { evalExpr } from '../src/eval/code.js';
-import { SourceError, type SourceDiagnostic } from '../src/eval/diag.js';
+import { SourceError, type SourceDiagnostic, at } from '../src/eval/diag.js';
+import { checkSyntaxDepth } from '../src/eval/syntax-budget.js';
+import { withValueBudget } from '../src/eval/value-budget.js';
+import { setCollectionLimits } from '../src/eval/ops.js';
 import { DEFAULT_LIMITS, newEngine } from '../src/eval/func.js';
 import { type Evaluated, type Preamble, evalFormula, evalPreamble } from '../src/eval/index.js';
 import type { Formula } from './helpers.js';
@@ -57,18 +60,26 @@ export function evalExpression(expr: string): ValueResult {
       diagnostics: root.diagnostics().map((d) => ({ severity: d.severity, message: d.message, ...(d.hints.length ? { hints: d.hints } : {}) })),
     };
   }
+  try { checkSyntaxDepth(root); }
+  catch (error) {
+    if (!(error instanceof SourceError)) throw error;
+    return { value: null, diagnostics: error.diagnostics.map(diagnostic) };
+  }
   const engine = newEngine();
+  setCollectionLimits(engine.limits.collectionSize, engine.limits.stringLength);
   const vm = new Vm(engine, LIBRARY);
   const node = new LinkedNode(root, 0).children().find((c) => c.kind !== SyntaxKind.Space)!;
   try {
-    const value = evalExpr(vm, node);
-    // A `return` or `break` outside a function or loop fails at the top.
-    if (vm.flow) throw new SourceError([forbidden(vm.flow)]);
-    const e = exact(value);
-    return {
-      value: { type: value.type, repr: repr(value), json: toJson(value), ...(e ? { exact: e } : {}) },
-      diagnostics: engine.warnings.map(diagnostic),
-    };
+    return withValueBudget(engine.values, () => at(node.span, () => {
+      const value = evalExpr(vm, node);
+      // A `return` or `break` outside a function or loop fails at the top.
+      if (vm.flow) throw new SourceError([forbidden(vm.flow)]);
+      const e = exact(value);
+      return {
+        value: { type: value.type, repr: repr(value), json: toJson(value), ...(e ? { exact: e } : {}) },
+        diagnostics: engine.warnings.map(diagnostic),
+      };
+    }));
   } catch (e) {
     if (!(e instanceof SourceError)) throw e;
     return { value: null, diagnostics: [...engine.warnings.map(diagnostic), ...e.diagnostics.map(diagnostic)] };
@@ -85,6 +96,7 @@ export function evalCorpusFormula(formula: Formula): Evaluated {
   if (formula.preamble?.trim()) {
     const tree = parse(formula.preamble);
     if (tree.erroneous()) throw new Error(`syntax error in the preamble of ${formula.id}`);
+    checkSyntaxDepth(tree, 'preamble');
     preamble = evalPreamble(tree);
   }
   const result = evalFormula(parseMath(formula.src), formula.display, DEFAULT_LIMITS, preamble, null);

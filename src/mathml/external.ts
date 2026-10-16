@@ -5,9 +5,11 @@
 // Content in a formula that isn't math, such as `#strong[x]` or a box, as
 // Typst's HTML export converts it: HTML elements and text inside the MathML.
 
+import { checkContentDepth } from '../eval/content-budget.js';
+import { getExpansionBudget } from '../eval/expansion-budget.js';
 import { toHex } from '../eval/color.js';
 import type { BoxElem, Content, EquationElem, Stroke } from '../eval/content.js';
-import { type ElementBudget, type SourceDiagnostic, warning } from '../eval/diag.js';
+import { type ElementBudget, type SourceDiagnostic, warn, warning } from '../eval/diag.js';
 import { type Length, type RelLength, absPt } from '../eval/layout.js';
 import { type StyleChain, chain, get } from '../eval/styles.js';
 import { type Pair, collapseSpaces } from '../ir/resolve.js';
@@ -201,6 +203,7 @@ export function fragment(children: HtmlNode[]): HtmlElement {
  * fragment, then converted with Typst's HTML show rules.
  */
 export function contentToHtml(content: Content, styles: StyleChain, ctx: ExternalContext): HtmlNode[] {
+  checkContentDepth(content);
   const out: HtmlNode[] = [];
   for (const child of realizeFragment(content, styles, ctx)) {
     if ('paragraph' in child) out.push(paragraphToHtml(child.paragraph, ctx));
@@ -214,6 +217,7 @@ export function contentToHtml(content: Content, styles: StyleChain, ctx: Externa
  * formula: no paragraphs form there, and spaces collapse over the whole.
  */
 export function mathContentToHtml(content: Content, styles: StyleChain, ctx: ExternalContext): HtmlNode[] {
+  checkContentDepth(content);
   const pairs = flatten(content, styles, ctx);
   collapseSpaces(pairs);
   const out: HtmlNode[] = [];
@@ -348,6 +352,7 @@ function convert(content: Content, styles: StyleChain, ctx: ExternalContext, out
       return;
     case 'text':
     case 'symbol':
+      getExpansionBudget().consume(content.text.length, content.span);
       out.push(content.text);
       return;
     case 'space':
@@ -374,6 +379,7 @@ function convert(content: Content, styles: StyleChain, ctx: ExternalContext, out
       else convert(content.body, styles, ctx, out);
       return;
     case 'raw':
+      getExpansionBudget().consume(content.text.length, content.span);
       out.push(rawToHtml(content.text, content.lang ?? null));
       return;
     case 'equation':
@@ -402,15 +408,15 @@ function convert(content: Content, styles: StyleChain, ctx: ExternalContext, out
         out.push(phantom(contentToHtml(content.body, styles, fragmentContext(ctx))));
         return;
       }
-      ctx.warnings.push(warning(content.span, 'hide was ignored during HTML export'));
+      warn(ctx.warnings, warning(content.span, 'hide was ignored during HTML export'));
       return;
     case 'h':
       // Zero-width spacing is nothing; other spacing has no HTML.
       if ('rel' in content.amount && content.amount.rel.rel === 0 && content.amount.rel.abs.abs === 0 && content.amount.rel.abs.em === 0) return;
-      ctx.warnings.push(warning(content.span, 'h was ignored during HTML export'));
+      warn(ctx.warnings, warning(content.span, 'h was ignored during HTML export'));
       return;
     default:
-      ctx.warnings.push(warning(content.span, `${content.func} was ignored during HTML export`));
+      warn(ctx.warnings, warning(content.span, `${content.func} was ignored during HTML export`));
   }
 }
 

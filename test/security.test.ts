@@ -16,7 +16,7 @@ const TAGS = new Set(
 
 /** Every attribute Typlet's outputs use, over the whole corpus. */
 const ATTRIBUTES = new Set(
-  'accent accentunder aria-hidden aria-label class data-lang display displaystyle encoding fence form href largeop linethickness lspace mathvariant minsize notation role rspace scriptlevel separator stretchy style symmetric title width'.split(' '),
+  'accent accentunder aria-hidden aria-label class data-lang data-typst-source display displaystyle encoding fence form href largeop linethickness lspace mathvariant minsize notation role rspace scriptlevel separator stretchy style symmetric title width'.split(' '),
 );
 
 /** Styles hold properties, numbers, units and colors: no URLs, escapes, quotes or at-rules. */

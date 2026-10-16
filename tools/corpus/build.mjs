@@ -7,9 +7,9 @@
 //   typst-docs.jsonl   Equations from the examples in Typst's math docs.
 //   symbols.jsonl      One formula per variant of every Typst symbol.
 //   code.jsonl         Formulas exercising embedded code Level 1.
-//   levels.jsonl       Formulas exercising embedded code Levels 2 and 3.
+//   levels.jsonl       Formulas exercising embedded code Levels 2 to 4.
 //   features.jsonl     Formulas exercising each feature of math evaluation and MathML.
-//   expressions.jsonl  Code expressions for values and operators, Levels 1 to 3.
+//   expressions.jsonl  Code expressions for values and operators, Levels 1 to 4.
 //   syntax.jsonl       Parser edge cases in math, code and markup mode.
 //
 // --labels samples a local file of Typst formulas, such as IBEM-im2typst's

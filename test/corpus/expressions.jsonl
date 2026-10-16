@@ -3914,3 +3914,914 @@
 {"expr":"math.cancel([x], stroke: (cap: \"round\", join: \"bevel\", miter-limit: 2))","id":"x-2e24defd0449"}
 {"expr":"math.cancel([x], stroke: (dash: \"nope\"))","id":"x-805342a2ad31"}
 {"expr":"math.cancel([x], stroke: (paint: 1))","id":"x-d4b23cdf617a"}
+{"expr":"{ let s = 0; for i in (1, 2, 3) { s += i }; s }","id":"x-cf6e9f427e50"}
+{"expr":"{ let s = 0; for i in range(4) { s += i }; s }","id":"x-4248d6e72028"}
+{"expr":"{ let s = (); for (k, v) in (a: 1, b: 2) { s.push(k + str(v)) }; s }","id":"x-660f5a5687d1"}
+{"expr":"{ let s = (); for c in \"héllo\" { s.push(c) }; s }","id":"x-f69c2dfb6d89"}
+{"expr":"{ let s = (); for c in \"e\\u{301}a\" { s.push(c) }; s.len() }","id":"x-15791535b683"}
+{"expr":"{ let s = (); for (a, b) in ((1, 2), (3, 4)) { s.push(a * b) }; s }","id":"x-94cbad9f5050"}
+{"expr":"{ let s = (); for (a, ..b) in ((1, 2, 3),) { s.push(b) }; s }","id":"x-5eceb2ad4170"}
+{"expr":"{ let s = (); for x in (1, 2) { for y in (3, 4) { s.push(x * y) } }; s }","id":"x-5dd6949998c6"}
+{"expr":"{ for i in (1, 2, 3) { if i == 2 { break }; [#i] } }","id":"x-080df511780a"}
+{"expr":"{ for i in (1, 2, 3) { if i == 2 { continue }; [#i] } }","id":"x-54585049e3f7"}
+{"expr":"for i in (1, 2, 3) [#i]","id":"x-8926f4f8c997"}
+{"expr":"for i in (1, 2, 3) { i }","id":"x-666a7042928c"}
+{"expr":"for i in (1, 2, 3) { str(i) }","id":"x-46bf24fc5ea6"}
+{"expr":"for i in (1, 2, 3) { (i,) }","id":"x-3b7896253ec9"}
+{"expr":"for i in () { 1 }","id":"x-ee12554069f0"}
+{"expr":"for i in 5 { i }","id":"x-37c5b6b44b68"}
+{"expr":"for i in none { i }","id":"x-036849528870"}
+{"expr":"for (a, b) in \"ab\" { a }","id":"x-b2189e5e9e81"}
+{"expr":"for (a, b) in (1, 2) { a }","id":"x-d5f31c78b5d5"}
+{"expr":"for (a, b) in ((1,),) { a }","id":"x-207c8cc70faa"}
+{"expr":"for x in (a: 1) { x }","id":"x-9d6bc0e143f2"}
+{"expr":"for (k, v) in (a: 1) { k }","id":"x-c6ebf242cf8c"}
+{"expr":"{ let i = 0; while i < 5 { i += 1 }; i }","id":"x-484ed52adeeb"}
+{"expr":"{ let i = 0; while i < 5 { i += 1; if i == 3 { break } }; i }","id":"x-2bba59da4427"}
+{"expr":"{ let out = (); let i = 0; while i < 6 { i += 1; if calc.odd(i) { continue }; out.push(i) }; out }","id":"x-3512e513b732"}
+{"expr":"{ while true { } }","id":"x-d9308a15db53"}
+{"expr":"{ let i = 0; while i < 1 { } }","id":"x-d103fc8d8e77"}
+{"expr":"{ let i = 0; while i < 3 { i += 1; i } }","id":"x-9edf0ef28d0d"}
+{"expr":"{ let i = 0; while i < 3 { i += 1; [#i] } }","id":"x-56ee7f6f6bc3"}
+{"expr":"while 1 { }","id":"x-72381cbb3399"}
+{"expr":"{ let x = 1; while x { } }","id":"x-58f4cc906236"}
+{"expr":"{ let f() = { for x in (1, 2, 3) { if x == 2 { return x } }; 0 }; f() }","id":"x-ea7c755fab4d"}
+{"expr":"{ let f() = { let i = 0; while true { i += 1; if i > 3 { return i } } }; f() }","id":"x-780644050f14"}
+{"expr":"{ for x in (1, 2) { return x } }","id":"x-c649a76edd71"}
+{"expr":"{ let x = 1; x = 2; x }","id":"x-df2e02a07ce9"}
+{"expr":"{ let x = 1; x += 2; x }","id":"x-4ef9cffa4fef"}
+{"expr":"{ let x = 5; x -= 2; x }","id":"x-7b92f1f48ff3"}
+{"expr":"{ let x = 2; x *= 3; x }","id":"x-bb41ea9628bd"}
+{"expr":"{ let x = 6; x /= 4; x }","id":"x-d7a40ffde867"}
+{"expr":"{ let s = \"a\"; s += \"b\"; s }","id":"x-0d221e77d268"}
+{"expr":"{ let a = (1,); a += (2,); a }","id":"x-2feebe86ba1e"}
+{"expr":"{ let x = [a]; x += [b]; x }","id":"x-d71546520e97"}
+{"expr":"{ let x = 1; x += \"a\" }","id":"x-135c380932a3"}
+{"expr":"{ let d = (a: 1); d.b = 2; d }","id":"x-d434244b9218"}
+{"expr":"{ let d = (a: 1); d.a += 1; d }","id":"x-3ee1721d853c"}
+{"expr":"{ let d = (a: (b: 1)); d.a.b = 2; d }","id":"x-414c529e2c25"}
+{"expr":"{ let d = (a: 1); d.b += 2 }","id":"x-bed9ab278e9a"}
+{"expr":"{ let a = (1, 2); a.at(0) = 5; a }","id":"x-82c47f90fd5b"}
+{"expr":"{ let a = (1, 2); a.at(-1) += 10; a }","id":"x-deb0a684ed1d"}
+{"expr":"{ let a = (1, 2); a.at(2) = 5 }","id":"x-80dadfc03601"}
+{"expr":"{ let a = (1, 2); a.first() = 5; a }","id":"x-46d82ddb889d"}
+{"expr":"{ let a = (1, 2); a.last() = 5; a }","id":"x-ade85c08d8f4"}
+{"expr":"{ let a = (); a.first() = 5 }","id":"x-4ebcf23e25b8"}
+{"expr":"{ let d = (a: 1); d.at(\"b\") = 2; d }","id":"x-1b895631f50c"}
+{"expr":"{ let d = (a: 1); d.at(\"b\") += 2 }","id":"x-71cc10ff589a"}
+{"expr":"{ let a = ((1, 2), (3, 4)); a.at(1).at(0) = 9; a }","id":"x-a420ee3eac51"}
+{"expr":"{ let d = (a: (1, 2)); d.a.push(3); d }","id":"x-3a94a09aa1a9"}
+{"expr":"{ let x = 1; x.a = 2 }","id":"x-d82f0e0bb5df"}
+{"expr":"{ let c = [a]; c.body = 2 }","id":"x-1d216243d04c"}
+{"expr":"{ let f = none; f.x = 1 }","id":"x-8a6780659297"}
+{"expr":"{ let l = 1pt; l.abs = 2pt }","id":"x-83e984e52b96"}
+{"expr":"{ let m = calc; m.pi = 1 }","id":"x-8f3d2f23f2a7"}
+{"expr":"{ let f(x) = x; f.a = 1 }","id":"x-6d2576554654"}
+{"expr":"{ let s = sym.alpha; s.a = 1 }","id":"x-6bd7865cdc31"}
+{"expr":"{ x = 1 }","id":"x-c143992f3991"}
+{"expr":"{ calc = 1 }","id":"x-569a640811ef"}
+{"expr":"{ calc.pi = 1 }","id":"x-ce83fc28e655"}
+{"expr":"{ let x = 1; (x) = 2 }","id":"x-883e7b43a1ed"}
+{"expr":"(1, 2).push(3)","id":"x-a1f3179c644d"}
+{"expr":"{ let a = (1, 2); (a).push(3); a }","id":"x-7659112e90ba"}
+{"expr":"{ let a = (1, 2); a.push(3); a }","id":"x-ce3a4f53bcbf"}
+{"expr":"{ let a = (1, 2); a.pop() }","id":"x-431eef8b4d15"}
+{"expr":"{ let a = (1, 2); a.pop(); a }","id":"x-f3b96b34493f"}
+{"expr":"{ let a = (); a.pop() }","id":"x-4659cc7aead3"}
+{"expr":"{ let a = (1, 3); a.insert(1, 2); a }","id":"x-fb03af748347"}
+{"expr":"{ let a = (1, 3); a.insert(2, 2); a }","id":"x-6c33f37706e5"}
+{"expr":"{ let a = (1, 3); a.insert(5, 2) }","id":"x-acecbe39d9f9"}
+{"expr":"{ let a = (1, 2, 3); a.remove(1) }","id":"x-3606a4e1f4d7"}
+{"expr":"{ let a = (1, 2, 3); a.remove(1); a }","id":"x-77d267143323"}
+{"expr":"{ let a = (1, 2, 3); a.remove(-1); a }","id":"x-7943d696dcfc"}
+{"expr":"{ let a = (1, 2, 3); a.remove(3) }","id":"x-6fe5694b3357"}
+{"expr":"{ let a = (1, 2, 3); a.remove(5, default: 0) }","id":"x-6f8a94e3e42e"}
+{"expr":"{ let d = (a: 1); d.insert(\"b\", 2); d }","id":"x-853a0cf57c67"}
+{"expr":"{ let d = (a: 1); d.insert(\"a\", 2); d }","id":"x-24e94d39ed76"}
+{"expr":"{ let d = (a: 1); d.remove(\"a\") }","id":"x-c62a25049405"}
+{"expr":"{ let d = (a: 1); d.remove(\"a\"); d }","id":"x-d93f783f7653"}
+{"expr":"{ let d = (a: 1); d.remove(\"b\") }","id":"x-adbb23f5484a"}
+{"expr":"{ let d = (a: 1); d.remove(\"b\", default: 0) }","id":"x-027c3d981d5c"}
+{"expr":"{ let s = \"a\"; s.push(\"b\") }","id":"x-0c0202251f77"}
+{"expr":"{ let x = 1; x.push(2) }","id":"x-1132725511a5"}
+{"expr":"{ let f(x) = x; f = 2; f }","id":"x-c3b2f8e01f6c"}
+{"expr":"{ let x = 1; let g() = { x = 2 }; g() }","id":"x-99d2faac4fcf"}
+{"expr":"{ let x = 1; let g() = { x += 2 }; g() }","id":"x-f3db0ef21073"}
+{"expr":"{ let x = 1; let g() = { let x = 2; x = 3; x }; g() }","id":"x-836c09f7e5d6"}
+{"expr":"{ let x = (a: 1); let g() = { x.a = 2 }; g() }","id":"x-dd09fb49e620"}
+{"expr":"{ let x = (1,); let g() = { x.push(2) }; g() }","id":"x-13e6b992f901"}
+{"expr":"{ let (a, b) = (1, 2); (a, b) = (b, a); (a, b) }","id":"x-1f23cdd94177"}
+{"expr":"{ let a = 0; let b = 0; (a, b) = (1,) }","id":"x-56932f6a8511"}
+{"expr":"{ let a = 0; let b = 0; (a, ..b) = (1, 2, 3); (a, b) }","id":"x-337563c2b567"}
+{"expr":"{ let a = 0; let b = 0; (x: a, y: b) = (x: 1, y: 2); (a, b) }","id":"x-41e6d273fb72"}
+{"expr":"{ let a = (0, 0); (a.at(0), a.at(1)) = (1, 2); a }","id":"x-3b460309058d"}
+{"expr":"{ let d = (:); (d.x, d.y) = (1, 2); d }","id":"x-f18a5019083a"}
+{"expr":"{ (a, b) = (1, 2) }","id":"x-886538dbef48"}
+{"expr":"{ let a = 0; (a, _) = (1, 2); a }","id":"x-211a69dcf476"}
+{"expr":"(1, 2, 3).len()","id":"x-012f8429488d"}
+{"expr":"().len()","id":"x-5e2b4936c44e"}
+{"expr":"(1, 2).first()","id":"x-e188d499e621"}
+{"expr":"(1, 2).last()","id":"x-3da8cb92c073"}
+{"expr":"().first()","id":"x-6a6e03e7993b"}
+{"expr":"().last()","id":"x-5d10e378b5d8"}
+{"expr":"().first(default: 0)","id":"x-17f69d0d5a86"}
+{"expr":"(1, 2, 3).at(1)","id":"x-72f4fa495941"}
+{"expr":"(1, 2, 3).at(-1)","id":"x-775c01498ed6"}
+{"expr":"(1, 2, 3).at(3)","id":"x-339a3fd1e549"}
+{"expr":"(1, 2, 3).at(3, default: 0)","id":"x-7a4c145edab4"}
+{"expr":"(1, 2, 3).at(-4)","id":"x-f5d9564086f5"}
+{"expr":"(1, 2, 3).at(1.5)","id":"x-227bf0fe930d"}
+{"expr":"(1, 2, 3).at(\"a\")","id":"x-082b87950192"}
+{"expr":"(1, 2, 3).slice(1)","id":"x-ec4201161fe8"}
+{"expr":"(1, 2, 3).slice(1, 2)","id":"x-ee86fd246c6c"}
+{"expr":"(1, 2, 3).slice(-2)","id":"x-20be18ee6c86"}
+{"expr":"(1, 2, 3).slice(1, count: 1)","id":"x-975fad806ffb"}
+{"expr":"(1, 2, 3).slice(2, 1)","id":"x-4cc57fe9ada7"}
+{"expr":"(1, 2, 3).slice(0, 5)","id":"x-3f54457029ff"}
+{"expr":"(1, 2, 3).slice(1, 2, count: 1)","id":"x-43445fdbda3f"}
+{"expr":"(1, 2, 3).contains(2)","id":"x-6d1fa92ae197"}
+{"expr":"(1, 2, 3).contains(\"a\")","id":"x-8594e68d97c7"}
+{"expr":"2 in (1, 2, 3)","id":"x-d0c0f6b8cae0"}
+{"expr":"4 not in (1, 2, 3)","id":"x-7009d10f59e0"}
+{"expr":"(1, 2, 3).find(x => x > 1)","id":"x-050ac19cee28"}
+{"expr":"(1, 2, 3).find(x => x > 5)","id":"x-8a1372125694"}
+{"expr":"(1, 2, 3).position(x => x > 1)","id":"x-5e9c78b9d687"}
+{"expr":"(1, 2, 3).position(x => x > 5)","id":"x-a73d4084d19a"}
+{"expr":"(1, 2, 3).filter(x => calc.odd(x))","id":"x-031a0ed725ac"}
+{"expr":"(1, 2, 3).map(x => x * x)","id":"x-c77c3bda64b5"}
+{"expr":"(1, 2, 3).map(str)","id":"x-c4453190275e"}
+{"expr":"(1, 2).map(x => x, 1)","id":"x-97a7ee6d2ad2"}
+{"expr":"(1, 2).map()","id":"x-92ad5663cc13"}
+{"expr":"(1, 2).map(1)","id":"x-911e02063a5b"}
+{"expr":"(1, 2).map(sym.alpha)","id":"x-e92c8de2cedd"}
+{"expr":"(1, 2).map(bool)","id":"x-fc5e6081ed2f"}
+{"expr":"(1, 2).filter(x => 1)","id":"x-7f0d1a615fe8"}
+{"expr":"(1, 2, 3).enumerate()","id":"x-95e1612f3958"}
+{"expr":"(1, 2, 3).enumerate(start: 1)","id":"x-edb0b0e1f5bc"}
+{"expr":"(\"a\", \"b\").enumerate().map(((i, x)) => str(i) + x)","id":"x-4eba2c17747c"}
+{"expr":"(1, 2).zip((3, 4))","id":"x-48a57851d1ef"}
+{"expr":"(1, 2, 3).zip((4, 5))","id":"x-b0d3648235f8"}
+{"expr":"(1, 2).zip((3, 4), (5, 6))","id":"x-cd4d632249da"}
+{"expr":"(1, 2).zip()","id":"x-b5d4fea7faaa"}
+{"expr":"(1, 2, 3).zip((4, 5), exact: true)","id":"x-47688c202478"}
+{"expr":"(1, 2).zip(3)","id":"x-36684ebc3836"}
+{"expr":"(1, 2, 3).fold(0, (acc, x) => acc + x)","id":"x-fa4efcd11101"}
+{"expr":"(\"a\", \"b\").fold(\"\", (acc, x) => acc + x)","id":"x-bebf2750fd5c"}
+{"expr":"(1, 2, 3).sum()","id":"x-577d8fc037dd"}
+{"expr":"().sum()","id":"x-264ce6fe084b"}
+{"expr":"().sum(default: 0)","id":"x-900a702010ba"}
+{"expr":"(1, 2.5).sum()","id":"x-74df40515d21"}
+{"expr":"(\"a\", \"b\").sum()","id":"x-e9ac2653083a"}
+{"expr":"(1pt, 2pt).sum()","id":"x-846c926efd3b"}
+{"expr":"(1, \"a\").sum()","id":"x-7aa69faf0889"}
+{"expr":"(1, 2, 3).product()","id":"x-de21f6009c12"}
+{"expr":"().product()","id":"x-cda0e1e70991"}
+{"expr":"().product(default: 1)","id":"x-b516b11e186d"}
+{"expr":"(2, 1.5).product()","id":"x-af79282ba7ec"}
+{"expr":"(\"a\", 2).product()","id":"x-ffcedbf5b18e"}
+{"expr":"(1, 2, 3).any(x => x > 2)","id":"x-7f3fff1352c3"}
+{"expr":"(1, 2, 3).all(x => x > 2)","id":"x-6cfa774a5f2a"}
+{"expr":"().any(x => true)","id":"x-da55fe94524a"}
+{"expr":"().all(x => false)","id":"x-0ba902710e26"}
+{"expr":"(1, 2).any(x => 1)","id":"x-5b359e7360f0"}
+{"expr":"((1, 2), (3, (4,))).flatten()","id":"x-ee9bed7bd248"}
+{"expr":"().flatten()","id":"x-cf215b47ed67"}
+{"expr":"(1, 2, 3).rev()","id":"x-728844320019"}
+{"expr":"(1, 2, 3, 2).split(2)","id":"x-afa439537ebf"}
+{"expr":"(1, 2).split(5)","id":"x-74d1a0857516"}
+{"expr":"(\"a\", \"b\").join(\", \")","id":"x-b7676c6e1753"}
+{"expr":"(\"a\", \"b\", \"c\").join(\", \", last: \" and \")","id":"x-2209ba924913"}
+{"expr":"().join()","id":"x-17b843a773fb"}
+{"expr":"(\"a\",).join(\", \")","id":"x-7b959042d4c1"}
+{"expr":"([a], [b]).join([+])","id":"x-b9342c3e1776"}
+{"expr":"(1, 2).join()","id":"x-b6394a2835d4"}
+{"expr":"(1, 2).join(\", \")","id":"x-3e1bb35821f5"}
+{"expr":"(\"a\", 1).join()","id":"x-6b89cf3f9cdb"}
+{"expr":"(1, 2, 3).intersperse(0)","id":"x-79c696a4fe7f"}
+{"expr":"().intersperse(0)","id":"x-5f676bd57d72"}
+{"expr":"(1,).intersperse(0)","id":"x-542efe0769a3"}
+{"expr":"(1, 2, 3, 4, 5).chunks(2)","id":"x-f4238fa06fb6"}
+{"expr":"(1, 2, 3, 4, 5).chunks(2, exact: true)","id":"x-962f10986824"}
+{"expr":"(1, 2).chunks(0)","id":"x-0bc277c9784c"}
+{"expr":"(1, 2, 3).windows(2)","id":"x-5f876d0409e6"}
+{"expr":"(1, 2).windows(3)","id":"x-0a5795ff62c0"}
+{"expr":"(1, 2).windows(0)","id":"x-67a976a9bfa9"}
+{"expr":"(3, 1, 2).sorted()","id":"x-aa6e1c806100"}
+{"expr":"(3, 1, 2).sorted(key: x => -x)","id":"x-6ff6c79bca41"}
+{"expr":"(3, 1, 2).sorted(by: (a, b) => a > b)","id":"x-cf34f63d6d1c"}
+{"expr":"(\"b\", \"a\").sorted()","id":"x-8e08338d652c"}
+{"expr":"(1, \"a\").sorted()","id":"x-ff0581c62998"}
+{"expr":"((2, 1), (1, 2)).sorted()","id":"x-158b781bdd6e"}
+{"expr":"(1, 2).sorted(by: (a, b) => 1)","id":"x-0efc993c79fa"}
+{"expr":"(1.5, 1).sorted()","id":"x-bbcdaf8e14ed"}
+{"expr":"(1, 1.0).sorted()","id":"x-55d011561898"}
+{"expr":"(1, 2, 1, 3, 2).dedup()","id":"x-f00062bded04"}
+{"expr":"(1, 2, 3).dedup(key: x => calc.rem(x, 2))","id":"x-0d43c0d98f13"}
+{"expr":"().dedup()","id":"x-40e7ab690548"}
+{"expr":"((\"a\", 1), (\"b\", 2)).to-dict()","id":"x-68b836833637"}
+{"expr":"((1, 2),).to-dict()","id":"x-ca06d639e92e"}
+{"expr":"((\"a\", 1, 2),).to-dict()","id":"x-84f2f8726668"}
+{"expr":"(\"a\",).to-dict()","id":"x-c9719cadc057"}
+{"expr":"(1, 2, 3).reduce((a, b) => a + b)","id":"x-ad27a2634190"}
+{"expr":"().reduce((a, b) => a + b)","id":"x-a98796da3a8e"}
+{"expr":"(5,).reduce((a, b) => a + b)","id":"x-f7614834eaa1"}
+{"expr":"(1, 2).reduce(calc.max)","id":"x-a5f795eb8292"}
+{"expr":"range(5)","id":"x-6b95bbe7870e"}
+{"expr":"range(2, 5)","id":"x-c806f8251c1f"}
+{"expr":"range(0, 10, step: 3)","id":"x-46a7345f7948"}
+{"expr":"range(5, 0, step: -2)","id":"x-eb1c1ce8b647"}
+{"expr":"range(0, 5, step: 0)","id":"x-ff5a064f1f28"}
+{"expr":"range(3, 1)","id":"x-d71aa43674b1"}
+{"expr":"range(-3)","id":"x-ff5f97191450"}
+{"expr":"range()","id":"x-bc5e0348a3eb"}
+{"expr":"range(1, 2, 3)","id":"x-f1e7e7405536"}
+{"expr":"range(1.5)","id":"x-335e81537751"}
+{"expr":"range(10000).len()","id":"x-ba643d658799"}
+{"expr":"(1, 2) + (3,)","id":"x-34d1ef49d3a1"}
+{"expr":"(1, 2) * -1","id":"x-0bfb29b017b7"}
+{"expr":"(1, 2) * 1.5","id":"x-5fd88a2a69c6"}
+{"expr":"array((1, 2))","id":"x-798f41d8dd06"}
+{"expr":"array(1)","id":"x-7928a8e6ad9e"}
+{"expr":"array(\"a\")","id":"x-df8f36da047c"}
+{"expr":"(1, 2).foo()","id":"x-99e453fb0d59"}
+{"expr":"(1, 2).len","id":"x-ff80952f18c4"}
+{"expr":"(1, 2).foo","id":"x-db27ceb34de5"}
+{"expr":"(a: 1, b: 2).len()","id":"x-82567ddcfbb1"}
+{"expr":"(:).len()","id":"x-a351744bee40"}
+{"expr":"(a: 1).at(\"a\")","id":"x-ae55dffc8aae"}
+{"expr":"(a: 1).at(\"b\")","id":"x-7d6a0ff8afff"}
+{"expr":"(a: 1).at(\"b\", default: 0)","id":"x-ffb6d1f352a3"}
+{"expr":"(a: 1).at(1)","id":"x-a7ddbe00b6c8"}
+{"expr":"(a: 1).keys()","id":"x-7eb1bc0b2e50"}
+{"expr":"(a: 1, b: 2).values()","id":"x-e9eb1c8979e6"}
+{"expr":"(a: 1, b: 2).pairs()","id":"x-b9f84cf7d44f"}
+{"expr":"(a: 1).a","id":"x-614421477d6e"}
+{"expr":"(a: 1).b","id":"x-f23e48484b9d"}
+{"expr":"(a: 1) + (b: 2)","id":"x-136201f9ba54"}
+{"expr":"(a: 1) + (a: 2)","id":"x-58cd9927492c"}
+{"expr":"\"b\" in (a: 1)","id":"x-0557d2db0ff4"}
+{"expr":"1 in (a: 1)","id":"x-48447c16ccac"}
+{"expr":"(a: 1, b: 2).map(v => v + 1)","id":"x-0e0b0d75ce79"}
+{"expr":"(a: 1, b: 2).filter(v => v > 1)","id":"x-b25c19a82b58"}
+{"expr":"(a: 1).filter((k, v) => true)","id":"x-742f0047c494"}
+{"expr":"(a: 1).foo()","id":"x-c33d67c2fbaf"}
+{"expr":"(a: 1).len","id":"x-d96886e4bb20"}
+{"expr":"dictionary(calc).keys().len()","id":"x-dac53221e2c7"}
+{"expr":"dictionary(sym).len()","id":"x-93239ef4e161"}
+{"expr":"dictionary(math).len()","id":"x-16435dce4ede"}
+{"expr":"dictionary(1)","id":"x-4d1a5a2a6507"}
+{"expr":"\"héllo\".len()","id":"x-e3ec045bcad0"}
+{"expr":"\"\".len()","id":"x-3a3d5f4792b1"}
+{"expr":"\"abc\".first()","id":"x-b0047a82e45d"}
+{"expr":"\"abc\".last()","id":"x-8a847f196fca"}
+{"expr":"\"\".first()","id":"x-d74c380d118d"}
+{"expr":"\"héllo\".at(1)","id":"x-1ab3df5ce07c"}
+{"expr":"\"héllo\".at(2)","id":"x-44dd846f0f72"}
+{"expr":"\"abc\".at(-1)","id":"x-9b38efa4a605"}
+{"expr":"\"abc\".at(5)","id":"x-013c7810ded3"}
+{"expr":"\"abc\".at(5, default: \"z\")","id":"x-7e968187e14a"}
+{"expr":"\"héllo\".slice(0, 2)","id":"x-f5f2d963192e"}
+{"expr":"\"héllo\".slice(1, 3)","id":"x-efde35563f92"}
+{"expr":"\"abc\".slice(1)","id":"x-87ca44dcbf3e"}
+{"expr":"\"abc\".slice(-2)","id":"x-46b6b4c35d86"}
+{"expr":"\"abc\".slice(2, 1)","id":"x-b9ca0a096d79"}
+{"expr":"\"abc\".slice(1, count: 1)","id":"x-efe5ce3bdfc3"}
+{"expr":"\"abc\".clusters()","id":"x-b87c51ec9e9d"}
+{"expr":"\"e\\u{301}a\".clusters()","id":"x-0ffc27f03d49"}
+{"expr":"\"e\\u{301}a\".codepoints()","id":"x-519879764d16"}
+{"expr":"\"abc\".contains(\"b\")","id":"x-538a3b519ec7"}
+{"expr":"\"abc\".contains(\"d\")","id":"x-053475e1a0d1"}
+{"expr":"\"abc\".contains(1)","id":"x-ad3a4c3d6d49"}
+{"expr":"\"abc\".starts-with(\"ab\")","id":"x-8db86a3bb356"}
+{"expr":"\"abc\".ends-with(\"bc\")","id":"x-e0fa9afeee37"}
+{"expr":"\"abc\".find(\"b\")","id":"x-ae88666c8e0c"}
+{"expr":"\"abc\".find(\"d\")","id":"x-b8c6256c19c2"}
+{"expr":"\"abc\".position(\"c\")","id":"x-2e3e79c32e87"}
+{"expr":"\"héllo\".position(\"l\")","id":"x-2bbfb83a166a"}
+{"expr":"\"abc\".match(\"b\")","id":"x-6b9f0d962587"}
+{"expr":"\"abc\".match(\"d\")","id":"x-3d47c5603d3e"}
+{"expr":"\"abab\".matches(\"b\")","id":"x-47e6f3402950"}
+{"expr":"\"abc\".matches(\"\")","id":"x-7ec358854a82"}
+{"expr":"\"abc\".replace(\"b\", \"x\")","id":"x-9c8f756ebb9b"}
+{"expr":"\"abab\".replace(\"b\", \"x\", count: 1)","id":"x-8dd202ee47e6"}
+{"expr":"\"abab\".replace(\"b\", m => m.text + str(m.start))","id":"x-f8ec96aaa2c4"}
+{"expr":"\"abc\".replace(\"\", \"-\")","id":"x-e6267670d66a"}
+{"expr":"\"abc\".replace(\"b\", 1)","id":"x-2b4c72b9c4ab"}
+{"expr":"\"abc\".replace(\"b\", str)","id":"x-219302c3b1fe"}
+{"expr":"\"  a b  \".trim()","id":"x-cdb6adfd73ce"}
+{"expr":"\"xxaxx\".trim(\"x\")","id":"x-e5009599c2a4"}
+{"expr":"\"xxaxx\".trim(\"x\", at: start)","id":"x-668927de0fad"}
+{"expr":"\"xxaxx\".trim(\"x\", at: end)","id":"x-4010fa37d18c"}
+{"expr":"\"xxaxx\".trim(\"x\", repeat: false)","id":"x-e0d48fc49475"}
+{"expr":"\"xxaxx\".trim(\"x\", at: center)","id":"x-672d1657a967"}
+{"expr":"\" a \".trim(at: start)","id":"x-8edf1e2db5c1"}
+{"expr":"\"a b  c\".split()","id":"x-cb6d3ed6e9fa"}
+{"expr":"\"a,b,,c\".split(\",\")","id":"x-49a7d9bda0ef"}
+{"expr":"\"abc\".split(\"\")","id":"x-af2a3d72d85f"}
+{"expr":"\"\".split(\",\")","id":"x-54986d0637c4"}
+{"expr":"\"abc\".rev()","id":"x-f511c5d6894e"}
+{"expr":"\"e\\u{301}a\".rev()","id":"x-af396397fdf8"}
+{"expr":"\"abc\".upper()","id":"x-2d3c17fd7be6"}
+{"expr":"\"a\" * 3","id":"x-d89cafa545c8"}
+{"expr":"3 * \"ab\"","id":"x-7d730a32f517"}
+{"expr":"\"a\" * -1","id":"x-b2b73a621807"}
+{"expr":"\"a\" * 0","id":"x-b7b01dff6e4f"}
+{"expr":"\"ab\" in \"abc\"","id":"x-4fa5b12fd7ce"}
+{"expr":"\"d\" in \"abc\"","id":"x-cd5eab86d715"}
+{"expr":"\"a\" < \"b\"","id":"x-13479f51fcb5"}
+{"expr":"\"B\" < \"a\"","id":"x-be49ad5401b7"}
+{"expr":"\"10\" < \"9\"","id":"x-5ad16cade8aa"}
+{"expr":"str(1)","id":"x-7257b6731c3e"}
+{"expr":"str(1.5)","id":"x-df2fe5d0465f"}
+{"expr":"str(1e20)","id":"x-9ce4e5ec8077"}
+{"expr":"str(1.0)","id":"x-b4dce4c00fc4"}
+{"expr":"str(true)","id":"x-a9a022014b56"}
+{"expr":"str(\"a\")","id":"x-8bb2fd46e705"}
+{"expr":"str(<lbl>)","id":"x-61e8e13f9eff"}
+{"expr":"str(int)","id":"x-312c709783c6"}
+{"expr":"str(none)","id":"x-7ab8fbabd8dc"}
+{"expr":"str(1pt)","id":"x-3694681bcbe5"}
+{"expr":"str([a])","id":"x-a864bd1f58a7"}
+{"expr":"str(1, 2)","id":"x-f7e6e5270ddc"}
+{"expr":"str(1, base: 2)","id":"x-fce8fe393925"}
+{"expr":"str(255, base: 16)","id":"x-00ba46c7f5f0"}
+{"expr":"str(-255, base: 16)","id":"x-d069db175961"}
+{"expr":"str(35, base: 36)","id":"x-e616ef1ec128"}
+{"expr":"str(1, base: 1)","id":"x-f16d6f654e14"}
+{"expr":"str(1, base: 37)","id":"x-18caa944da9f"}
+{"expr":"str(1.5, base: 2)","id":"x-0e18990a3ce2"}
+{"expr":"str.from-unicode(97)","id":"x-73295add2399"}
+{"expr":"str.from-unicode(128512)","id":"x-195b3ae7e99d"}
+{"expr":"str.from-unicode(-1)","id":"x-d8c634b8d3ec"}
+{"expr":"str.from-unicode(55296)","id":"x-1198e62130f0"}
+{"expr":"str.from-unicode(1114112)","id":"x-2731797dcf47"}
+{"expr":"str.to-unicode(\"a\")","id":"x-a41e2b3bf34f"}
+{"expr":"str.to-unicode(\"ab\")","id":"x-1a2334245766"}
+{"expr":"str.to-unicode(\"\")","id":"x-36f4667b6d88"}
+{"expr":"str.to-unicode(\"é\")","id":"x-5a9a41974d7b"}
+{"expr":"repr(\"a\")","id":"x-964ae2a7be95"}
+{"expr":"repr(\"a\\\"b\")","id":"x-b03c6d37bfee"}
+{"expr":"repr(\"a\\\\b\")","id":"x-4a25fc883605"}
+{"expr":"repr(\"\\n\")","id":"x-c70d634aca94"}
+{"expr":"repr(\"é\")","id":"x-0bf1b9e25e1f"}
+{"expr":"upper(\"abc\")","id":"x-c3ed0e054228"}
+{"expr":"lower(\"ABC\")","id":"x-71cafa635bfa"}
+{"expr":"upper(\"héllo\")","id":"x-b544b2b57dbe"}
+{"expr":"upper(1)","id":"x-f3dae9d6f631"}
+{"expr":"(5).signum()","id":"x-61ef7cf63da3"}
+{"expr":"(-5).signum()","id":"x-f042c7cb0f2a"}
+{"expr":"(0).signum()","id":"x-de9a635d0a89"}
+{"expr":"(1.5).signum()","id":"x-8a5292669533"}
+{"expr":"(-0.0).signum()","id":"x-5408477c1497"}
+{"expr":"(0.0).signum()","id":"x-1e73708b96a1"}
+{"expr":"float.inf","id":"x-82178bfcf753"}
+{"expr":"-float.inf","id":"x-e09ef079e05d"}
+{"expr":"float.nan","id":"x-5615f635171d"}
+{"expr":"float.nan == float.nan","id":"x-45a6132cfd58"}
+{"expr":"float.inf > 1e308","id":"x-222191284f64"}
+{"expr":"float.nan.is-nan()","id":"x-d9a5560becea"}
+{"expr":"(1.5).is-nan()","id":"x-ae7d2337df64"}
+{"expr":"float.inf.is-infinite()","id":"x-d49b7964faeb"}
+{"expr":"(1.0).is-infinite()","id":"x-2651b48a1f7d"}
+{"expr":"(1).is-nan()","id":"x-7603990a5886"}
+{"expr":"(5).bit-not()","id":"x-2ea9a7e03f54"}
+{"expr":"(5).bit-and(3)","id":"x-0fd5cf839a71"}
+{"expr":"(5).bit-or(3)","id":"x-e6701af31663"}
+{"expr":"(5).bit-xor(3)","id":"x-8620d787525e"}
+{"expr":"(1).bit-lshift(3)","id":"x-7c127a3bef54"}
+{"expr":"(1).bit-lshift(63)","id":"x-1fe08a35b8b6"}
+{"expr":"(1).bit-lshift(64)","id":"x-f05e226ce395"}
+{"expr":"(-8).bit-rshift(1)","id":"x-578314af5119"}
+{"expr":"(-8).bit-rshift(1, logical: true)","id":"x-630db9eece08"}
+{"expr":"(8).bit-rshift(64)","id":"x-2a85dd0173b1"}
+{"expr":"(8).bit-rshift(-1)","id":"x-25a539d8df6b"}
+{"expr":"int(1.9)","id":"x-60c18464d64f"}
+{"expr":"int(-1.9)","id":"x-f20caa68184a"}
+{"expr":"int(\"42\")","id":"x-bb6a52183cde"}
+{"expr":"int(\"-42\")","id":"x-288e1f917de5"}
+{"expr":"int(\"+42\")","id":"x-7a983f71fd11"}
+{"expr":"int(\" 42\")","id":"x-4fc1471d68c9"}
+{"expr":"int(\"4.2\")","id":"x-8d4d7c86cbde"}
+{"expr":"int(\"1e3\")","id":"x-61c9e095d1f2"}
+{"expr":"int(true)","id":"x-7b4893146737"}
+{"expr":"int(false)","id":"x-3e2e76beabd1"}
+{"expr":"int(1e19)","id":"x-842f5f69916e"}
+{"expr":"int(1e300)","id":"x-5becb8274003"}
+{"expr":"int(float.nan)","id":"x-307350fde7e2"}
+{"expr":"int(float.inf)","id":"x-b29b04cd25a1"}
+{"expr":"int(\"9223372036854775808\")","id":"x-14cfe9944c82"}
+{"expr":"int(\"-9223372036854775808\")","id":"x-9e3db8fab6bb"}
+{"expr":"int(\"\")","id":"x-f33673aa3dc6"}
+{"expr":"int(\"0x10\")","id":"x-174c42131809"}
+{"expr":"int(none)","id":"x-20b716766f13"}
+{"expr":"int(1pt)","id":"x-fdcc285b3350"}
+{"expr":"float(1)","id":"x-8c01540e0939"}
+{"expr":"float(\"1.5\")","id":"x-e960c18b8f2d"}
+{"expr":"float(\"1e3\")","id":"x-3332f6ade88f"}
+{"expr":"float(\" 1.5\")","id":"x-ad21a8a965f4"}
+{"expr":"float(\"inf\")","id":"x-eba570243371"}
+{"expr":"float(\"-inf\")","id":"x-1c11f7c9497d"}
+{"expr":"float(\"nan\")","id":"x-a3b815f31f4a"}
+{"expr":"float(\"NaN\")","id":"x-68651e822854"}
+{"expr":"float(\"infinity\")","id":"x-ed555380f1cc"}
+{"expr":"float(\"1.5.5\")","id":"x-b1bc4c2413a4"}
+{"expr":"float(\"\")","id":"x-70a09b9f4ac8"}
+{"expr":"float(true)","id":"x-e6cf3936f36d"}
+{"expr":"float(50%)","id":"x-78496b8484a6"}
+{"expr":"float(9223372036854775807)","id":"x-8a5c009939b0"}
+{"expr":"float(\"0x10\")","id":"x-872754cc847a"}
+{"expr":"float(\".5\")","id":"x-6952932d6edd"}
+{"expr":"float(\"5.\")","id":"x-5bd9e052bce1"}
+{"expr":"float(\"+1.5\")","id":"x-a91763287fe0"}
+{"expr":"float(\"1_000\")","id":"x-6292a5318fb0"}
+{"expr":"type(1)","id":"x-9f263b53a1cf"}
+{"expr":"type(1.5)","id":"x-09e882a1ce58"}
+{"expr":"type(\"a\")","id":"x-a76660f1824a"}
+{"expr":"type(none)","id":"x-e7221dee9ead"}
+{"expr":"type(auto)","id":"x-07576eb509e4"}
+{"expr":"type(true)","id":"x-589099de3a31"}
+{"expr":"type(())","id":"x-b18c0b8d648e"}
+{"expr":"type((:))","id":"x-f7e8a377f21d"}
+{"expr":"type([a])","id":"x-8446370d9687"}
+{"expr":"type(calc)","id":"x-6ca53301d636"}
+{"expr":"type(int)","id":"x-86c111e395c9"}
+{"expr":"type(x => x)","id":"x-22aed013044d"}
+{"expr":"type(1pt)","id":"x-f222a87e8664"}
+{"expr":"type(1em)","id":"x-ccdddbf77523"}
+{"expr":"type(1pt + 1em)","id":"x-c0ff28d57859"}
+{"expr":"type(50%)","id":"x-dea8ce733b4f"}
+{"expr":"type(50% + 1pt)","id":"x-3295cd8ef9c5"}
+{"expr":"type(1deg)","id":"x-0c1e6824623e"}
+{"expr":"type(1fr)","id":"x-b5445c0b4868"}
+{"expr":"type(red)","id":"x-0d08a34ee34d"}
+{"expr":"type(left)","id":"x-a792cf9096fa"}
+{"expr":"type(sym.alpha)","id":"x-5cb29d8870c7"}
+{"expr":"type(<lbl>)","id":"x-4d72e0ef887a"}
+{"expr":"type(arguments())","id":"x-5f6ea534a982"}
+{"expr":"type(0.5pt + red)","id":"x-fc9c9f7bc207"}
+{"expr":"type(type(1))","id":"x-318c7ed40586"}
+{"expr":"repr(type(1))","id":"x-18cbb5787cea"}
+{"expr":"str(type(1))","id":"x-b1ef4f0de2c1"}
+{"expr":"type(1) == int","id":"x-27705a67fdd2"}
+{"expr":"int == \"int\"","id":"x-8e126fd23b61"}
+{"expr":"repr(int)","id":"x-fcec0e79d55b"}
+{"expr":"repr(none)","id":"x-469dec6ab906"}
+{"expr":"repr(type(none))","id":"x-8982401515cc"}
+{"expr":"type(none) == none","id":"x-b4acc2e60b96"}
+{"expr":"int.foo","id":"x-fd0a3286d266"}
+{"expr":"str.len","id":"x-ab0b4c334902"}
+{"expr":"int.max","id":"x-be2c616334a0"}
+{"expr":"int.min","id":"x-caafbef9579e"}
+{"expr":"repr(1)","id":"x-537485e57aa3"}
+{"expr":"repr(1.0)","id":"x-0b4d859e45f5"}
+{"expr":"repr(1.5)","id":"x-70c4ae46beed"}
+{"expr":"repr(1e20)","id":"x-f2a5a34e13bf"}
+{"expr":"repr(1e21)","id":"x-99feb120a28c"}
+{"expr":"repr(0.1 + 0.2)","id":"x-3a31c3dba768"}
+{"expr":"repr(1e-7)","id":"x-e2bf872382b2"}
+{"expr":"repr(-0.0)","id":"x-d73084be3c82"}
+{"expr":"repr(1pt)","id":"x-7690f765716d"}
+{"expr":"repr(1.5em)","id":"x-83dfe8051c42"}
+{"expr":"repr(1pt + 1em)","id":"x-53d450397f5f"}
+{"expr":"repr(50%)","id":"x-d5d226a6ba56"}
+{"expr":"repr(1deg)","id":"x-69491012a095"}
+{"expr":"repr(90deg)","id":"x-23fa0399002b"}
+{"expr":"repr(1rad)","id":"x-90f5c315be9c"}
+{"expr":"repr(1fr)","id":"x-561d056bb790"}
+{"expr":"repr(red)","id":"x-4a1c14cc3b41"}
+{"expr":"repr(rgb(1, 2, 3))","id":"x-3f7ef85ae19b"}
+{"expr":"repr(left)","id":"x-7e070cec81bd"}
+{"expr":"repr(sym.alpha)","id":"x-566bf3aec6da"}
+{"expr":"repr([a])","id":"x-0a0e433a0159"}
+{"expr":"repr([a *b*])","id":"x-57f19b463af5"}
+{"expr":"repr(x => x)","id":"x-212f2d7d5dc8"}
+{"expr":"repr(calc)","id":"x-73923a31a744"}
+{"expr":"repr(calc.abs)","id":"x-c4a00ee928a6"}
+{"expr":"repr(<lbl>)","id":"x-d09dc7783250"}
+{"expr":"repr(())","id":"x-9ec69d19ea1a"}
+{"expr":"repr((1,))","id":"x-09c595c86e58"}
+{"expr":"repr((a: 1))","id":"x-791512a49817"}
+{"expr":"repr(arguments(1, a: 2))","id":"x-1415f09510c4"}
+{"expr":"repr(0.5pt + red)","id":"x-1af2ac30fd0f"}
+{"expr":"repr(true)","id":"x-c8f027b4059d"}
+{"expr":"repr(auto)","id":"x-4fee5c99f39f"}
+{"expr":"panic()","id":"x-da2acbfa3a65"}
+{"expr":"panic(1)","id":"x-9655b4b957a7"}
+{"expr":"panic(\"a\", 1, [b])","id":"x-305d1611b33f"}
+{"expr":"assert(true)","id":"x-474a168fd78a"}
+{"expr":"assert(false)","id":"x-62d57d5f33d0"}
+{"expr":"assert(false, message: \"nope\")","id":"x-dbe9e9e0d148"}
+{"expr":"assert(1)","id":"x-5131c997f011"}
+{"expr":"assert.eq(1, 1)","id":"x-b90e8c463ad8"}
+{"expr":"assert.eq(1, 2)","id":"x-93a7f62d6f10"}
+{"expr":"assert.eq(1, 2, message: \"m\")","id":"x-b2762110da4c"}
+{"expr":"assert.ne(1, 2)","id":"x-ad2130a8b034"}
+{"expr":"assert.ne(1, 1)","id":"x-8fc9ab2cc12a"}
+{"expr":"assert.eq(1, 1.0)","id":"x-293dc39ba099"}
+{"expr":"assert.eq((1, 2), (1, 2))","id":"x-3c4515c54b0c"}
+{"expr":"0.1 + 0.2","id":"x-2853eaa8f0a3"}
+{"expr":"1 / 3","id":"x-b47df6774d03"}
+{"expr":"1e308 * 10","id":"x-ce76f8aa70a3"}
+{"expr":"-1e308 * 10","id":"x-6ce36ab36216"}
+{"expr":"9223372036854775807 + 1","id":"x-6967f94dc406"}
+{"expr":"9223372036854775807 * 2","id":"x-dc91891b66ce"}
+{"expr":"-9223372036854775807 - 2","id":"x-6e30d3017bfb"}
+{"expr":"1 / 0","id":"x-95baf036f1aa"}
+{"expr":"1.0 / 0","id":"x-a70c2871eebe"}
+{"expr":"0 / 0","id":"x-61c85f3d19dd"}
+{"expr":"7 / 2","id":"x-8949e0f5f22e"}
+{"expr":"-7 / 2","id":"x-f97bbff1f4cf"}
+{"expr":"1e400","id":"x-f2bba4568fec"}
+{"expr":"9223372036854775808","id":"x-c5c29af0c2b1"}
+{"expr":"-9223372036854775808","id":"x-85386477f3af"}
+{"expr":"0x1f","id":"x-922783559b2a"}
+{"expr":"0b101","id":"x-412cb8fe88ce"}
+{"expr":"0o17","id":"x-9e63dedde5e8"}
+{"expr":"1pt.pt()","id":"x-a4644f7cae90"}
+{"expr":"1cm.pt()","id":"x-a1b31cda6614"}
+{"expr":"1in.pt()","id":"x-7464877a649e"}
+{"expr":"1mm.pt()","id":"x-25498bd4b303"}
+{"expr":"72pt.inches()","id":"x-50420d4adee8"}
+{"expr":"1cm.mm()","id":"x-a4c3230fc290"}
+{"expr":"10mm.cm()","id":"x-259ff11e257f"}
+{"expr":"1em.pt()","id":"x-728565b9b2ac"}
+{"expr":"(1pt + 1em).pt()","id":"x-0b69c2c90661"}
+{"expr":"1pt.abs","id":"x-3762cb89efef"}
+{"expr":"1pt.em","id":"x-b1911b206c9f"}
+{"expr":"(1pt + 2em).em","id":"x-fbcc6cb57b50"}
+{"expr":"(1pt + 2em).abs","id":"x-31b3bb87a116"}
+{"expr":"(50% + 1pt).length","id":"x-58c701c01763"}
+{"expr":"(50% + 1pt).ratio","id":"x-a35d1cc40c70"}
+{"expr":"90deg.rad()","id":"x-cf7eabe6dc52"}
+{"expr":"1rad.deg()","id":"x-0ba3ee745198"}
+{"expr":"180deg.rad()","id":"x-0d5ac197244e"}
+{"expr":"90deg.deg()","id":"x-e18692729514"}
+{"expr":"1pt.foo()","id":"x-dc7534317a5d"}
+{"expr":"1deg.foo","id":"x-cf662f5a149e"}
+{"expr":"calc.abs(-3)","id":"x-a2cf8acf9f73"}
+{"expr":"calc.abs(-3.5)","id":"x-1fa298f4e0c6"}
+{"expr":"calc.abs(-1pt)","id":"x-fd647325ff65"}
+{"expr":"calc.abs(-50%)","id":"x-de9cd32af846"}
+{"expr":"calc.abs(-1deg)","id":"x-2e75c828bb37"}
+{"expr":"calc.abs(-1fr)","id":"x-63220f5f2daf"}
+{"expr":"calc.abs(-(1pt + 1em))","id":"x-6c3f7d1ca9c6"}
+{"expr":"calc.abs(\"a\")","id":"x-6217386e73a6"}
+{"expr":"calc.abs(-9223372036854775807 - 1)","id":"x-1e23c08924fe"}
+{"expr":"calc.pow(2, 10)","id":"x-f56354715b69"}
+{"expr":"calc.pow(2, -1)","id":"x-b85910fcbf36"}
+{"expr":"calc.pow(2.5, 2)","id":"x-f76bc238033d"}
+{"expr":"calc.pow(2, 0.5)","id":"x-2ef2788ca198"}
+{"expr":"calc.pow(0, 0)","id":"x-5e97c4bf7f76"}
+{"expr":"calc.pow(0, -1)","id":"x-a7f01083d4bc"}
+{"expr":"calc.pow(2, 63)","id":"x-8bcd132ed501"}
+{"expr":"calc.pow(2, 62)","id":"x-0a1c74a6a966"}
+{"expr":"calc.pow(-2, 63)","id":"x-ad41636ac5ae"}
+{"expr":"calc.pow(2, float.inf)","id":"x-6692732592d6"}
+{"expr":"calc.pow(2, 2147483648)","id":"x-adfd706bbfda"}
+{"expr":"calc.pow(-8, 1/3)","id":"x-adbd67e00ba7"}
+{"expr":"calc.pow(10, 2)","id":"x-e8173f95aa3d"}
+{"expr":"calc.pow(calc.e, 2)","id":"x-b9387cac91c5"}
+{"expr":"calc.pow(2, 3.5)","id":"x-fb9d79177cff"}
+{"expr":"calc.pow(1.1, 10)","id":"x-11b66ee629f8"}
+{"expr":"calc.pow(7.3, 33)","id":"x-7386f70c05dc"}
+{"expr":"calc.pow(0.98765, -47)","id":"x-b8e5d529c1a6"}
+{"expr":"calc.exp(1)","id":"x-2bae66c09510"}
+{"expr":"calc.exp(0)","id":"x-bccf16f4d7e4"}
+{"expr":"calc.exp(-1.5)","id":"x-fcd64cba0ac5"}
+{"expr":"calc.exp(710)","id":"x-bc37156dbb4d"}
+{"expr":"calc.exp(float.inf)","id":"x-63eb0e825a1c"}
+{"expr":"calc.exp(float.nan)","id":"x-cb667d2e8e98"}
+{"expr":"calc.sqrt(4)","id":"x-840b9be6c9a7"}
+{"expr":"calc.sqrt(2)","id":"x-c30e212e4b51"}
+{"expr":"calc.sqrt(-1)","id":"x-1e55efdd9100"}
+{"expr":"calc.sqrt(0)","id":"x-d001289e2b41"}
+{"expr":"calc.root(27, 3)","id":"x-54ce1bbd0583"}
+{"expr":"calc.root(-27, 3)","id":"x-76c59b7b3e1f"}
+{"expr":"calc.root(16, 4)","id":"x-2f6f83ba3568"}
+{"expr":"calc.root(-16, 4)","id":"x-6ea72823d89c"}
+{"expr":"calc.root(2, 0)","id":"x-a04fa76142f9"}
+{"expr":"calc.root(2, -1)","id":"x-cef2775cc9d6"}
+{"expr":"calc.sin(0)","id":"x-3ca23a48577c"}
+{"expr":"calc.sin(90deg)","id":"x-44066374c255"}
+{"expr":"calc.sin(1)","id":"x-2c86afe622d4"}
+{"expr":"calc.sin(calc.pi)","id":"x-495106706940"}
+{"expr":"calc.sin(100)","id":"x-5ca56b4742d2"}
+{"expr":"calc.cos(0)","id":"x-de44dd528365"}
+{"expr":"calc.cos(180deg)","id":"x-9928dea5bcf8"}
+{"expr":"calc.cos(1)","id":"x-ee0057ebf125"}
+{"expr":"calc.tan(45deg)","id":"x-628cbb767df6"}
+{"expr":"calc.tan(1)","id":"x-79a8d1927075"}
+{"expr":"calc.asin(1)","id":"x-48a53e47465d"}
+{"expr":"calc.asin(2)","id":"x-34ef02cb678c"}
+{"expr":"calc.acos(0)","id":"x-8a292404a77f"}
+{"expr":"calc.atan(1)","id":"x-465660a23e7d"}
+{"expr":"calc.atan2(1, 1)","id":"x-fff7c29d0812"}
+{"expr":"calc.atan2(0, -1)","id":"x-497d7d8ddb9e"}
+{"expr":"calc.atan2(1, 0)","id":"x-51d6f48b4b3f"}
+{"expr":"calc.sinh(1)","id":"x-255f855d388c"}
+{"expr":"calc.cosh(1)","id":"x-b0d971c8ca96"}
+{"expr":"calc.tanh(1)","id":"x-ead9eb031eec"}
+{"expr":"calc.asinh(1)","id":"x-7d13f9d765ec"}
+{"expr":"calc.acosh(2)","id":"x-131da004e105"}
+{"expr":"calc.acosh(0.5)","id":"x-a8245602026d"}
+{"expr":"calc.atanh(0.5)","id":"x-25c52a888548"}
+{"expr":"calc.atanh(1)","id":"x-0dc48d99352c"}
+{"expr":"calc.atanh(2)","id":"x-6116b3fd92d7"}
+{"expr":"calc.sin(\"a\")","id":"x-cd71e4eaa8c7"}
+{"expr":"calc.sin(1pt)","id":"x-04602aca0b67"}
+{"expr":"calc.log(100)","id":"x-420f0992081e"}
+{"expr":"calc.log(8, base: 2)","id":"x-8335e89b2e3d"}
+{"expr":"calc.log(0)","id":"x-696323909573"}
+{"expr":"calc.log(-1)","id":"x-f34659213dd6"}
+{"expr":"calc.log(1, base: 1)","id":"x-e02280592529"}
+{"expr":"calc.log(1, base: 0)","id":"x-682575009ad3"}
+{"expr":"calc.log(float.inf)","id":"x-b09d6b9fd678"}
+{"expr":"calc.ln(calc.e)","id":"x-abfdfcc521ed"}
+{"expr":"calc.ln(0)","id":"x-e16e0313876a"}
+{"expr":"calc.ln(-1)","id":"x-71db7df157e2"}
+{"expr":"calc.log(2.5, base: 7.5)","id":"x-b55325eeb08b"}
+{"expr":"calc.log(1000, base: 10)","id":"x-f0f3eaeb8918"}
+{"expr":"calc.log(0.001)","id":"x-0ca37df19bcd"}
+{"expr":"calc.erf(0)","id":"x-f2e7c66f1a64"}
+{"expr":"calc.erf(1)","id":"x-2bf61d2aac06"}
+{"expr":"calc.erf(-1)","id":"x-94fe487e93ee"}
+{"expr":"calc.erf(0.5)","id":"x-5e5bdebe564a"}
+{"expr":"calc.erf(3)","id":"x-daae7e854d7c"}
+{"expr":"calc.erf(float.inf)","id":"x-868c9fb551fe"}
+{"expr":"calc.fact(0)","id":"x-820581788474"}
+{"expr":"calc.fact(5)","id":"x-65a3c1281a75"}
+{"expr":"calc.fact(20)","id":"x-eb590fdd8ec0"}
+{"expr":"calc.fact(21)","id":"x-c4acca525b03"}
+{"expr":"calc.fact(-1)","id":"x-d646f37c2204"}
+{"expr":"calc.perm(5, 2)","id":"x-56149ae1526c"}
+{"expr":"calc.perm(2, 5)","id":"x-d222272e876f"}
+{"expr":"calc.perm(0, 0)","id":"x-9fd7e787e54b"}
+{"expr":"calc.perm(21, 21)","id":"x-dedd594e5c00"}
+{"expr":"calc.perm(100, 2)","id":"x-c28f53ebec92"}
+{"expr":"calc.binom(5, 2)","id":"x-019abc1cfda9"}
+{"expr":"calc.binom(2, 5)","id":"x-ce3bf5fa70c2"}
+{"expr":"calc.binom(0, 0)","id":"x-c26428e21acb"}
+{"expr":"calc.binom(66, 33)","id":"x-1fc810432d35"}
+{"expr":"calc.binom(67, 33)","id":"x-675b6269f884"}
+{"expr":"calc.binom(-1, 1)","id":"x-a24d324ac08e"}
+{"expr":"calc.gcd(12, 18)","id":"x-ec131e3d31f6"}
+{"expr":"calc.gcd(0, 5)","id":"x-c14a5044844d"}
+{"expr":"calc.gcd(0, 0)","id":"x-566fd69b5221"}
+{"expr":"calc.gcd(-12, 18)","id":"x-bdd6ec45cb30"}
+{"expr":"calc.lcm(4, 6)","id":"x-8934cbd9bc50"}
+{"expr":"calc.lcm(0, 5)","id":"x-dd158d92ae0d"}
+{"expr":"calc.lcm(-4, 6)","id":"x-7421a3d5ef35"}
+{"expr":"calc.lcm(9223372036854775807, 2)","id":"x-2c6af0701091"}
+{"expr":"calc.floor(1.5)","id":"x-991b0ce0cc05"}
+{"expr":"calc.floor(-1.5)","id":"x-ab46aa17ab3a"}
+{"expr":"calc.floor(2)","id":"x-db76dae71d41"}
+{"expr":"calc.floor(1e300)","id":"x-3e2002a42a90"}
+{"expr":"calc.ceil(1.5)","id":"x-65e6eafe7ee7"}
+{"expr":"calc.ceil(-1.5)","id":"x-da121700a196"}
+{"expr":"calc.ceil(2)","id":"x-a5bb14499872"}
+{"expr":"calc.trunc(1.7)","id":"x-d9a1cd45e1e4"}
+{"expr":"calc.trunc(-1.7)","id":"x-dc0645f1b625"}
+{"expr":"calc.trunc(3)","id":"x-613153c2abea"}
+{"expr":"calc.fract(1.75)","id":"x-94028e292a79"}
+{"expr":"calc.fract(-1.75)","id":"x-36647c11179d"}
+{"expr":"calc.fract(3)","id":"x-bf634f4d7c03"}
+{"expr":"calc.floor(float.nan)","id":"x-6c6868c83371"}
+{"expr":"calc.floor(float.inf)","id":"x-e9649e0ea2e8"}
+{"expr":"calc.ceil(-float.inf)","id":"x-df3e4584c870"}
+{"expr":"calc.floor(-0.5)","id":"x-1ad9ea005308"}
+{"expr":"calc.ceil(-0.5)","id":"x-1cab665f6d2c"}
+{"expr":"calc.round(1.5)","id":"x-3b1965f05ffd"}
+{"expr":"calc.round(2.5)","id":"x-cc08c6a7e7cf"}
+{"expr":"calc.round(-1.5)","id":"x-cb94a3b66ef0"}
+{"expr":"calc.round(-2.5)","id":"x-6fdb9e311091"}
+{"expr":"calc.round(3)","id":"x-00844292a7d5"}
+{"expr":"calc.round(3.14159, digits: 2)","id":"x-353eb090f922"}
+{"expr":"calc.round(3.14159, digits: 0)","id":"x-656a4099c439"}
+{"expr":"calc.round(1234, digits: -2)","id":"x-2baabe246efe"}
+{"expr":"calc.round(1250, digits: -2)","id":"x-b1faa62f60ec"}
+{"expr":"calc.round(-1250, digits: -2)","id":"x-4a28860c96c7"}
+{"expr":"calc.round(1.5, digits: -1)","id":"x-4cc3f545551b"}
+{"expr":"calc.round(2.675, digits: 2)","id":"x-5a35c932f3db"}
+{"expr":"calc.round(1e300, digits: 2)","id":"x-02eed5c48c36"}
+{"expr":"calc.round(float.nan)","id":"x-b98a913b117b"}
+{"expr":"calc.round(float.inf)","id":"x-df3150d087b9"}
+{"expr":"calc.round(9223372036854775807, digits: -1)","id":"x-7dbf1ab35126"}
+{"expr":"calc.round(1, digits: 400)","id":"x-290846b81f81"}
+{"expr":"calc.round(1.5, digits: 400)","id":"x-fb20dc22cc34"}
+{"expr":"calc.round(123.456, digits: -1)","id":"x-6adefc85934d"}
+{"expr":"calc.round(0.5)","id":"x-21cdcfabb9ab"}
+{"expr":"calc.round(-0.5)","id":"x-aa2df7316c33"}
+{"expr":"calc.round(0.49999999999999994)","id":"x-2c342bfb818a"}
+{"expr":"calc.round(4503599627370497.0)","id":"x-76da760e8176"}
+{"expr":"calc.round(1.005, digits: 2)","id":"x-a0749c403a6c"}
+{"expr":"calc.round(5, digits: -400)","id":"x-d660a221f79e"}
+{"expr":"calc.round(1e-20, digits: 20)","id":"x-562814ed0360"}
+{"expr":"calc.round(1.23456789e-5, digits: 7)","id":"x-e54a3f0bd392"}
+{"expr":"calc.clamp(5, 1, 3)","id":"x-3da2084bba2d"}
+{"expr":"calc.clamp(0, 1, 3)","id":"x-ffa81c120107"}
+{"expr":"calc.clamp(2, 1, 3)","id":"x-83f915cc4af3"}
+{"expr":"calc.clamp(2, 3, 1)","id":"x-f2ffa98d99dc"}
+{"expr":"calc.clamp(2.5, 1, 3)","id":"x-8bd3dd84e605"}
+{"expr":"calc.clamp(2, 1.5, 3)","id":"x-b3917239328f"}
+{"expr":"calc.clamp(2, 1, 3.5)","id":"x-a0f83de60c7f"}
+{"expr":"calc.clamp(1pt, 0pt, 2pt)","id":"x-450da94e6f28"}
+{"expr":"calc.min(1, 2)","id":"x-1e05563fa3c4"}
+{"expr":"calc.min(2.5, 1)","id":"x-bdb198226966"}
+{"expr":"calc.min()","id":"x-5f47e3efbcc1"}
+{"expr":"calc.min(1)","id":"x-12ed9fcd5ea7"}
+{"expr":"calc.min(1pt, 2pt)","id":"x-c42278e3af3d"}
+{"expr":"calc.min(1pt, 1em)","id":"x-8744df94f7f8"}
+{"expr":"calc.min(\"a\", \"b\")","id":"x-cf9a2851c817"}
+{"expr":"calc.min(1, \"a\")","id":"x-1d0126a11df7"}
+{"expr":"calc.min((1, 2))","id":"x-3d8379dc6ba7"}
+{"expr":"calc.max(1, 2, 3)","id":"x-5b71d5cc0fe8"}
+{"expr":"calc.max(1.5, 2)","id":"x-4d894a0c89a7"}
+{"expr":"calc.max(-1, -1.0)","id":"x-902dc1251d77"}
+{"expr":"calc.min(1, 1.0)","id":"x-eaad7d937780"}
+{"expr":"calc.max(1, 1.0)","id":"x-cde7843cf1ed"}
+{"expr":"calc.even(2)","id":"x-c4ceff431bbc"}
+{"expr":"calc.even(3)","id":"x-6023df118383"}
+{"expr":"calc.odd(3)","id":"x-9b56bc0a10e6"}
+{"expr":"calc.odd(-3)","id":"x-cd994cda5632"}
+{"expr":"calc.even(2.0)","id":"x-ef42e9eaec4f"}
+{"expr":"calc.rem(7, 3)","id":"x-15dd3b50083b"}
+{"expr":"calc.rem(-7, 3)","id":"x-f5b4665c6558"}
+{"expr":"calc.rem(7, -3)","id":"x-740b348d2637"}
+{"expr":"calc.rem(7.5, 2)","id":"x-5b5430e70728"}
+{"expr":"calc.rem(7, 0)","id":"x-ba26537673ed"}
+{"expr":"calc.rem(7, 0.0)","id":"x-948dbd2f39e4"}
+{"expr":"calc.rem(1, 2pt)","id":"x-85b56f3209b0"}
+{"expr":"calc.rem(-9223372036854775807 - 1, -1)","id":"x-c17b9238d1a0"}
+{"expr":"calc.div-euclid(7, 3)","id":"x-68cdc99d9cce"}
+{"expr":"calc.div-euclid(-7, 3)","id":"x-ec63b49cbc2c"}
+{"expr":"calc.div-euclid(7, -3)","id":"x-a800bb252f64"}
+{"expr":"calc.div-euclid(-7, -3)","id":"x-6c06541f1e63"}
+{"expr":"calc.div-euclid(7.5, 2)","id":"x-62be13c8e7cc"}
+{"expr":"calc.div-euclid(-7.5, 2)","id":"x-33ad94cc7b41"}
+{"expr":"calc.div-euclid(7, 0)","id":"x-8f81ec21b08e"}
+{"expr":"calc.div-euclid(-9223372036854775807 - 1, -1)","id":"x-1f9a3824e600"}
+{"expr":"calc.rem-euclid(7, 3)","id":"x-7cd0901dbce1"}
+{"expr":"calc.rem-euclid(-7, 3)","id":"x-cc51a0f2afca"}
+{"expr":"calc.rem-euclid(7, -3)","id":"x-0b55bd3c4f09"}
+{"expr":"calc.rem-euclid(-7, -3)","id":"x-4e097aac2ca0"}
+{"expr":"calc.rem-euclid(-7.5, 2)","id":"x-f4ab6905cc3a"}
+{"expr":"calc.rem-euclid(7, 0)","id":"x-1ab099af3cf7"}
+{"expr":"calc.rem-euclid(-9223372036854775807 - 1, -1)","id":"x-c1e23bb97883"}
+{"expr":"calc.quo(7, 2)","id":"x-9dd0da1f8003"}
+{"expr":"calc.quo(-7, 2)","id":"x-a60a2062406b"}
+{"expr":"calc.quo(7.5, 2)","id":"x-af882cf37941"}
+{"expr":"calc.quo(7, 0)","id":"x-30495089b3fd"}
+{"expr":"calc.quo(-9223372036854775807 - 1, -1)","id":"x-f6b8f109693f"}
+{"expr":"calc.quo(7, 0.0)","id":"x-b8603076a889"}
+{"expr":"calc.norm(3, 4)","id":"x-f7be021294c7"}
+{"expr":"calc.norm()","id":"x-6bd036ad230d"}
+{"expr":"calc.norm(p: 1, 3, 4)","id":"x-3e26413c6f72"}
+{"expr":"calc.norm(p: 0, 3, 4)","id":"x-464ff3b321d2"}
+{"expr":"calc.norm(p: 3, 1, 2, 3)","id":"x-31ff9036345c"}
+{"expr":"calc.norm(p: 2.5, 1.5, -2)","id":"x-da73177157ea"}
+{"expr":"calc.norm(-3)","id":"x-274a5cb75fec"}
+{"expr":"calc.pi","id":"x-fa47342506df"}
+{"expr":"calc.tau","id":"x-7f7fd9d4fb09"}
+{"expr":"calc.e","id":"x-2bc6d685f09a"}
+{"expr":"calc.inf","id":"x-d3092cf75d65"}
+{"expr":"calc.nan","id":"x-e9dc0e0be1a5"}
+{"expr":"calc.foo","id":"x-c399db0dca2a"}
+{"expr":"calc.pi()","id":"x-8b6a2d546eea"}
+{"expr":"calc.abs()","id":"x-7f2382e1d1d8"}
+{"expr":"calc.abs(1, 2)","id":"x-71e175152ec3"}
+{"expr":"calc.pow(2)","id":"x-0103ec1d2156"}
+{"expr":"calc.pow(2, 3, 4)","id":"x-d5588be9243f"}
+{"expr":"calc.pow(base: 2, exponent: 3)","id":"x-a86dd32a8e7f"}
+{"expr":"calc.round(1.5, 2)","id":"x-5b13273c55d9"}
+{"expr":"calc.round(digits: 1, 1.55)","id":"x-a1eea43c05ed"}
+{"expr":"calc.sqrt(2) * calc.sqrt(2)","id":"x-1a8a6956f312"}
+{"expr":"calc.round(0.1 * 3, digits: 2)","id":"x-65dc22cfaf8d"}
+{"expr":"{ let f(a, b) = a + b; f.with(1)(2) }","id":"x-cd49195f5e44"}
+{"expr":"{ let f(a, b: 2) = a + b; f.with(b: 3)(1) }","id":"x-52f01402338d"}
+{"expr":"calc.pow.with(2)(10)","id":"x-6cbbcfde54a4"}
+{"expr":"math.frac.with([1])([2])","id":"x-d245c7a9c2a1"}
+{"expr":"text.with(fill: red)[a]","id":"x-29c6f181ac87"}
+{"expr":"{ let f(x) = x; f.with(1, 2)() }","id":"x-bbe9111f2a40"}
+{"expr":"upper.with()(\"a\")","id":"x-f22e9ad232fc"}
+{"expr":"{ let f(a) = a; f.with(1) == f.with(1) }","id":"x-fb37541d1d46"}
+{"expr":"{ let g(x) = { let f(a) = a + x; f }; g(1) == g(1) }","id":"x-052817435a51"}
+{"expr":"{ let g(x) = { let f(a) = a + x; f }; g(1) == g(2) }","id":"x-1c09e15d33ee"}
+{"expr":"{ let f(a) = a; let g(a) = a; f == g }","id":"x-c4860ab3b419"}
+{"expr":"calc.pow.with(2) == calc.pow.with(2)","id":"x-f527ee8b9c83"}
+{"expr":"calc.pow == calc.pow","id":"x-5c338beb6e80"}
+{"expr":"calc.pow == calc.exp","id":"x-8883d5f50ace"}
+{"expr":"[a].func()","id":"x-56edd03df3d1"}
+{"expr":"[a].func() == text","id":"x-9ef0bae905cb"}
+{"expr":"[*a*].func()","id":"x-f2e04d8d5ab0"}
+{"expr":"$x$.func()","id":"x-596fa3eb88df"}
+{"expr":"$x$.body","id":"x-da2feb117606"}
+{"expr":"$x$.block","id":"x-5be166d3958b"}
+{"expr":"$x$.body.func()","id":"x-01d68ddf5ca0"}
+{"expr":"[a].has(\"text\")","id":"x-6f2c378f9139"}
+{"expr":"[a].has(\"foo\")","id":"x-28f20c052832"}
+{"expr":"[a].text","id":"x-d62eb7bfc5b1"}
+{"expr":"[a].at(\"text\")","id":"x-17a690f9dfca"}
+{"expr":"[a].at(\"foo\")","id":"x-f5d4381620fa"}
+{"expr":"[a].at(\"foo\", default: 1)","id":"x-5d20b11f2050"}
+{"expr":"[a].fields()","id":"x-2b7f65be4b03"}
+{"expr":"[*a*].fields()","id":"x-65bea909966f"}
+{"expr":"[*a*].body","id":"x-df971d304348"}
+{"expr":"$x^2$.body.func()","id":"x-219ee705f50a"}
+{"expr":"$x^2$.body.fields()","id":"x-24478c5e4695"}
+{"expr":"$x^2$.body.base","id":"x-5b359bcc71b1"}
+{"expr":"$x^2$.body.t","id":"x-03934f085b0f"}
+{"expr":"$x^2$.body.tl","id":"x-eccd74a1fdd4"}
+{"expr":"$x^2$.body.at(\"tl\")","id":"x-53535cff6e8c"}
+{"expr":"$x^2$.body.at(\"tl\", default: none)","id":"x-880f701d76d3"}
+{"expr":"text(fill: red)[a].fill","id":"x-7955e6b91d35"}
+{"expr":"text(fill: red)[a].fields()","id":"x-6eb781f42a26"}
+{"expr":"strong[a].delta","id":"x-46136139dc2f"}
+{"expr":"strong(delta: 100)[a].delta","id":"x-9e6a2f7753d9"}
+{"expr":"box[a].width","id":"x-e6d15cbd7d3d"}
+{"expr":"box(width: 1em)[a].width","id":"x-485b6b6b0bf6"}
+{"expr":"hide[a].body","id":"x-c8a9b3144609"}
+{"expr":"[a].foo","id":"x-93d1b1ea1eb2"}
+{"expr":"[a].foo()","id":"x-ba13e46c408d"}
+{"expr":"([a] + [b]).func()","id":"x-67fd08b2a2ef"}
+{"expr":"([a] + [b]).children","id":"x-f9b23c0d4c29"}
+{"expr":"([a] + [b]).fields()","id":"x-8e7d468ce018"}
+{"expr":"[].func()","id":"x-fc993a899d8b"}
+{"expr":"[].fields()","id":"x-9c55f2e4b763"}
+{"expr":"math.frac(1, 2).num","id":"x-276a8c9511b3"}
+{"expr":"math.frac(1, 2).denom","id":"x-e04d77aa2061"}
+{"expr":"math.attach([x], t: [2]).t","id":"x-a5c4b4f01042"}
+{"expr":"math.mat((1, 2)).rows","id":"x-8c84102394ed"}
+{"expr":"math.mat((1, 2)).delim","id":"x-c96a72cd9857"}
+{"expr":"math.vec(1, 2).children","id":"x-c2346ae30f34"}
+{"expr":"math.cases(1, 2).reverse","id":"x-cb9517484c14"}
+{"expr":"math.lr([x]).body","id":"x-2c63d156d3b2"}
+{"expr":"math.op(\"a\").text","id":"x-c16896a2e1db"}
+{"expr":"math.op(\"a\").limits","id":"x-6486c26a4134"}
+{"expr":"math.class(\"relation\", [x]).class","id":"x-d93dfe361208"}
+{"expr":"math.root(3, [x]).index","id":"x-ab9d0ce8b216"}
+{"expr":"math.cancel([x]).angle","id":"x-3c6d3c83152c"}
+{"expr":"math.accent([x], sym.hat).accent","id":"x-91e10c130e05"}
+{"expr":"h(1em).amount","id":"x-305f0cd72d8e"}
+{"expr":"h(1em, weak: true).weak","id":"x-26eebecea9c1"}
+{"expr":"link(\"https://typst.app\")[a].dest","id":"x-71bcb90ccb33"}
+{"expr":"link(\"https://typst.app\")[a].body","id":"x-d2d7c51ff78e"}
+{"expr":"[a] + [b]","id":"x-c8f007c1740d"}
+{"expr":"[a] + \"b\"","id":"x-8c8787031ccd"}
+{"expr":"\"a\" + [b]","id":"x-8344d1fb2bcd"}
+{"expr":"2 * [a]","id":"x-8fa4c9fb0245"}
+{"expr":"{ let f(..args) = args; f(1, 2, a: 3).len() }","id":"x-684bb8a6f7d9"}
+{"expr":"{ let f(..args) = args.pos(); f(1, 2, a: 3) }","id":"x-50c7518849b3"}
+{"expr":"{ let f(..args) = args.named(); f(1, a: 3) }","id":"x-dd023c5b4b08"}
+{"expr":"{ let f(..args) = args.at(0); f(1) }","id":"x-f87841795399"}
+{"expr":"{ let f(..args) = args.at(1); f(1) }","id":"x-dd88f8c4a278"}
+{"expr":"{ let f(..args) = args.at(\"a\"); f(a: 1) }","id":"x-a15bf07dd6b7"}
+{"expr":"{ let f(..args) = args.at(\"b\", default: 0); f(a: 1) }","id":"x-5f73f83ca6e8"}
+{"expr":"{ let f(..args) = args.at(-1); f(1, 2) }","id":"x-7ea52a59be5d"}
+{"expr":"{ let f(..args) = args; f(1) == f(1) }","id":"x-d6e70f77d465"}
+{"expr":"arguments(1, 2, a: 3)","id":"x-32c6aabfa37c"}
+{"expr":"arguments(1).pos()","id":"x-90ce5e4aa306"}
+{"expr":"arguments(a: 1).named()","id":"x-38ce98cd4d98"}
+{"expr":"arguments().len()","id":"x-c18af024c631"}
+{"expr":"arguments(1).at(0)","id":"x-712e9598c1ef"}
+{"expr":"arguments(1).at(1.5)","id":"x-aa640de2255d"}
+{"expr":"arguments(1).foo","id":"x-2c79c00fa08e"}
+{"expr":"arguments(1) == arguments(1)","id":"x-a6500ec6b0fb"}
+{"expr":"arguments(1, a: 2) == arguments(a: 2, 1)","id":"x-0d5e5f3e7f2d"}
+{"expr":"{ let f(n) = if n <= 0 { 0 } else { n + f(n - 1) }; f(50) }","id":"x-60e94efd42f6"}
+{"expr":"{ let f(n) = if n <= 0 { 0 } else { n + f(n - 1) }; f(79) }","id":"x-493ef721229f"}
+{"expr":"{ let f(n) = if n <= 0 { 0 } else { n + f(n - 1) }; f(80) }","id":"x-11dac82e1a4f"}
+{"expr":"{ let f(n) = if n <= 0 { 0 } else { n + f(n - 1) }; f(81) }","id":"x-7ca7b98ebb3f"}
+{"expr":"{ let add(a) = b => a + b; add(1)(2) }","id":"x-6efcff368473"}
+{"expr":"{ let f(x) = x * 2; (1, 2).map(f) }","id":"x-7d4b9e732398"}
+{"expr":"{ let x; x }","id":"x-b5d7b61ab859"}
+{"expr":"calc.perm(9007199254740993, 1)","id":"x-01ab03455caa"}
+{"expr":"calc.binom(9007199254740993, 1)","id":"x-ef82ac3210e0"}
+{"expr":"calc.perm(9223372036854775807, 1)","id":"x-e320af28595d"}
+{"expr":"calc.binom(9223372036854775807, 1)","id":"x-9dd5d7138599"}
+{"expr":"calc.clamp(0, 9007199254740993, 9007199254740992)","id":"x-47f672ef8e1b"}
+{"expr":"calc.clamp(0.0, 9007199254740993, 9007199254740992)","id":"x-52175656c77d"}
+{"expr":"calc.clamp(9007199254740993, 9007199254740992, 9007199254740994)","id":"x-34846945ddb7"}
+{"expr":"calc.norm(float.nan, 1, p: calc.inf)","id":"x-2825babf2c7d"}
+{"expr":"calc.norm(1, float.nan, p: calc.inf)","id":"x-b1fcc77133a8"}
+{"expr":"calc.norm(calc.inf, float.nan, p: calc.inf)","id":"x-0845d72b671b"}
+{"expr":"calc.pow(9223372036854775807, 1)","id":"x-105cc9184db0"}
+{"expr":"calc.pow(1, 2147483647)","id":"x-5f90aa57306c"}
+{"expr":"calc.pow(-1, 2147483647)","id":"x-c98a314c6ab1"}
+{"expr":"calc.pow(0, 2147483647)","id":"x-a89ec7a190a5"}
+{"expr":"content.at(\"a\", \"text\")","id":"x-e6f568df2677"}
+{"expr":"content.func(\"a\") == text","id":"x-11a842f73a24"}
+{"expr":"content.func(none) == [].func()","id":"x-8bd8428668a1"}
+{"expr":"content.func(sym.alpha) == [#sym.alpha].func()","id":"x-ffbd0fa49500"}
+{"expr":"([a] + [b]).func()((\"a\", \"b\"))","id":"x-07156346ee67"}
+{"expr":"([a] + [b]).func()((none, sym.alpha, \"a\"))","id":"x-469ee56d8ee6"}
+{"expr":"[].func() == [].func()","id":"x-5e836e8d7487"}
+{"expr":"([a] + [b]).func() == ([a] + [b]).func()","id":"x-353fab88f0e2"}
+{"expr":"[ ].func() == [ ].func()","id":"x-5f9a0233a792"}
+{"expr":"([].func(), [].func()).dedup().len()","id":"x-7cbc5359fa3f"}
+{"expr":"\"a\".replace(\"a\", \"b\", count: -1)","id":"x-436917108ea4"}
+{"expr":"\"a\".replace(\"a\", \"b\", count: 0)","id":"x-fce8026e8c4e"}
+{"expr":"\"😀é😀é\".matches(\"é\")","id":"x-783c617c4c26"}
+{"expr":"\"😀é\".matches(\"\")","id":"x-3631e2fc4054"}
+{"expr":"\"😀é😀é\".match(\"é\")","id":"x-f3476a4fbdf8"}
+{"expr":"\"😀é\".replace(\"\", m => str(m.start))","id":"x-51ce2d6de526"}
+{"expr":"\"😀é\".split(\"\")","id":"x-83b65a2354c7"}

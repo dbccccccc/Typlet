@@ -33,6 +33,8 @@ function sourceOf(formula: Element): string | null {
   const annotation = formula.querySelector('annotation[encoding="application/x-typst"]');
   if (annotation) return annotation.textContent ?? '';
   const html = formula.querySelector('.typlet-html[aria-label]');
+  const source = html?.getAttribute('data-typst-source');
+  if (source != null) return source;
   const label = html?.getAttribute('aria-label');
   if (label == null) return null;
   // A numbered equation's label ends with its number, which stands at the end of the row.
@@ -67,6 +69,55 @@ function closestFormula(node: Node): Element | null {
   return formulaOf(node instanceof Element ? node : node.parentElement);
 }
 
+/** Keeps document separators without changing literal text or formula whitespace. */
+function clipboardText(container: Element): string {
+  // A partial table selection can clone cells or rows without their wrappers.
+  const parts = [...container.children];
+  const cells = parts.length > 0 && parts.every((part) => part.localName === 'td' || part.localName === 'th');
+  const rows = parts.length > 0 && parts.every((part) => part.localName === 'tr');
+  if ((cells || rows) && [...container.childNodes].every((child) => child.nodeType !== 3 || !child.textContent?.trim())) {
+    return parts.map((part) => clipboardText(part)).join(cells ? '\t' : '\n');
+  }
+  const blocks = new Set('address article aside blockquote dd div dl dt figure figcaption footer h1 h2 h3 h4 h5 h6 header hr li main nav ol pre section table tr ul'.split(' '));
+  let out = '';
+  let pending = '';
+  const separate = (separator: string) => {
+    if (separator.length > pending.length) pending = separator;
+  };
+  const write = (text: string) => {
+    if (!text) return;
+    if (pending && out) {
+      const before = out.match(/\n*$/)![0].length;
+      const after = text.match(/^\n*/)![0].length;
+      out += '\n'.repeat(Math.max(0, pending.length - before - after));
+    }
+    pending = '';
+    out += text;
+  };
+  const visit = (node: Node) => {
+    if (node.nodeType === 3) { write(node.textContent ?? ''); return; }
+    if (node.nodeType !== 1) return;
+    const tag = (node as Element).localName;
+    if (tag === 'br') { write('\n'); return; }
+    if (tag === 'table' || tag === 'thead' || tag === 'tbody' || tag === 'tfoot' || tag === 'tr') {
+      const rowText = (row: HTMLTableRowElement) => [...row.cells].map((cell) => clipboardText(cell)).join('\t');
+      const table = node as HTMLTableElement;
+      const text = tag === 'tr' ? rowText(node as HTMLTableRowElement) : [...table.rows].map(rowText).join('\n');
+      const caption = tag === 'table' && table.caption ? clipboardText(table.caption) + '\n' : '';
+      separate('\n');
+      write(caption + text);
+      separate('\n');
+      return;
+    }
+    const separator = tag === 'p' ? '\n\n' : blocks.has(tag) ? '\n' : '';
+    if (separator) separate(separator);
+    for (const child of node.childNodes) visit(child);
+    if (separator) separate(separator);
+  };
+  visit(container);
+  return out;
+}
+
 /** The copy handler: puts the selection's formulas on the clipboard as Typst source. */
 export function handleCopy(event: ClipboardEvent): void {
   const selection = (event.target as Node | null)?.ownerDocument?.getSelection?.() ?? globalThis.getSelection?.();
@@ -78,11 +129,11 @@ export function handleCopy(event: ClipboardEvent): void {
   if (end) range.setEndAfter(end);
   const fragment = range.cloneContents();
   if (!fragment.querySelector('.typlet')) return;
-  const html = [...fragment.childNodes]
-    .map((node) => (node.nodeType === 3 ? node.textContent : (node as Element).outerHTML ?? ''))
-    .join('');
-  event.clipboardData.setData('text/html', html);
-  event.clipboardData.setData('text/plain', typletReplaceWithSource(fragment).textContent ?? '');
+  const container = fragment.ownerDocument.createElement('div');
+  container.append(fragment);
+  event.clipboardData.setData('text/html', container.innerHTML);
+  typletReplaceWithSource(container);
+  event.clipboardData.setData('text/plain', clipboardText(container));
   event.preventDefault();
 }
 

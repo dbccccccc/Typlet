@@ -6,8 +6,10 @@
 // for its paged export. Typlet lays out with New Computer Modern Math only;
 // content that isn't math, such as a displayed value, is refused.
 
+import { getLayoutEngine, withLayoutEngine } from './engine.js';
+import { getExpansionBudget, withExpansionBudget } from '../eval/expansion-budget.js';
 import type { Content, EquationElem } from '../eval/content.js';
-import { type SourceDiagnostic, type Span, unsupported, warning } from '../eval/diag.js';
+import { type SourceDiagnostic, type Span, unsupported, warn, warning } from '../eval/diag.js';
 import { type Abs, type Alignment, type FixedAlignment, emAt, lengthAt } from '../eval/layout.js';
 import { type StyleChain, type Styles, get } from '../eval/styles.js';
 import { type MathItem, asSlice, isMultiline, properties } from '../ir/item.js';
@@ -37,6 +39,8 @@ import { layoutGlyph, layoutNumber, layoutText } from './text.js';
 
 /** The context of math layout: the fragments laid out so far, like `MathContext`. */
 export class MathContext {
+  readonly engine = getLayoutEngine();
+  readonly expansion = getExpansionBudget();
   fragments: MathFragment[] = [];
 
   constructor(
@@ -45,6 +49,8 @@ export class MathContext {
     readonly align: FixedAlignment,
     /** The width of the region the equation is laid out in, which boxes in it get; `null` for no limit. */
     readonly region: Abs | null = null,
+    /** The equation's entry styles, before local content changes. */
+    readonly entryStyles: StyleChain = equationStyles(false),
   ) {}
 
   push(fragment: MathFragment): void {
@@ -52,14 +58,16 @@ export class MathContext {
   }
 
   warn(span: Span, message: string): void {
-    this.warnings.push(warning(span, message));
+    warn(this.warnings, warning(span, message));
   }
 
   /** Lays out an item into fragments. */
   layoutIntoFragments(item: MathItem, styles: StyleChain): MathRun {
-    const start = this.fragments.length;
-    this.layoutIntoSelf(item, styles);
-    return this.fragments.splice(start);
+    return withLayoutEngine(this.engine, this.warnings, () => withExpansionBudget(this.expansion, () => this.expansion.depth.withDepth(item.type === 'component' ? item.props.span : null, () => {
+      const start = this.fragments.length;
+      this.layoutIntoSelf(item, styles);
+      return this.fragments.splice(start);
+    })));
   }
 
   /** Lays out an item into a single fragment, framing several. */
@@ -190,29 +198,31 @@ export function layoutEquationInline(equation: EquationElem, warnings: SourceDia
  * `null` for no limit.
  */
 export function layoutInline(item: MathItem, warnings: SourceDiagnostic[], styles = equationStyles(false), region: Abs | null = null): InlineItem[] {
-  const ctx = new MathContext(warnings, 'start', region);
-  const items: InlineItem[] = isMultiline(item)
-    ? [{ kind: 'frame', frame: ctx.layoutIntoFragment(item, styles).intoFrame() }]
-    : runIntoParItems(ctx.layoutIntoFragments(item, styles));
+  return withLayoutEngine(getLayoutEngine(), warnings, () => withExpansionBudget(getExpansionBudget(), () => {
+    const ctx = new MathContext(warnings, 'start', region, styles);
+    const items: InlineItem[] = isMultiline(item)
+      ? [{ kind: 'frame', frame: ctx.layoutIntoFragment(item, styles).intoFrame() }]
+      : runIntoParItems(ctx.layoutIntoFragments(item, styles));
 
-  // An empty equation still has a height.
-  if (items.length === 0) items.push({ kind: 'frame', frame: Frame.soft({ x: 0, y: 0 }) });
+    // An empty equation still has a height.
+    if (items.length === 0) items.push({ kind: 'frame', frame: Frame.soft({ x: 0, y: 0 }) });
 
-  const size = fontSize(styles);
-  const slack = emAt(LEADING, size) * 0.7;
-  const top = emAt(FONT_METRICS.capHeight, size);
-  for (const item of items) {
-    if (item.kind !== 'frame') continue;
-    const frame = item.frame;
-    const ascent = Math.max(top, frame.ascent - slack);
-    const descent = Math.max(0, frame.descent - slack);
-    frame.translate(point(0, ascent - frame.baseline));
-    frame.size.y = ascent + descent;
-    // The paragraph around the equation shifts its frames by the text's
-    // baseline shift. Its show rule leaves the shift as it is around it.
-    applyShift(frame, styles);
-  }
-  return items;
+    const size = fontSize(styles);
+    const slack = emAt(LEADING, size) * 0.7;
+    const top = emAt(FONT_METRICS.capHeight, size);
+    for (const item of items) {
+      if (item.kind !== 'frame') continue;
+      const frame = item.frame;
+      const ascent = Math.max(top, frame.ascent - slack);
+      const descent = Math.max(0, frame.descent - slack);
+      frame.translate(point(0, ascent - frame.baseline));
+      frame.size.y = ascent + descent;
+      // The paragraph around the equation shifts its frames by the text's
+      // baseline shift. Its show rule leaves the shift as it is around it.
+      applyShift(frame, styles);
+    }
+    return items;
+  }));
 }
 
 /** Lays out a block equation into one frame, with its number if it has one, like `layout_equation_block`. */
@@ -233,17 +243,19 @@ export function layoutBlock(
   styles = equationStyles(true),
   number: Content | null = null,
 ): Frame {
-  const builder = blockBuilder(item, warnings, styles);
-  if (number === null) return builder.buildAligned();
-  // Without a page width, the equation gets the number's width on both sides.
-  const numberFrame = layoutParagraph(number, styles, warnings);
-  const fullNumberWidth = numberFrame.width + emAt(NUMBER_GUTTER, fontSize(styles));
-  return addEquationNumber(builder, numberFrame, numberAlign(styles), 'center', Infinity, fullNumberWidth);
+  return withLayoutEngine(getLayoutEngine(), warnings, () => withExpansionBudget(getExpansionBudget(), () => {
+    const builder = blockBuilder(item, warnings, styles);
+    if (number === null) return builder.buildAligned();
+    // Without a page width, the equation gets the number's width on both sides.
+    const numberFrame = layoutParagraph(number, styles, warnings);
+    const fullNumberWidth = numberFrame.width + emAt(NUMBER_GUTTER, fontSize(styles));
+    return addEquationNumber(builder, numberFrame, numberAlign(styles), 'center', Infinity, fullNumberWidth);
+  }));
 }
 
 /** The rows of a block equation, laid out centered. */
 function blockBuilder(item: MathItem, warnings: SourceDiagnostic[], styles: StyleChain): MathRunFrameBuilder {
-  const ctx = new MathContext(warnings, 'center');
+  const ctx = new MathContext(warnings, 'center', null, styles);
   return item.type === 'component' && item.kind.tag === 'multiline'
     ? layoutMultiline(item.kind.rows, ctx, item.styles)
     : MathRunFrameBuilder.fromFrame(runIntoFrame(ctx.layoutIntoFragments(item, styles)));
@@ -268,26 +280,28 @@ export function layoutNumberedBlock(
   styles: StyleChain,
   number: Content,
 ): NumberedBlock {
-  const builder = blockBuilder(item, warnings, styles);
-  const numberFrame = layoutParagraph(number, styles, warnings);
-  const align = numberAlign(styles);
-  const rows = builder.frames;
-  const isMultiline = rows.length >= 2;
-  const row = rows[align.y === 'end' ? rows.length - 1 : 0];
-  const equation = builder.buildAligned();
-  const numberTop =
-    align.y === 'center' && isMultiline
-      ? (equation.height - numberFrame.height) / 2
-      : row
-        ? row[1].y + row[0].baseline - numberFrame.baseline
-        : -numberFrame.baseline;
-  return {
-    equation,
-    number: numberFrame,
-    numberTop,
-    side: align.x,
-    numberWidth: numberFrame.width + emAt(NUMBER_GUTTER, fontSize(styles)),
-  };
+  return withLayoutEngine(getLayoutEngine(), warnings, () => withExpansionBudget(getExpansionBudget(), () => {
+    const builder = blockBuilder(item, warnings, styles);
+    const numberFrame = layoutParagraph(number, styles, warnings);
+    const align = numberAlign(styles);
+    const rows = builder.frames;
+    const isMultiline = rows.length >= 2;
+    const row = rows[align.y === 'end' ? rows.length - 1 : 0];
+    const equation = builder.buildAligned();
+    const numberTop =
+      align.y === 'center' && isMultiline
+        ? (equation.height - numberFrame.height) / 2
+        : row
+          ? row[1].y + row[0].baseline - numberFrame.baseline
+          : -numberFrame.baseline;
+    return {
+      equation,
+      number: numberFrame,
+      numberTop,
+      side: align.x,
+      numberWidth: numberFrame.width + emAt(NUMBER_GUTTER, fontSize(styles)),
+    };
+  }));
 }
 
 /** The gap between an equation and its number. */

@@ -23,7 +23,8 @@ import {
   symbolElem,
   textElem,
 } from './content.js';
-import type { Span } from './diag.js';
+import { type Span, at, sameSpan } from './diag.js';
+import { type ValueBudget, ReprBuilder, withValueContext } from './value-budget.js';
 import type { Func } from './func.js';
 import {
   type Alignment,
@@ -43,8 +44,8 @@ import {
   reprRatio,
   reprRel,
 } from './layout.js';
-import { displayFloat, formatFloat, formatIntWithBase, prettyArrayLike, reprStr } from './repr.js';
-import type { Module } from './scope.js';
+import { displayFloat, formatFloat, formatIntWithBase, joinRepr, prettyArrayLike, reprStr } from './repr.js';
+import type { Module, Scope } from './scope.js';
 import { type Symbol, reprSymbol, symbolEq, symbolGet } from './symbol.js';
 import { isIdent } from '../syntax/lexer.js';
 import type { Styles } from './styles.js';
@@ -71,7 +72,7 @@ export type Value =
   | { readonly type: 'dictionary'; readonly v: ReadonlyMap<string, Value> }
   | { readonly type: 'function'; readonly v: Func }
   | { readonly type: 'arguments'; readonly v: Args }
-  | { readonly type: 'type'; readonly v: TypeName }
+  | { readonly type: 'type'; readonly v: AnyTypeName }
   | { readonly type: 'module'; readonly v: Module }
   | { readonly type: 'alignment'; readonly v: Alignment }
   | { readonly type: 'stroke'; readonly v: Stroke }
@@ -80,8 +81,28 @@ export type Value =
 
 export type TypeName = Value['type'];
 
+/** Typst's type names, including types Typlet has no values of, which casts and type values can still name. */
+export type AnyTypeName = TypeName | UnsupportedTypeName;
+
+/** The types of Typst's global scope that Typlet has no values of (docs/DESIGN.md §6.3). */
+export type UnsupportedTypeName =
+  | 'regex'
+  | 'decimal'
+  | 'bytes'
+  | 'version'
+  | 'datetime'
+  | 'duration'
+  | 'location'
+  | 'selector'
+  | 'path'
+  | 'direction'
+  | 'gradient'
+  | 'tiling'
+  | 'counter'
+  | 'state';
+
 /** Typst's long type names, as error messages use them. */
-const LONG_NAMES: Partial<Record<TypeName, string>> = {
+const LONG_NAMES: Partial<Record<AnyTypeName, string>> = {
   bool: 'boolean',
   int: 'integer',
   relative: 'relative length',
@@ -89,7 +110,7 @@ const LONG_NAMES: Partial<Record<TypeName, string>> = {
 };
 
 /** The type's name in messages, such as "integer". */
-export function longName(type: TypeName): string {
+export function longName(type: AnyTypeName): string {
   return LONG_NAMES[type] ?? type;
 }
 
@@ -117,93 +138,109 @@ export const funcValue = (v: Func): Value => ({ type: 'function', v });
 
 /** Typst's `repr` of a value: how it is written in code. */
 export function repr(value: Value): string {
+  return withValueContext((budget) => reprValue(value, budget, 0));
+}
+
+function reprValue(value: Value, budget: ValueBudget, depth: number): string {
+  budget.visit(depth);
+  const result = reprInner(value, budget, depth);
+  budget.checkString(result.length);
+  return result;
+}
+
+function reprField(name: string, value: Value, budget: ValueBudget, depth: number): string {
+  const child = reprValue(value, budget, depth + 1);
+  budget.checkString(name.length + 2 + child.length);
+  return name + ': ' + child;
+}
+
+function reprInner(value: Value, budget: ValueBudget, depth: number): string {
   switch (value.type) {
-    case 'none':
-      return 'none';
-    case 'auto':
-      return 'auto';
-    case 'bool':
-      return value.v ? 'true' : 'false';
-    case 'int':
-      return value.v.toString();
-    case 'float':
-      return formatFloat(value.v, null, true, '');
-    case 'length':
-      return reprLength(value.v);
-    case 'angle':
-      return reprAngle(value.v);
-    case 'ratio':
-      return reprRatio(value.v);
-    case 'relative':
-      return reprRel(value.v);
-    case 'fraction':
-      return reprFr(value.v);
-    case 'color':
-      return reprColor(value.v);
-    case 'symbol':
-      return reprSymbol(value.v);
-    case 'str':
-      return reprStr(value.v);
-    case 'content':
-      return reprContent(value.v);
+    case 'none': return 'none';
+    case 'auto': return 'auto';
+    case 'bool': return value.v ? 'true' : 'false';
+    case 'int': return value.v.toString();
+    case 'float': return formatFloat(value.v, null, true, '');
+    case 'length': return reprLength(value.v);
+    case 'angle': return reprAngle(value.v);
+    case 'ratio': return reprRatio(value.v);
+    case 'relative': return reprRel(value.v);
+    case 'fraction': return reprFr(value.v);
+    case 'color': return reprColor(value.v);
+    case 'symbol': return reprSymbol(value.v);
+    case 'str': return reprStr(value.v);
+    case 'content': return reprContent(value.v, budget, depth);
     case 'array': {
-      const max = 40;
-      const pieces = value.v.slice(0, max).map(repr);
-      if (value.v.length > max) pieces.push(`.. (${value.v.length - max} items omitted)`);
+      const pieces: string[] = [];
+      let length = 0;
+      for (let i = 0; i < Math.min(value.v.length, 40); i++) {
+        const piece = reprValue(value.v[i]!, budget, depth + 1);
+        length += piece.length + (i ? 2 : 0);
+        budget.checkString(length);
+        pieces.push(piece);
+      }
+      if (value.v.length > 40) pieces.push(`.. (${value.v.length - 40} items omitted)`);
       return prettyArrayLike(pieces, value.v.length === 1);
     }
     case 'dictionary': {
       if (value.v.size === 0) return '(:)';
-      const max = 40;
-      const pieces = [...value.v]
-        .slice(0, max)
-        .map(([key, v]) => `${isIdent(key) ? key : reprStr(key)}: ${repr(v)}`);
-      if (value.v.size > max) pieces.push(`.. (${value.v.size - max} pairs omitted)`);
+      const pieces: string[] = [];
+      let length = 0;
+      for (const [key, child] of value.v) {
+        if (pieces.length === 40) break;
+        const piece = reprField(isIdent(key) ? key : reprStr(key), child, budget, depth);
+        length += piece.length + (pieces.length ? 2 : 0);
+        budget.checkString(length);
+        pieces.push(piece);
+      }
+      if (value.v.size > 40) pieces.push(`.. (${value.v.size - 40} pairs omitted)`);
       return prettyArrayLike(pieces, false);
     }
-    case 'function':
-      return value.v.name ?? '(..) => ..';
-    case 'arguments':
-      return `arguments${prettyArrayLike(
-        value.v.items.map((item) => (item.name === null ? repr(item.value) : `${item.name}: ${repr(item.value)}`)),
-        false,
-      )}`;
-    case 'type':
-      return value.v;
-    case 'module':
-      return `<module ${value.v.name}>`;
-    case 'alignment':
-      return reprAlignment(value.v);
-    case 'stroke':
-      return reprStroke(value.v);
-    case 'styles':
-      return 'styles(..)';
-    case 'label':
-      return `<${value.v}>`;
+    case 'function': return value.v.name ?? '(..) => ..';
+    case 'arguments': {
+      function* pieces() {
+        for (const item of (value as Extract<Value, { type: 'arguments' }>).v.items) {
+          yield item.name === null ? reprValue(item.value, budget, depth + 1) : reprField(item.name, item.value, budget, depth);
+        }
+      }
+      return joinRepr(['arguments', prettyArrayLike(pieces(), false)]);
+    }
+    case 'type': return value.v === 'none' || value.v === 'auto' ? `type(${value.v})` : value.v;
+    case 'module': return joinRepr(['<module ', value.v.name, '>']);
+    case 'alignment': return reprAlignment(value.v);
+    case 'stroke': return reprStroke(value.v, budget, depth);
+    case 'styles': return 'styles(..)';
+    case 'label': return joinRepr(['<', value.v, '>']);
   }
 }
 
-function reprStroke(stroke: Stroke): string {
+function reprStroke(stroke: Stroke, budget: ValueBudget, depth: number): string {
   const { paint, thickness, cap, join, dash, miterLimit } = stroke;
   if (cap === undefined && join === undefined && dash === undefined && miterLimit === undefined) {
-    if (paint !== undefined && thickness !== undefined) return `${reprLength(thickness)} + ${reprColor(paint)}`;
+    if (paint !== undefined && thickness !== undefined) return joinRepr([reprLength(thickness), ' + ', reprColor(paint)]);
     if (paint !== undefined) return reprColor(paint);
     if (thickness !== undefined) return reprLength(thickness);
     return '1pt + black';
   }
-  const parts: string[] = [];
-  if (paint !== undefined) parts.push(`paint: ${reprColor(paint)}`);
-  if (thickness !== undefined) parts.push(`thickness: ${reprLength(thickness)}`);
-  if (cap !== undefined) parts.push(`cap: ${reprStr(cap)}`);
-  if (join !== undefined) parts.push(`join: ${reprStr(join)}`);
-  if (dash !== undefined) parts.push(`dash: ${dash === null ? 'none' : reprDash(dash)}`);
-  if (miterLimit !== undefined) parts.push(`miter-limit: ${formatFloat(miterLimit, null, true, '')}`);
-  return `(${parts.join(', ')})`;
+  function* parts() {
+    if (paint !== undefined) yield joinRepr(['paint: ', reprColor(paint)]);
+    if (thickness !== undefined) yield joinRepr(['thickness: ', reprLength(thickness)]);
+    if (cap !== undefined) yield joinRepr(['cap: ', reprStr(cap)]);
+    if (join !== undefined) yield joinRepr(['join: ', reprStr(join)]);
+    if (dash !== undefined) yield joinRepr(['dash: ', dash === null ? 'none' : reprDash(dash, budget, depth)]);
+    if (miterLimit !== undefined) yield joinRepr(['miter-limit: ', formatFloat(miterLimit, null, true, '')]);
+  }
+  return joinRepr(['(', joinRepr(parts(), ', '), ')']);
 }
 
-function reprDash(dash: DashPattern): string {
-  const array = dash.array.map((l) => (l === null ? reprStr('dot') : reprLength(l)));
-  return `(array: (${array.join(', ')}), phase: ${reprLength(dash.phase)})`;
+function reprDash(dash: DashPattern, budget: ValueBudget, depth: number): string {
+  function* lengths() {
+    for (const length of dash.array) {
+      budget.visit(depth + 1);
+      yield length === null ? reprStr('dot') : reprLength(length);
+    }
+  }
+  return joinRepr(['(array: (', joinRepr(lengths(), ', '), '), phase: ', reprLength(dash.phase), ')']);
 }
 
 // The order of each element's fields, as Typst declares them, with the kind of
@@ -413,6 +450,11 @@ function cornersValue<T>(corners: Corners<T>, f: (v: T) => Value): Value {
 
 const relValue = (rel: RelLength): Value => ({ type: 'relative', v: rel });
 
+/** Wrapping content fields is work too, before recursive serialization begins. */
+function mapField<T, U>(items: readonly T[], convert: (item: T) => U): U[] {
+  return withValueContext((budget) => items.map((item) => { budget.visit(); return convert(item); }));
+}
+
 /** Converts a field of an element to a value, as Typst's `IntoValue` for the field's type does. */
 export function fieldValue(kind: FieldKind, raw: unknown): Value {
   switch (kind) {
@@ -421,9 +463,9 @@ export function fieldValue(kind: FieldKind, raw: unknown): Value {
     case 'optContent':
       return raw === null ? NONE : contentValue(raw as Content);
     case 'contents':
-      return arrayValue((raw as Content[]).map(contentValue));
+      return arrayValue(mapField(raw as Content[], contentValue));
     case 'rows':
-      return arrayValue((raw as Content[][]).map((row) => arrayValue(row.map(contentValue))));
+      return arrayValue(mapField(raw as Content[][], (row) => arrayValue(mapField(row, contentValue))));
     case 'bool':
       return boolValue(raw as boolean);
     case 'int':
@@ -455,7 +497,7 @@ export function fieldValue(kind: FieldKind, raw: unknown): Value {
       if (augment.stroke === null && augment.hline.length === 0 && augment.vline.length === 1) {
         return intValue(BigInt(augment.vline[0]!));
       }
-      const offsets = (list: readonly number[]) => arrayValue(list.map((n) => intValue(BigInt(n))));
+      const offsets = (list: readonly number[]) => arrayValue(mapField(list, (n) => intValue(BigInt(n))));
       return dictValue(
         new Map<string, Value>([
           ['hline', offsets(augment.hline)],
@@ -527,27 +569,27 @@ export function contentFields(content: Content): [string, Value][] {
     .map(([name, kind]) => [name, fieldValue(kind, record[name])]);
 }
 
-function reprContent(content: Content): string {
+function reprContent(content: Content, budget: ValueBudget, depth: number): string {
   switch (content.func) {
-    case 'sequence':
-      return content.children.length === 0
-        ? '[]'
-        : `sequence${prettyArrayLike(
-            content.children.map((child) => reprContent(child)),
-            false,
-          )}`;
-    case 'styled':
-      return `styled(child: ${reprContent(content.child)}, ..)`;
+    case 'sequence': {
+      if (content.children.length === 0) return '[]';
+      function* pieces() {
+        for (const child of (content as Extract<Content, { func: 'sequence' }>).children) {
+          yield reprValue(contentValue(child), budget, depth + 1);
+        }
+      }
+      return joinRepr(['sequence', prettyArrayLike(pieces(), false)]);
+    }
+    case 'styled': return joinRepr(['styled(child: ', reprValue(contentValue(content.child), budget, depth + 1), ', ..)']);
     case 'text':
-    case 'symbol':
-      return `[${content.text}]`;
-    case 'space':
-      return '[ ]';
-    default:
-      return `${content.func}${prettyArrayLike(
-        contentFields(content).map(([name, value]) => `${name}: ${repr(value)}`),
-        false,
-      )}`;
+    case 'symbol': return joinRepr(['[', content.text, ']']);
+    case 'space': return '[ ]';
+    default: {
+      function* pieces() {
+        for (const [name, value] of contentFields(content)) yield reprField(name, value, budget, depth);
+      }
+      return joinRepr([content.func, prettyArrayLike(pieces(), false)]);
+    }
   }
 }
 
@@ -573,7 +615,7 @@ export function display(value: Value, span: Span = null): Content {
     case 'content':
       return spanned(value.v, span);
     default:
-      return { func: 'raw', text: repr(value), lang: 'typc', block: false, span };
+      return at(span, () => ({ func: 'raw', text: repr(value), lang: 'typc', block: false, span }));
   }
 }
 
@@ -581,6 +623,12 @@ export function display(value: Value, span: Span = null): Content {
 
 /** Whether two values are equal, as Typst's `==` decides. */
 export function equal(a: Value, b: Value): boolean {
+  return withValueContext((budget) => compareValue(a, b, budget, 0, false));
+}
+
+function compareValue(a: Value, b: Value, budget: ValueBudget, depth: number, hash: boolean): boolean {
+  budget.visit(depth);
+  if (hash && a.type !== b.type) return false;
   switch (a.type) {
     case 'none':
     case 'auto':
@@ -591,21 +639,26 @@ export function equal(a: Value, b: Value): boolean {
       if (b.type === 'int') return a.v === b.v;
       return b.type === 'float' && Number(a.v) === b.v;
     case 'float':
-      if (b.type === 'float') return a.v === b.v;
+      if (b.type === 'float') return numberEqual(a.v, b.v, hash);
       return b.type === 'int' && a.v === Number(b.v);
     case 'length':
+      if (hash) return lengthBitsEqual(a.v, (b as typeof a).v);
       if (b.type === 'length') return lengthEq(a.v, b.v);
       return b.type === 'relative' && lengthEq(a.v, b.v.abs) && b.v.rel === 0;
     case 'ratio':
-      if (b.type === 'ratio') return a.v === b.v;
+      if (b.type === 'ratio') return numberEqual(a.v, b.v, hash);
       return b.type === 'relative' && a.v === b.v.rel && lengthIsZero(b.v.abs);
     case 'relative':
+      if (hash) {
+        const y = (b as typeof a).v;
+        return Object.is(a.v.rel, y.rel) && lengthBitsEqual(a.v.abs, y.abs);
+      }
       if (b.type === 'relative') return relEq(a.v, b.v);
       if (b.type === 'length') return lengthEq(b.v, a.v.abs) && a.v.rel === 0;
       return b.type === 'ratio' && b.v === a.v.rel && lengthIsZero(a.v.abs);
     case 'angle':
     case 'fraction':
-      return b.type === a.type && a.v === b.v;
+      return b.type === a.type && numberEqual(a.v, b.v, hash);
     case 'color':
       return b.type === 'color' && colorEq(a.v, b.v);
     case 'symbol':
@@ -613,19 +666,27 @@ export function equal(a: Value, b: Value): boolean {
     case 'str':
       return b.type === 'str' && a.v === b.v;
     case 'content':
-      return b.type === 'content' && JSON.stringify(toJson(a)) === JSON.stringify(toJson(b));
+      return b.type === 'content' && (!hash || sameSpan(a.v.span, b.v.span)) && jsonEqual(jsonValue(a, budget, depth), jsonValue(b, budget, depth), budget, depth);
     case 'array':
-      return b.type === 'array' && a.v.length === b.v.length && a.v.every((x, i) => equal(x, b.v[i]!));
-    case 'dictionary':
-      return (
-        b.type === 'dictionary' &&
-        a.v.size === b.v.size &&
-        [...a.v].every(([key, x]) => b.v.has(key) && equal(x, b.v.get(key)!))
-      );
+      return b.type === 'array' && a.v.length === b.v.length && a.v.every((x, i) => compareValue(x, b.v[i]!, budget, depth + 1, hash));
+    case 'dictionary': {
+      if (b.type !== 'dictionary' || a.v.size !== b.v.size) return false;
+      const entries = b.v.entries();
+      for (const [key, child] of a.v) {
+        const other = hash ? entries.next().value! : [key, b.v.get(key)] as const;
+        if (other[0] !== key || other[1] === undefined || !compareValue(child, other[1], budget, depth + 1, hash)) return false;
+      }
+      return true;
+    }
     case 'function':
-      return b.type === 'function' && a.v === b.v;
+      return b.type === 'function' && compareFunctions(a.v, b.v, budget, depth);
     case 'arguments':
-      return b.type === 'arguments' && a.v === b.v;
+      if (b.type !== 'arguments') return false;
+      if (!hash) return compareArgs(a.v, b.v, budget, depth);
+      return sameSpan(a.v.span, b.v.span) && a.v.items.length === b.v.items.length && a.v.items.every((item, i) => {
+        const other = b.v.items[i]!;
+        return item.name === other.name && compareValue(item.value, other.value, budget, depth + 1, true);
+      });
     case 'type':
       return b.type === 'type' && a.v === b.v;
     case 'module':
@@ -641,38 +702,132 @@ export function equal(a: Value, b: Value): boolean {
   }
 }
 
+
+/** Function identity and closure hashing retain their existing semantics. */
+function compareFunctions(a: Func, b: Func, budget: ValueBudget, depth: number): boolean {
+  budget.visit(depth);
+  if (a === b) return true;
+  if (a.closure && b.closure) {
+    const x = a.closure;
+    const y = b.closure;
+    return sameSpan(x.node.span, y.node.span) && x.defaults.length === y.defaults.length
+      && x.defaults.every((value, i) => compareValue(value, y.defaults[i]!, budget, depth + 1, true))
+      && compareScopes(x.captured, y.captured, budget, depth + 1);
+  }
+  return false;
+}
+
+function compareScopes(a: Scope, b: Scope, budget: ValueBudget, depth: number): boolean {
+  budget.visit(depth);
+  let countA = 0;
+  let countB = 0;
+  for (const name of a.names()) {
+    countA++;
+    const other = b.get(name);
+    if (other === undefined || !compareValue(a.get(name)!.value, other.value, budget, depth + 1, true)) return false;
+  }
+  for (const _name of b.names()) { budget.visit(depth + 1); countB++; }
+  return countA === countB;
+}
+
+/** Equality of arguments: positional values in order, named values as a dictionary. */
+export function argsEqual(a: Args, b: Args): boolean {
+  return withValueContext((budget) => compareArgs(a, b, budget, 0));
+}
+
+function compareArgs(a: Args, b: Args, budget: ValueBudget, depth: number): boolean {
+  budget.visit(depth);
+  const split = (args: Args) => {
+    const pos: Value[] = [];
+    const named = new Map<string, Value>();
+    for (const item of args.items) {
+      budget.visit(depth + 1);
+      if (item.name === null) pos.push(item.value);
+      else named.set(item.name, item.value);
+    }
+    return { pos, named };
+  };
+  const x = split(a);
+  const y = split(b);
+  return compareValue(arrayValue(x.pos), arrayValue(y.pos), budget, depth, false)
+    && compareValue(dictValue(x.named), dictValue(y.named), budget, depth, false);
+}
+
+const numberEqual = (a: number, b: number, hash: boolean): boolean => hash ? Object.is(a, b) : a === b;
+const lengthBitsEqual = (a: Length, b: Length): boolean => Object.is(a.abs, b.abs) && Object.is(a.em, b.em);
+
+/** Hash equality preserves floating bits, dictionary order and content locations. */
+export function hashEqual(a: Value, b: Value): boolean {
+  return withValueContext((budget) => compareValue(a, b, budget, 0, true));
+}
+
+/** Compares JSON equivalents without materializing their escaped string form. */
+function jsonEqual(a: unknown, b: unknown, budget: ValueBudget, depth: number): boolean {
+  const stack: [unknown, unknown, number][] = [[a, b, depth]];
+  while (stack.length) {
+    const [rawA, rawB, level] = stack.pop()!;
+    budget.visit(level);
+    const x = typeof rawA === 'number' && !Number.isFinite(rawA) ? null : rawA;
+    const y = typeof rawB === 'number' && !Number.isFinite(rawB) ? null : rawB;
+    if (x === y) continue;
+    if (!x || !y || typeof x !== 'object' || typeof y !== 'object') return false;
+    if (Array.isArray(x) || Array.isArray(y)) {
+      if (!Array.isArray(x) || !Array.isArray(y) || x.length !== y.length) return false;
+      for (let i = x.length - 1; i >= 0; i--) stack.push([x[i] ?? null, y[i] ?? null, level + 1]);
+    } else {
+      const left = x as Record<string, unknown>;
+      const right = y as Record<string, unknown>;
+      const keys = Object.keys(left).filter((key) => left[key] !== undefined);
+      const other = Object.keys(right).filter((key) => right[key] !== undefined);
+      if (keys.length !== other.length || keys.some((key, i) => key !== other[i])) return false;
+      for (let i = keys.length - 1; i >= 0; i--) stack.push([left[keys[i]!], right[keys[i]!], level + 1]);
+    }
+  }
+  return true;
+}
+
 // --- serialization ---------------------------------------------------------
 
 /** Serializes a value to JSON as Typst's serde implementation does. */
 export function toJson(value: Value): unknown {
+  return withValueContext((budget) => jsonValue(value, budget, 0));
+}
+
+function jsonValue(value: Value, budget: ValueBudget, depth: number): unknown {
+  budget.visit(depth);
   switch (value.type) {
-    case 'none':
-      return null;
+    case 'none': return null;
     case 'bool':
     case 'float':
-    case 'str':
-      return value.v;
-    case 'int':
-      return Number(value.v);
-    case 'symbol':
-      return symbolGet(value.v);
-    case 'content':
-      return contentToJson(value.v);
-    case 'array':
-      return value.v.map(toJson);
-    case 'dictionary':
-      return Object.fromEntries([...value.v].map(([key, v]) => [key, toJson(v)]));
-    default:
-      return repr(value);
+    case 'str': return value.v;
+    case 'int': return Number(value.v);
+    case 'symbol': return symbolGet(value.v);
+    case 'content': return jsonContent(value.v, budget, depth);
+    case 'array': return value.v.map((child) => jsonValue(child, budget, depth + 1));
+    case 'dictionary': {
+      function* entries(): Generator<[string, unknown]> {
+        for (const [key, child] of (value as Extract<Value, { type: 'dictionary' }>).v) yield [key, jsonValue(child, budget, depth + 1)];
+      }
+      return Object.fromEntries(entries());
+    }
+    default: {
+      const text = reprInner(value, budget, depth);
+      budget.checkString(text.length);
+      return text;
+    }
   }
 }
 
 /** Serializes content to JSON as Typst's `#metadata` does: `{func, ...fields}`. */
 export function contentToJson(content: Content): Record<string, unknown> {
+  return toJson(contentValue(content)) as Record<string, unknown>;
+}
+
+function jsonContent(content: Content, budget: ValueBudget, depth: number): Record<string, unknown> {
   const out: Record<string, unknown> = { func: content.func };
   for (const [name, value] of contentFields(content)) {
-    if (!INTERNAL_FIELDS.has(name)) out[name] = toJson(value);
+    if (!INTERNAL_FIELDS.has(name)) out[name] = jsonValue(value, budget, depth + 1);
   }
-  if (content.label !== undefined) out.label = `<${content.label}>`;
+  if (content.label !== undefined) out.label = joinRepr(['<', content.label, '>']);
   return out;
 }

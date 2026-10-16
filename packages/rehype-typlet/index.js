@@ -6,7 +6,7 @@
 // `math-inline` and `math-display`, and code blocks fenced as ```math.
 
 /**
- * @import {ElementContent, Root} from 'hast'
+ * @import {Element, ElementContent, Root} from 'hast'
  * @import {RenderOptions, TypletWarning} from 'typlet'
  * @import {VFile} from 'vfile'
  */
@@ -34,6 +34,11 @@ export default function rehypeTyplet(options) {
   return function (tree, file) {
     const equationCounter = settings.equationCounter ?? { value: 0 };
 
+    // Collect original scopes before replacing any: empty results can shift
+    // siblings, and fenced code replaces its ancestor pre. Inserted fallback
+    // markup is never visited as another formula.
+    /** @type {Array<{element: Element, scope: Element, parent: Root | Element, ancestors: Array<Root | Element>, displayMode: boolean}>} */
+    const formulas = [];
     visitParents(tree, 'element', function (element, parents) {
       const classes = Array.isArray(element.properties.className) ? element.properties.className : [];
       // Code fenced as ```math.
@@ -55,8 +60,14 @@ export default function rehypeTyplet(options) {
       }
       if (!parent) return;
 
+      formulas.push({ element, scope, parent, ancestors: [...parents, element], displayMode });
+      return SKIP;
+    });
+
+    for (const { element, scope, parent, ancestors, displayMode } of formulas) {
+      const index = parent.children.indexOf(scope);
+      if (index < 0) continue;
       const value = toText(scope, { whitespace: 'pre' });
-      const ancestors = [...parents, element];
       /** @param {TypletWarning} warning */
       const report = (warning) => {
         file.message(warning.message, { ancestors, place: element.position, ruleId: 'warning', source: 'rehype-typlet' });
@@ -85,9 +96,7 @@ export default function rehypeTyplet(options) {
 
       /** @type {Array<ElementContent>} */
       const nodes = /** @type {Array<ElementContent>} */ (fromHtmlIsomorphic(result, { fragment: true }).children);
-      const index = parent.children.indexOf(scope);
       parent.children.splice(index, 1, ...nodes);
-      return SKIP;
-    });
+    }
   };
 }

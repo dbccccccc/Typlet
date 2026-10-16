@@ -192,6 +192,10 @@ function blockMarkdown(state, startLine, endLine, silent) {
 export default function markdownItTyplet(md, options = {}) {
   const { delimiters = 'markdown', ...renderOptions } = options;
 
+  md.core.ruler.before('block', 'typlet_equation_counter', (state) => {
+    if (renderOptions.equationCounter === undefined) state.env.typletEquationCounter = { value: 0 };
+  });
+
   /**
    * @param {string} source
    * @param {boolean} displayMode

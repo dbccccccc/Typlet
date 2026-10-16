@@ -32,8 +32,18 @@ const UPSTREAM_PATH = String.raw`(?:crates|src)\/[\w./-]+\.rs`;
 const PORTED_LINE_1 = new RegExp(
   String.raw`^\/\/ Ported from (Typst|codex|typst-assets) (\d+\.\d+\.\d+): (${UPSTREAM_PATH}(?:, ${UPSTREAM_PATH})*)$`,
 );
-const PORTED_LINE_2 = '// Copyright The Typst Project Developers. Licensed under Apache-2.0.';
+const TYPST_COPYRIGHT = '// Copyright The Typst Project Developers. Licensed under Apache-2.0.';
 const PORTED_LINE_3 = '// Modified for Typlet. See THIRD_PARTY_NOTICES.md.';
+
+/**
+ * The projects code is ported from: where their paths start, and the
+ * copyright line their headers carry.
+ */
+const PROJECTS = {
+  Typst: { prefix: 'crates/', copyright: TYPST_COPYRIGHT },
+  codex: { prefix: 'src/', copyright: TYPST_COPYRIGHT },
+  'typst-assets': { prefix: 'src/', copyright: TYPST_COPYRIGHT },
+};
 
 /**
  * Parses a file's header. Returns `{ kind: 'ported', project, version, upstream: [paths] }`,
@@ -43,7 +53,7 @@ export function parseHeader(text) {
   const lines = text.replace(/^﻿/, '').split(/\r?\n/, 3);
   if (lines[0] === ORIGINAL_MARKER) return { kind: 'original' };
   const match = PORTED_LINE_1.exec(lines[0] ?? '');
-  if (match && lines[1] === PORTED_LINE_2 && lines[2] === PORTED_LINE_3) {
+  if (match && lines[1] === PROJECTS[match[1]].copyright && lines[2] === PORTED_LINE_3) {
     return { kind: 'ported', project: match[1], version: match[2], upstream: match[3].split(', ') };
   }
   return null;
@@ -68,7 +78,7 @@ export function checkHeaders(files, upstreamDoc, typstVersion, codexVersion = '0
     if (header?.kind === 'ported') {
       // typst-assets is released with Typst and shares its version.
       const expected = header.project === 'codex' ? codexVersion : typstVersion;
-      const prefix = header.project === 'Typst' ? 'crates/' : 'src/';
+      const { prefix } = PROJECTS[header.project];
       if (header.version !== expected) {
         problems.push(`${path}: ported from ${header.project} ${header.version}, but Typlet targets ${expected}`);
       }

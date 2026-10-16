@@ -15,4 +15,4 @@ export interface Options extends RenderOptions {
 }
 
 /** Renders math with Typlet. Each document, one `md.render` call, numbers its equations from 1. */
-export default function markdownItTyplet(md: MarkdownIt, options?: Options): void;
+export default function markdownItTyplet(md: InstanceType<typeof MarkdownIt>, options?: Options): void;

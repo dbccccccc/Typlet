@@ -8,7 +8,7 @@ A lightweight, KaTeX-style renderer for [Typst](https://typst.app) math: one sma
 
 Typlet draws Typst math as HTML laid out by a port of Typst's own math layout, with MathML for screen readers, and its tests compare every formula it lays out with the Typst compiler's own layout. It evaluates the embedded code formulas use, from `#h(1em)` and `mat(delim: "[", ...)` to styled content, boxes, `#let` definitions, functions and set rules (see [Embedded code](#embedded-code)). It comes with auto-render, copy-as-Typst, a custom element, a command-line tool, and plugins for rehype and markdown-it (see [Integrations](#integrations)).
 
-> **Status: 0.1, the first public release.** It reproduces Typst 0.15.1. The API may still change before 1.0: [CHANGELOG.md](CHANGELOG.md) lists what each release changes, [Limitations](#limitations) what Typlet doesn't draw yet, and [docs/DESIGN.md](docs/DESIGN.md) how it works.
+> **Status: 0.2.** It reproduces Typst 0.15.1. The API may still change before 1.0: [CHANGELOG.md](CHANGELOG.md) lists what each release changes, [Limitations](#limitations) what Typlet doesn't draw yet, and [docs/DESIGN.md](docs/DESIGN.md) how it works.
 
 Typlet is an independent project and is not affiliated with Typst GmbH.
 
@@ -21,8 +21,8 @@ npm install typlet
 Or load it in a page, with its stylesheet:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typlet@0.1.1/fonts/typlet.css">
-<script src="https://cdn.jsdelivr.net/npm/typlet@0.1.1/dist/typlet.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typlet@0.2.0/fonts/typlet.css">
+<script src="https://cdn.jsdelivr.net/npm/typlet@0.2.0/dist/typlet.min.js"></script>
 <script>
   typlet.render('sum_(i=1)^n i = (n(n+1))/2', document.getElementById('formula'), { displayMode: true });
 </script>
@@ -50,11 +50,22 @@ Pages need `typlet.css` and the fonts (see [Fonts](#fonts)). The `output` option
 | `html` | Typlet's HTML | An `aria-label` with the source |
 | `mathml` | The browser, from MathML that matches Typst's own HTML export | The MathML |
 
-Inline formulas wrap after binary operators and relations, where Typst breaks lines. A formula that Typlet cannot draw yet, such as one with a symbol that New Computer Modern Math lacks, falls back to MathML with a warning.
+Inline formulas wrap after binary operators and relations, where Typst breaks lines. A formula that Typlet cannot draw yet, such as one with a symbol that New Computer Modern Math lacks, falls back to MathML with a warning, in both HTML outputs.
+
+`renderToResult()` returns the markup together with what drew the formula, the warnings and the equation number, for pages that need to know, such as an editor's preview:
+
+```js
+import { renderToResult } from 'typlet';
+
+const { markup, drawnAs, warnings, number } = renderToResult('x^2', { strict: 'ignore' });
+// drawnAs: 'html' | 'mathml' | 'fallback' | 'error'
+// warnings: each with a kind, 'fallback', 'deprecation' or 'other'
+// number: '(1)' for a numbered display equation, else null
+```
 
 The MathML follows Typst's own HTML export, and keeps what that export drops: `overline` and `underline` as stretchy accents, `cancel` as `<menclose>`, colors, box borders and backgrounds, and `hide` as `<mphantom>`.
 
-The `typlet/mathml` entry point renders MathML alone. It leaves out the layout engine and font metrics, so it is about half the size:
+The `typlet/mathml` entry point renders MathML alone. It leaves out the layout engine and font metrics, so it is about 40% smaller:
 
 ```js
 import { renderToString } from 'typlet/mathml';
@@ -64,7 +75,9 @@ renderToString('sum_(i=1)^n i = (n(n+1))/2', { displayMode: true });
 //  <annotation encoding="application/x-typst">sum_(i=1)^n i = (n(n+1))/2</annotation></semantics></math></span></span>'
 ```
 
-The options follow KaTeX's where the meaning carries over: `displayMode`, `output`, `throwOnError`, `errorColor`, `strict` and `trust`. Typlet adds `preamble`, `equationCounter` and `fallback` (see [Embedded code](#embedded-code)), and budgets for untrusted input: `maxCalls` (30,000 function calls), `maxCollectionSize` (10,000 items), `maxStringLength` (100,000 characters), `maxElements` (10,000 content elements), `maxSize` (1,000 em for spacing, boxes and text) and `maxOutputSize` (1,000,000 characters). An invalid formula throws a `TypletError` with Typst's message and hints, the error's span in the source, and a `kind`: `syntax`, `eval`, `unsupported` (Typst supports it, Typlet doesn't yet) or `limit` (a budget ran out).
+The options follow KaTeX's where the meaning carries over: `displayMode`, `output`, `throwOnError`, `errorColor`, `strict` and `trust`. Typlet adds `preamble`, `equationCounter` and `fallback` (see [Embedded code](#embedded-code)), and budgets for untrusted input: `maxCalls` (30,000 function calls), `maxCollectionSize` (10,000 items), `maxStringLength` (100,000 characters), `maxElements` (10,000 content elements and expanded text units per stage), `maxSize` (1,000 em for spacing, boxes and text) and `maxOutputSize` (1,000,000 characters). An invalid formula throws a `TypletError` with Typst's message and hints, the error's span in the source, and a `kind`: `syntax`, `eval`, `unsupported` (Typst supports it, Typlet doesn't yet) or `limit` (a budget ran out).
+
+`maxOutputSize` counts UTF-16 code units in markup generated by Typlet, including errors and pending fallback previews. When needed, these previews omit the tooltip and color, shorten the escaped source, or become empty if even the minimal span cannot fit. Thrown errors keep their complete source and diagnostics. External `fallback` markup is supplied by the caller and is not truncated.
 
 ```js
 renderToString('x + foo');
@@ -75,12 +88,17 @@ renderToString('x + foo');
 
 `parse()`, from the main `typlet` entry point, returns Typst's syntax tree for a formula, with the same node kinds, error recovery and messages as typst-syntax.
 
+The collection limit checks each array and dictionary, including literals, spreads, joins and repetition, plus generated argument lists and closure sinks. Fixed syntax arguments and empty spreads keep their original behavior. Syntax trees, active set/show rule chains and runtime content are also bounded in depth; definitions cannot build a content tree that overflows recursive consumers. Expressions and rule tails together allow at most 512 active evaluation steps per engine, including recursive macros and delayed callbacks. This internal limit reports a source-located `limit` error and produces controlled error markup with `throwOnError: false`.
+
+Each evaluation engine also shares an internal budget of 100,000 value-node visits and a traversal depth of 256 across representations, serialization and comparisons. Repeated visits to a shared subtree count separately, so a compact value graph can reach this limit. These limits have no public option and are independent of `maxCalls`. Representation strings, including implicit value displays and diagnostic representations, obey `maxStringLength` in JavaScript UTF-16 code units.
+
 ### Embedded code
 
 Typlet evaluates Typst code in formulas, as Typst does:
 - **Values:** literals, operators, arrays and dictionaries, colors, alignments, strokes, and calls such as `#h(-1em/6)` and `mat(delim: "[", augment: #2, ..rows)`.
 - **Content and styling:** content blocks with markup (`#[*bold* and _emphasized_ text]`), `text` (fill, size, weight, style, tracking, spacing, baseline, and the language, which chooses the quotes), `strong`, `emph`, `highlight`, `hide`, `box` (size, baseline, fill, stroke, radius, inset, outset) and `link`. Links are drawn only when the `trust` option allows them: `true`, or a function of the URL and its protocol, such as `({ protocol }) => protocol === 'https'`. Settings the HTML can't draw yet, such as other fonts or text strokes, fall back to MathML with a warning.
 - **Definitions and settings:** `#let` values and functions, with named parameters, defaults, destructuring and recursion; `if`/`else`; code blocks; set rules such as `#set math.mat(delim: "[")` and `#set text(fill: blue)`, which apply to the rest of the formula; and show-set rules for equations, `#show math.equation: set text(fill: blue)`, with or without `.where(block: true)`.
+- **Deliberate language boundary:** formulas, user functions/macros and basic collection literals, joins, repetition and spreads follow the v0.1.1 scope. Loops, mutation, `calc`, constructors and general collection/string methods are unsupported; hosts can handle them through `fallback`.
 
 The `preamble` option holds code that comes before every formula, like the start of a document. It replaces KaTeX's `macros`. Typlet evaluates it once per set of options. Display equations that its set rules number take their numbers from `equationCounter`:
 
@@ -94,12 +112,14 @@ renderToString('norm(v) <= 1', options);                     // numbered (1)
 renderToString('norm(u + v) <= norm(u) + norm(v)', options); // numbered (2)
 ```
 
-Typlet refuses what needs Typst's document engine: `show` rules other than `show math.equation: set …`, loops, introspection such as `context` and `counter`, file access, and document elements such as headings. These throw a `TypletError` of kind `unsupported`. The `fallback` option can render them another way, for example with Typst compiled to WebAssembly, loaded only when needed:
+Typlet refuses what needs Typst's document engine: `show` rules other than `show math.equation: set …`, introspection such as `context` and `counter`, file access, and document elements such as headings. These throw a `TypletError` of kind `unsupported`. The `fallback` option can render them another way, for example with Typst compiled to WebAssembly, loaded only when needed:
 
 ```js
 // renderWithTypst is your own function, for example one built on typst.ts.
 render(source, element, { fallback: (source, error) => renderWithTypst(source) }); // markup, or a promise of it
 ```
+
+A pending fallback updates its element only while it is still the latest `render()` call and the page has not changed that element's contents. This also applies when the source stays the same but options change. Rejected promises show a bounded error preview; unknown fallback failures use a generic message. Synchronous exceptions keep their existing behavior.
 
 Errors in the preamble have `in: 'preamble'` in their diagnostics, with spans in the preamble.
 
@@ -141,9 +161,9 @@ The fonts are under the GUST Font License; see [fonts/MANIFEST-typlet-newcm-math
 
 ## Limitations
 
-Typlet 0.1 draws most formulas as Typst does, and says so when it can't:
+Typlet 0.2 draws most formulas as Typst does, and says so when it can't:
 - **Some formulas are drawn as MathML, with a warning,** by the browser and not by Typst's layout. These are formulas with a symbol that New Computer Modern Math lacks, with text in a script it lacks, such as Cyrillic, Hebrew or Arabic, or in Devanagari, which needs shaping, with raw text, or with text settings such as another font or a stroke.
-- **Code that needs Typst's document engine is refused,** with a `TypletError` of kind `unsupported`: loops, `show` rules other than show-set rules for equations, `context`, counters and file access. The `fallback` option can render such formulas another way.
+- **Code that needs Typst's document engine is refused,** with a `TypletError` of kind `unsupported`: `show` rules other than show-set rules for equations, `context`, counters, file access, and regular expressions, decimals, dates and the other types without values in Typlet. The `fallback` option can render such formulas another way.
 - **One math font.** Formulas are set in New Computer Modern Math, Typst's default.
 - **Speed.** Typlet renders a formula about as fast as KaTeX once its code is warm, and a page's first formulas more slowly. The documentation site's comparison page measures both in your browser.
 

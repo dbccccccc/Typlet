@@ -26,6 +26,7 @@ import { pathToFileURL } from 'node:url';
 import { deflateSync, inflateSync } from 'node:zlib';
 import { chromium, firefox, webkit } from 'playwright';
 import { runOracle } from '../../tools/lib/oracle.mjs';
+import { validateOracleSvgs, validateVisualContract } from './visual-contract.mjs';
 
 const root = resolve(import.meta.dirname, '../..');
 const SIZE = 32; // px per em; Typst lays out at 11pt
@@ -50,33 +51,27 @@ const LAUNCH = {
 };
 const ALLOWANCE = { chromium: MAX_MISMATCH, firefox: MAX_MISMATCH, webkit: LINUX ? 0.08 : MAX_MISMATCH };
 
-const { renderToString } = await import(pathToFileURL(join(root, 'dist/index.js')).href);
+const { renderToResult, renderToString, TypletError, typstVersion } = await import(pathToFileURL(join(root, 'dist/index.js')).href);
 
-// Formulas whose preambles put text on the page, which the SVG shows too.
-const SKIPPED = new Set(['levels/preamble-text']);
-
-// The formulas: the corpora's, where Typlet draws HTML.
-const formulas = [];
+// Check every corpus input and drawing mode before creating a server or browser.
+const corpus = [];
 for (const name of ['paired', 'features', 'typst-docs', 'levels']) {
   for (const line of readFileSync(join(root, `test/corpus/${name}.jsonl`), 'utf8').split('\n')) {
     if (!line.trim()) continue;
-    const f = JSON.parse(line);
-    if (SKIPPED.has(`${name}/${f.id}`)) continue;
-    const preamble = f.preamble?.trim() ? f.preamble : undefined;
-    let html;
-    try {
-      html = renderToString(f.src, { output: 'html', displayMode: !!f.display, strict: 'ignore', trust: true, preamble });
-    } catch {
-      continue;
-    }
-    formulas.push({ id: `${name}/${f.id}`, src: f.src, display: !!f.display, preamble, html });
+    const formula = JSON.parse(line);
+    corpus.push({ ...formula, id: `${name}/${formula.id}` });
   }
 }
+const manifest = JSON.parse(readFileSync(join(import.meta.dirname, 'visual-contract.json'), 'utf8'));
+const formulas = validateVisualContract(corpus, manifest, {
+  render: renderToResult, typstVersion, isTypletError: (error) => error instanceof TypletError,
+});
 const svgs = runOracle(
   ['run', '--outputs', 'svg'],
-  formulas.map((f) => ({ id: f.id, src: f.src, display: f.display, ...(f.preamble ? { preamble: f.preamble } : {}) })),
+  formulas.map((f) => ({ id: f.id, src: f.src, display: Boolean(f.display), ...(f.preamble?.trim() ? { preamble: f.preamble } : {}) })),
 );
-for (const [i, record] of svgs.entries()) formulas[i].svg = record.svg ?? null;
+const svgById = validateOracleSvgs(formulas, svgs);
+const comparable = formulas.map((formula) => ({ ...formula, svg: svgById.get(formula.id) }));
 
 /** A page of formulas in a grid, drawn by Typst or Typlet. */
 function page(batch, engine) {
@@ -270,7 +265,6 @@ const outDir = join(tmpdir(), 'typlet-visual');
 mkdirSync(outDir, { recursive: true });
 const browsers = { chromium, firefox, webkit };
 const names = process.argv.slice(2).length ? process.argv.slice(2) : Object.keys(browsers);
-const comparable = formulas.filter((f) => f.svg);
 let failures = 0;
 for (const name of names) {
   const browser = await browsers[name].launch(LAUNCH[name]);

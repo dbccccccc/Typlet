@@ -1,6 +1,37 @@
 import { describe, expect, it } from 'vitest';
-import { kindName, parse, render, renderToString, type RenderOptions, SyntaxKind, TypletError } from '../src/index.js';
+import { kindName, parse, render, renderToResult, renderToString, type RenderOptions, SyntaxKind, TypletError } from '../src/index.js';
 import * as mathmlEntry from '../src/mathml.js';
+
+describe('nested render budget scopes', () => {
+  const source = '#link("https://example.com")[x] #box(width: 20em)[x]';
+
+  it.each([false, true])('restores a smaller outer size limit after inner failure=%s', (fail) => {
+    const trust = () => {
+      try { renderToResult(fail ? 'foo' : 'x', { maxSize: 1000, strict: 'ignore' }); }
+      catch (error) { if (!(error instanceof TypletError)) throw error; }
+      return true;
+    };
+    const result = renderToResult(source, { maxSize: 10, trust, strict: 'ignore', throwOnError: false });
+    expect(result.drawnAs).toBe('error');
+    expect(() => renderToResult(source, { maxSize: 10, trust, strict: 'ignore' })).toThrow(TypletError);
+  });
+
+  it('restores a larger outer size limit', () => {
+    const result = renderToResult(source, { maxSize: 30, strict: 'ignore', trust: () => {
+      renderToResult('x', { maxSize: 1, strict: 'ignore' });
+      return true;
+    } });
+    expect(result.drawnAs).toBe('html');
+  });
+
+  it('restores the outer default element allowance for nested boxes', () => {
+    const result = renderToResult(source, { maxElements: 100, strict: 'ignore', trust: () => {
+      renderToResult('x', { maxElements: 2, strict: 'ignore' });
+      return true;
+    } });
+    expect(result.drawnAs).toBe('html');
+  });
+});
 
 describe('parse', () => {
   it('parses formulas in math mode by default', () => {
@@ -96,7 +127,8 @@ describe('renderToString', () => {
     expect(out).toMatch(/^<span class="typlet"><math>/);
     expect(seen).toHaveLength(1);
     expect(seen[0]).toMatch(/drawn as MathML$/);
-    expect(() => renderToString('#left', { output: 'html' })).toThrow(TypletError);
+    // The `html` output falls back the same way.
+    expect(renderToString('#left', { output: 'html', strict: 'ignore' })).toMatch(/^<span class="typlet"><math>/);
   });
 
   it('reports syntax errors with Typst’s message and span', () => {
@@ -115,9 +147,9 @@ describe('renderToString', () => {
   });
 
   it('refuses unsupported constructs by name', () => {
-    const error = catchError(() => mathml('#for i in (1, 2) [#i]'));
+    const error = catchError(() => mathml('#context [x]'));
     expect(error.kind).toBe('unsupported');
-    expect(error.message).toBe('Typlet does not support loops');
+    expect(error.message).toBe('Typlet does not support context expressions');
   });
 
   it('stops at its budgets', () => {
@@ -152,6 +184,39 @@ describe('renderToString', () => {
     const element = { innerHTML: '' };
     render('x', element, { output: 'mathml' });
     expect(element.innerHTML).toContain('<mi>𝑥</mi>');
+  });
+});
+
+describe('renderToResult', () => {
+  it('says what drew the formula, with the warnings and their kinds', () => {
+    const html = renderToResult('x^2');
+    expect(html.markup).toBe(renderToString('x^2'));
+    expect(html).toMatchObject({ drawnAs: 'html', warnings: [], number: null });
+    const fallback = renderToResult('#left', { strict: 'ignore' });
+    expect(fallback.drawnAs).toBe('mathml');
+    expect(fallback.warnings).toHaveLength(1);
+    expect(fallback.warnings[0]).toMatchObject({ severity: 'warning', kind: 'fallback' });
+    expect(fallback.warnings[0]!.message).toMatch(/drawn as MathML$/);
+    expect(renderToResult('x', { output: 'mathml' }).drawnAs).toBe('mathml');
+    expect(mathmlEntry.renderToResult('x').drawnAs).toBe('mathml');
+    expect(renderToResult('gt.tri', { strict: 'ignore' }).warnings[0]).toMatchObject({ kind: 'deprecation' });
+    expect(renderToResult('#[#link("https://typst.app")[t]]', { strict: 'ignore' }).warnings[0]).toMatchObject({ kind: 'other' });
+  });
+
+  it('gives the number of a numbered display equation', () => {
+    const options = { displayMode: true, preamble: '#set math.equation(numbering: "(1)")', equationCounter: { value: 0 } };
+    expect(renderToResult('x', options).number).toBe('(1)');
+    expect(renderToResult('y', options).number).toBe('(2)');
+    expect(renderToResult('y', { ...options, displayMode: false }).number).toBeNull();
+  });
+
+  it('reports the fallback option’s markup and errors rendered in place', () => {
+    const fallback = () => '<svg></svg>';
+    expect(renderToResult('#[#show "x": "y"\nx]', { fallback })).toEqual({ markup: '<svg></svg>', drawnAs: 'fallback', warnings: [], number: null });
+    const error = renderToResult('foo', { throwOnError: false });
+    expect(error.drawnAs).toBe('error');
+    expect(error.markup).toMatch(/^<span class="typlet-error"/);
+    expect(() => renderToResult('foo')).toThrow(TypletError);
   });
 });
 

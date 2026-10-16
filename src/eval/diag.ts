@@ -19,10 +19,12 @@ export interface SourceDiagnostic {
   /** The function calls that led to the problem, innermost first. */
   trace: { point: string; span: Span }[];
   /**
-   * Set for Typlet's own errors: `unsupported` when Typlet refuses a construct
-   * that Typst supports, `limit` when a resource budget runs out.
+   * Set for Typlet's own errors, `unsupported` when Typlet refuses a construct
+   * that Typst supports and `limit` when a resource budget runs out, and for
+   * the warnings the API tells apart: `deprecation` for a deprecated name,
+   * `fallback` when the HTML output draws a formula as MathML.
    */
-  kind?: 'unsupported' | 'limit';
+  kind?: 'unsupported' | 'limit' | 'deprecation' | 'fallback';
 }
 
 /**
@@ -70,6 +72,20 @@ export function error(span: Span, message: string, ...hints: string[]): SourceDi
 
 export function warning(span: Span, message: string, ...hints: string[]): SourceDiagnostic {
   return { severity: 'warning', span, message, hints, trace: [] };
+}
+
+/** Whether two spans are the same location. */
+export function sameSpan(a: Span, b: Span): boolean {
+  return a === b || (a !== null && b !== null && a.start === b.start && a.end === b.end && a.file === b.file);
+}
+
+/**
+ * Adds a warning, unless one with the same location and message is there
+ * already, like Typst's `Sink::warn`: a function called several times warns
+ * once.
+ */
+export function warn(warnings: SourceDiagnostic[], diag: SourceDiagnostic): void {
+  if (!warnings.some((w) => w.message === diag.message && sameSpan(w.span, diag.span))) warnings.push(diag);
 }
 
 /** Fails with an error at a location. */
@@ -122,12 +138,20 @@ export function bailLimit(message: string, ...hints: string[]): never {
  * itself over and over, doubling at each step, stops (docs/DESIGN.md §6.6).
  */
 export class ElementBudget {
-  private count = 0;
+  protected count = 0;
 
   constructor(readonly max: number = elementLimit) {}
 
+  consume(count: number, span: Span): void {
+    const next = this.count + count;
+    if (!Number.isSafeInteger(count) || count < 0 || !Number.isSafeInteger(next) || next > this.max) {
+      limit(span, `Typlet stopped after ${this.max} elements`);
+    }
+    this.count = next;
+  }
+
   visit(span: Span): void {
-    if (++this.count > this.max) limit(span, `Typlet stopped after ${this.max} elements`);
+    this.consume(1, span);
   }
 }
 
@@ -136,6 +160,14 @@ let elementLimit = 10_000;
 /** Sets the element budget for the following formulas. */
 export function setElementLimit(max: number): void {
   elementLimit = max;
+}
+
+/** Keeps synchronous nested renders from changing their caller's allowance. */
+export function withElementLimit<T>(max: number, body: () => T): T {
+  const previous = elementLimit;
+  elementLimit = max;
+  try { return body(); }
+  finally { elementLimit = previous; }
 }
 
 /** Collects warnings, like Typst's `Sink`. */

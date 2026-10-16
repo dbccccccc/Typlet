@@ -481,51 +481,105 @@ fn write_symbols(
     }
 }
 
-/// Writes every name in Typst's global scope and math scope:
+/// Writes every name in Typst's global scope and math scope, in the `calc`
+/// module, and in the scopes of the types whose methods Typlet may
+/// implement, plus each type's constructor under the scope `constructor`:
 /// `{"scope", "name", "type", "deprecated"?, "params"?}`. Functions list their
 /// parameters as `{"name", "input", "positional", "named", "variadic",
 /// "required", "settable", "default"?}`, where `input` describes the accepted
-/// values and `default` is the repr of the default value.
+/// values and `default` is the repr of the default value. A method's
+/// parameters leave out the value it is called on.
 fn names() -> i32 {
+    use typst::foundations::{Args, Array, Content, Dict, Func, Module, Str, Symbol, Type};
+    use typst::layout::{Alignment, Angle, Fr, Length, Ratio, Rel};
+    use typst::visualize::{Color, Stroke};
+
     let library = world::paged_library();
     let mut stdout = BufWriter::new(io::stdout().lock());
+    let mut write = |scope: &str, name: &str, value: &TypstValue, deprecation: Option<&str>| {
+        let row = name_row(scope, name, value, deprecation);
+        serde_json::to_writer(&mut stdout, &row).expect("failed to write stdout");
+        stdout.write_all(b"\n").expect("failed to write stdout");
+    };
     for (scope_name, module) in [("global", &library.global), ("math", &library.math)] {
         for (name, binding) in module.scope().iter() {
-            let value = binding.read();
-            let mut row = Map::new();
-            row.insert("scope".into(), json!(scope_name));
-            row.insert("name".into(), json!(name.as_str()));
-            row.insert("type".into(), json!(value.ty().short_name()));
-            if let Some(deprecation) = binding.deprecation() {
-                row.insert("deprecated".into(), json!(deprecation.message()));
+            write(scope_name, name, binding.read(), binding.deprecation().map(|d| d.message()));
+        }
+    }
+    if let Some(binding) = library.global.scope().get("calc") {
+        if let TypstValue::Module(module) = binding.read() {
+            for (name, binding) in module.scope().iter() {
+                write("calc", name, binding.read(), binding.deprecation().map(|d| d.message()));
             }
-            if let TypstValue::Func(func) = value {
-                let params: Vec<Value> = func
-                    .params()
-                    .filter_map(|param| param.to_native())
-                    .map(|param| {
-                        let mut p = Map::new();
-                        p.insert("name".into(), json!(param.name));
-                        p.insert("input".into(), cast_info(&param.input));
-                        p.insert("positional".into(), json!(param.positional));
-                        p.insert("named".into(), json!(param.named));
-                        p.insert("variadic".into(), json!(param.variadic));
-                        p.insert("required".into(), json!(param.required));
-                        p.insert("settable".into(), json!(param.settable));
-                        if let Some(default) = param.default {
-                            p.insert("default".into(), json!(default().repr().as_str()));
-                        }
-                        Value::Object(p)
-                    })
-                    .collect();
-                row.insert("params".into(), json!(params));
-            }
-            serde_json::to_writer(&mut stdout, &Value::Object(row)).expect("failed to write stdout");
-            stdout.write_all(b"\n").expect("failed to write stdout");
+        }
+    }
+    let types = [
+        Type::of::<Array>(),
+        Type::of::<Dict>(),
+        Type::of::<Str>(),
+        Type::of::<i64>(),
+        Type::of::<f64>(),
+        Type::of::<bool>(),
+        Type::of::<Func>(),
+        Type::of::<Content>(),
+        Type::of::<Type>(),
+        Type::of::<Args>(),
+        Type::of::<Symbol>(),
+        Type::of::<Label>(),
+        Type::of::<Module>(),
+        Type::of::<Length>(),
+        Type::of::<Angle>(),
+        Type::of::<Ratio>(),
+        Type::of::<Rel<Length>>(),
+        Type::of::<Fr>(),
+        Type::of::<Alignment>(),
+        Type::of::<Color>(),
+        Type::of::<Stroke>(),
+    ];
+    for ty in types {
+        let scope_name = ty.short_name();
+        for (name, binding) in ty.scope().iter() {
+            write(scope_name, name, binding.read(), binding.deprecation().map(|d| d.message()));
+        }
+        if let Ok(func) = ty.constructor() {
+            write("constructor", scope_name, &TypstValue::Func(func), None);
         }
     }
     stdout.flush().expect("failed to write stdout");
     0
+}
+
+/// One row of `names`: a binding of a scope, with a function's parameters.
+fn name_row(scope: &str, name: &str, value: &TypstValue, deprecation: Option<&str>) -> Value {
+    let mut row = Map::new();
+    row.insert("scope".into(), json!(scope));
+    row.insert("name".into(), json!(name));
+    row.insert("type".into(), json!(value.ty().short_name()));
+    if let Some(message) = deprecation {
+        row.insert("deprecated".into(), json!(message));
+    }
+    if let TypstValue::Func(func) = value {
+        let params: Vec<Value> = func
+            .params()
+            .filter_map(|param| param.to_native())
+            .map(|param| {
+                let mut p = Map::new();
+                p.insert("name".into(), json!(param.name));
+                p.insert("input".into(), cast_info(&param.input));
+                p.insert("positional".into(), json!(param.positional));
+                p.insert("named".into(), json!(param.named));
+                p.insert("variadic".into(), json!(param.variadic));
+                p.insert("required".into(), json!(param.required));
+                p.insert("settable".into(), json!(param.settable));
+                if let Some(default) = param.default {
+                    p.insert("default".into(), json!(default().repr().as_str()));
+                }
+                Value::Object(p)
+            })
+            .collect();
+        row.insert("params".into(), json!(params));
+    }
+    Value::Object(row)
 }
 
 /// Describes what a parameter accepts: a list of type names and value reprs,

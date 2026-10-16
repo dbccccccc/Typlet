@@ -2,6 +2,8 @@
 // Copyright The Typst Project Developers. Licensed under Apache-2.0.
 // Modified for Typlet. See THIRD_PARTY_NOTICES.md.
 
+import { ReprBuilder, getValueBudget } from './value-budget.js';
+
 // Typst formats numbers with Rust's `Display` and `Debug` implementations for
 // `f64`. Both print the shortest digits that round-trip, which is also what
 // JavaScript's `toExponential()` produces, but they lay the digits out
@@ -134,26 +136,54 @@ export function separatedList(pieces: readonly string[], last: string): string {
   return buf;
 }
 
-/** Joins pieces with commas, breaking them onto lines when they get long. */
-export function prettyCommaList(pieces: readonly string[], trailingComma: boolean): string {
-  const MAX_WIDTH = 50;
-  // Typst measures the width in UTF-8 bytes.
-  const len =
-    pieces.reduce((sum, piece) => sum + utf8Length(piece), 0) + 2 * Math.max(pieces.length - 1, 0);
-  if (len <= MAX_WIDTH) {
-    return pieces.join(', ') + (trailingComma ? ',' : '');
+/** Concatenates representation pieces without first building an oversized result. */
+export function joinRepr(parts: Iterable<string>, separator = ''): string {
+  const out = new ReprBuilder();
+  let between = '';
+  for (const part of parts) {
+    out.push(between);
+    out.push(part);
+    between = separator;
   }
-  return pieces.map((piece) => `${piece.trim()},\n`).join('');
+  return out.finish();
+}
+
+/** Joins pieces with commas, breaking them onto lines when they get long. */
+export function prettyCommaList(pieces: Iterable<string>, trailingComma: boolean): string {
+  const parts: string[] = [];
+  const budget = getValueBudget();
+  let length = 0;
+  let width = 0;
+  for (const piece of pieces) {
+    length += piece.length + (parts.length ? 2 : 0);
+    budget.checkString(length);
+    // Only the 50-byte boundary matters. A wide child can be a large nested
+    // representation, so do not rescan it at every enclosing collection.
+    if (width <= 50) width += (parts.length ? 2 : 0) + (piece.length > 50 ? 51 : utf8Length(piece));
+    parts.push(piece);
+  }
+  if (width <= 50) {
+    budget.checkString(length + (trailingComma ? 1 : 0));
+    return parts.join(', ') + (trailingComma ? ',' : '');
+  }
+  const trimmed = parts.map((part) => part.trim());
+  budget.checkString(trimmed.reduce((total, part) => total + part.length + 2, 0));
+  return trimmed.join(',\n') + ',\n';
 }
 
 /** Formats an array-like value: the pieces in parentheses, indented when they span lines. */
-export function prettyArrayLike(parts: readonly string[], trailingComma: boolean): string {
+export function prettyArrayLike(parts: Iterable<string>, trailingComma: boolean): string {
   const list = prettyCommaList(parts, trailingComma);
-  if (!list.includes('\n')) return `(${list})`;
-  const lines = list.split('\n');
-  // `str::lines` drops the empty piece after a final newline.
-  if (lines[lines.length - 1] === '') lines.pop();
-  return `(\n${lines.map((line) => `  ${line}`).join('\n')}\n)`;
+  const budget = getValueBudget();
+  if (!list.includes('\n')) {
+    budget.checkString(list.length + 2);
+    return '(' + list + ')';
+  }
+  const body = list.endsWith('\n') ? list.slice(0, -1) : list;
+  let length = body.length + 6;
+  for (let i = body.indexOf('\n'); i >= 0; i = body.indexOf('\n', i + 1)) length += 2;
+  budget.checkString(length);
+  return '(\n  ' + body.replace(/\n/g, '\n  ') + '\n)';
 }
 
 function utf8Length(text: string): number {
@@ -173,30 +203,21 @@ const ESCAPED = /[\p{Grapheme_Extend}\p{Cc}\p{Cf}\p{Cs}\p{Co}\p{Cn}\p{Zl}\p{Zp}\
 
 /** Typst's `repr` of a string: quoted, with Rust's debug escapes. */
 export function reprStr(text: string): string {
-  let out = '"';
+  const out = new ReprBuilder();
+  out.push('"');
   for (const c of text) {
+    let piece: string;
     switch (c) {
-      case '\0':
-        out += '\\u{0}';
-        break;
-      case '"':
-        out += '\\"';
-        break;
-      case '\\':
-        out += '\\\\';
-        break;
-      case '\t':
-        out += '\\t';
-        break;
-      case '\r':
-        out += '\\r';
-        break;
-      case '\n':
-        out += '\\n';
-        break;
-      default:
-        out += c !== ' ' && ESCAPED.test(c) ? `\\u{${c.codePointAt(0)!.toString(16)}}` : c;
+      case '\0': piece = '\\u{0}'; break;
+      case '"': piece = '\\"'; break;
+      case '\\': piece = '\\\\'; break;
+      case '\t': piece = '\\t'; break;
+      case '\r': piece = '\\r'; break;
+      case '\n': piece = '\\n'; break;
+      default: piece = c !== ' ' && ESCAPED.test(c) ? `\\u{${c.codePointAt(0)!.toString(16)}}` : c;
     }
+    out.push(piece);
   }
-  return `${out}"`;
+  out.push('"');
+  return out.finish();
 }

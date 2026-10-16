@@ -7,7 +7,7 @@
 
 import { Args } from './args.js';
 import { type Cast, castError, typeInfo, union } from './cast.js';
-import { HintedError, type Span, bail, warning } from './diag.js';
+import { HintedError, type Span, bail, warn, warning } from './diag.js';
 import { type Named, SYSTEMS, represent } from './numeral.js';
 import type { Engine, Func } from './func.js';
 import { type Value, intValue, strValue } from './value.js';
@@ -69,7 +69,7 @@ export function applyNumbering(
       return represent(named, n);
     } catch (e) {
       if (!(e instanceof HintedError)) throw e;
-      engine.warnings.push(warning(span, e.message, 'this will become a hard error in the future'));
+      warn(engine.warnings, warning(span, e.message, 'this will become a hard error in the future'));
       return String(n);
     }
   };

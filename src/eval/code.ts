@@ -23,6 +23,7 @@ import { evalLetBinding } from './binding.js';
 import { evalFuncCall, evalMathCall } from './call.js';
 import { strCast } from './cast.js';
 import { evalClosure } from './closure.js';
+import { checkEvalDepth, withRuleDepth } from './func.js';
 import { INTERNAL_FIELDS, type Content, spaceElem, spanned, styled } from './content.js';
 import { evalConditional, evalLoopControl, evalReturn } from './flow.js';
 import { evalContentBlock, evalMarkupExpr } from './markup.js';
@@ -70,11 +71,17 @@ const K = SyntaxKind;
 
 /** Evaluates an expression, like Typst's `Eval for ast::Expr`. */
 export function evalExpr(vm: Vm, node: LinkedNode): Value {
-  const value = evalExprInner(vm, node);
-  if (value.type !== 'content') return value;
-  // Content built by the expression itself already has the span.
-  const content = spanned(value.v, node.span);
-  return content === value.v ? value : contentValue(content);
+  checkEvalDepth(vm.engine, node.span);
+  vm.engine.evalDepth++;
+  try {
+    const value = evalExprInner(vm, node);
+    if (value.type !== 'content') return value;
+    // Content built by the expression itself already has the span.
+    const content = spanned(value.v, node.span);
+    return content === value.v ? value : contentValue(content);
+  } finally {
+    vm.engine.evalDepth--;
+  }
 }
 
 function evalExprInner(vm: Vm, node: LinkedNode): Value {
@@ -173,6 +180,13 @@ function evalExprInner(vm: Vm, node: LinkedNode): Value {
     case K.LoopContinue:
       return evalLoopControl(vm, node, 'continue');
 
+    // The parser recognizes full Typst syntax; execution keeps the formula subset.
+    case K.WhileLoop:
+    case K.ForLoop:
+      return unsupported(span, 'loops');
+    case K.DestructAssignment:
+      return unsupported(span, 'assignments');
+
     default:
       return evalMarkupExpr(vm, node) ?? unsupported(span, describeUnsupported(node.kind));
   }
@@ -195,16 +209,11 @@ function literal(node: LinkedNode): Value {
 /** How Typlet names a construct it refuses. */
 function describeUnsupported(kind: SyntaxKind): string {
   switch (kind) {
-    case K.WhileLoop:
-    case K.ForLoop:
-      return 'loops';
     case K.ModuleImport:
     case K.ModuleInclude:
       return 'imports and includes';
     case K.Contextual:
       return 'context expressions';
-    case K.DestructAssignment:
-      return 'assignments';
     default:
       return 'this kind of markup or code';
   }
@@ -235,7 +244,7 @@ export function evalCode(vm: Vm, list: LinkedNode[], start: number): Value {
     if (expr.kind === K.SetRule || expr.kind === K.ShowRule) {
       const styles = expr.kind === K.SetRule ? evalSetRule(vm, expr) : evalShowRule(vm, expr);
       if (vm.flow) break;
-      const tail = display(evalCode(vm, list, i + 1));
+      const tail = withRuleDepth(vm.engine, expr.span, () => display(evalCode(vm, list, i + 1)));
       value = contentValue(styled(tail, styles));
       last = true;
     } else {
@@ -282,7 +291,7 @@ function escapeChar(text: string): string {
 
 /** Reads a binding, emitting its deprecation warning, like `Binding::read_checked`. */
 export function readBinding(vm: Vm, binding: { value: Value; deprecation: string | null }, span: Span): Value {
-  if (binding.deprecation !== null) vm.warn(span, binding.deprecation);
+  if (binding.deprecation !== null) vm.deprecated(span, binding.deprecation);
   return binding.value;
 }
 
@@ -327,7 +336,7 @@ function evalArray(vm: Vm, node: LinkedNode): Value {
     const item = children[i]!;
     if (item.kind !== K.Spread) {
       allDictSpreads = false;
-      items.push(evalExpr(vm, item));
+      at(item.span, () => ops.appendCollection(items, [evalExpr(vm, item)]));
       continue;
     }
     const spread = item;
@@ -335,7 +344,7 @@ function evalArray(vm: Vm, node: LinkedNode): Value {
     if (value.type === 'none') continue;
     if (value.type === 'array') {
       allDictSpreads = false;
-      items.push(...value.v);
+      at(spread.span, () => ops.appendCollection(items, value.v));
       continue;
     }
     if (
@@ -365,7 +374,7 @@ function evalDict(vm: Vm, node: LinkedNode): Value {
   for (const item of node.children()) {
     if (item.kind === K.Named) {
       const name = item.children().find((c) => c.kind === K.Ident)!.text;
-      map.set(name, evalExpr(vm, lastExpr(item)));
+      at(item.span, () => ops.insertDict(map, name, evalExpr(vm, lastExpr(item))));
     } else if (item.kind === K.Keyed) {
       const rawKey = firstExpr(item);
       const key = evalExpr(vm, rawKey);
@@ -376,12 +385,12 @@ function evalDict(vm: Vm, node: LinkedNode): Value {
         if (!(e instanceof SourceError)) throw e;
         invalidKeys.push(...e.diagnostics);
       }
-      map.set(name, evalExpr(vm, lastExpr(item)));
+      at(item.span, () => ops.insertDict(map, name, evalExpr(vm, lastExpr(item))));
     } else if (item.kind === K.Spread) {
       const value = evalExpr(vm, firstExpr(item));
       if (value.type === 'none') continue;
       if (value.type === 'dictionary') {
-        for (const [k, v] of value.v) map.set(k, v);
+        at(item.span, () => { for (const [k, v] of value.v) ops.insertDict(map, k, v); });
         continue;
       }
       bailAt(item.span, `cannot spread ${typeOf(value)} into dictionary`);
@@ -443,11 +452,11 @@ export function accessField(vm: Vm, target: Value, field: string, fieldSpan: Spa
     switch (target.type) {
       case 'symbol': {
         const [symbol, deprecation] = symbolModified(target.v, field);
-        if (deprecation !== null) vm.warn(fieldSpan, deprecation);
+        if (deprecation !== null) vm.deprecated(fieldSpan, deprecation);
         return { type: 'symbol', v: symbol };
       }
       case 'module':
-        return readBinding(vm, moduleField(target.v, field), fieldSpan);
+        return readBinding(vm, moduleField(target.v, field, fieldSpan), fieldSpan);
       case 'dictionary': {
         const value = target.v.get(field);
         if (value === undefined) bail(`dictionary does not contain key ${reprStr(field)}`);
@@ -458,6 +467,7 @@ export function accessField(vm: Vm, target: Value, field: string, fieldSpan: Spa
       case 'content':
         return contentField(target.v, field);
       case 'function':
+        if (field === 'with' || field === 'where') return unsupported(fieldSpan, 'function methods outside equation show-set rules');
         return bail(
           target.v.name === null
             ? 'cannot access fields on user-defined functions'

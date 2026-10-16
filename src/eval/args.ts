@@ -5,6 +5,7 @@
 import type { Cast } from './cast.js';
 import { type Span, SourceError, at, bail, bailAt, error, rethrowAt } from './diag.js';
 import { reprStr } from './repr.js';
+import { checkCollectionSize, insertDict } from './ops.js';
 import { type Value, arrayValue, dictValue } from './value.js';
 
 /** One argument: positional when `name` is null. */
@@ -33,7 +34,7 @@ export class Args {
 
   /** The number of positional arguments left. */
   remaining(): number {
-    return this.items.filter((item) => item.name === null).length;
+    return this.items.reduce((count, item) => count + Number(item.name === null), 0);
   }
 
   /** Inserts a positional argument at `index`. */
@@ -159,12 +160,15 @@ export class Args {
 
   /** The positional arguments. */
   toPos(): Value {
+    checkCollectionSize(this.remaining());
     return arrayValue(this.items.filter((item) => item.name === null).map((item) => item.value));
   }
 
   /** The named arguments. */
   toNamed(): Value {
-    return dictValue(new Map(this.items.flatMap((item) => (item.name === null ? [] : [[item.name, item.value]]))));
+    const map = new Map<string, Value>();
+    for (const item of this.items) if (item.name !== null) insertDict(map, item.name, item.value);
+    return dictValue(map);
   }
 
   /** The value of the last named argument called `field`. */

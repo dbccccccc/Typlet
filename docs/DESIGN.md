@@ -90,7 +90,7 @@ One standalone SVG per formula, built from the same layout as the HTML, with gly
 
 ### 2.5 Programmatic results
 
-`parse(src)` returns the syntax tree, with typst-syntax's kinds and spans, for editors and linters. A `layout(src)` that returns the frame of positioned glyphs and rules is planned.
+`renderToResult(src)` returns the markup with what drew the formula (`html`, `mathml`, `fallback` or `error`), the warnings, each with a kind, and the equation number, so that an integration such as an editor's preview needs no string matching. `parse(src)` returns the syntax tree, with typst-syntax's kinds and spans, for editors and linters. A `layout(src)` that returns the frame of positioned glyphs and rules is planned.
 
 ## 3. Pipeline
 
@@ -127,6 +127,8 @@ HTML can only address characters, but OpenType MATH size variants and assembly p
 7. **Generate `typlet.css`** with the `@font-face` rules and base styles, including Typst's styles for MathML.
 
 The metrics are generated from the oracle's dump of the font as Typst reads it, through ttf-parser and rustybuzz, and the tests check them against it. Text runs such as `"if"` or `argmax` use the extracted advances and kerning pairs, and the browser shapes them. Bold text needs New Computer Modern Math Bold, so the pipeline adds a small Latin subset of it, declared with `font-weight: bold`, which browsers load only when a page shows bold text.
+
+Underlines and overlines select their six math line constants from the actual glyph font. Framed and space content uses the equation-entry font, preserving the prior Book fallback when empty content needs no supported font validation. Both Book and Bold values come from the existing oracle font dumps.
 
 The font is under the GUST Font License, which allows modification and redistribution and asks that derived fonts be renamed. The fonts therefore ship as "Typlet NewCM Math", with the license and a manifest.
 
@@ -232,7 +234,7 @@ Typlet supports code in levels. It refuses everything else with a clear error.
 - **The `preamble` option:** Typst code with `let` and `set` statements, evaluated once. Its definitions and settings apply to every formula rendered with the same options. It replaces KaTeX's `macros`.
 - **Equation numbers** come from a counter that the caller controls. Auto-render numbers a page's equations in order.
 
-**Level 4, collections and loops (planned, if users ask).** `for` and `while` loops, `range`, and methods on arrays, dictionaries and strings, such as `map`, `join`, `at` and `len`, under the same budgets.
+**Deliberate v0.1.1 boundary.** Basic arrays and dictionaries, joins, repetition, spreads, destructuring `let` bindings and argument sinks belong to the formula language above. General computation is excluded: loops, assignments, collection/string/numeric methods, `range`, `calc`, generic type constructors, conversions and inspection functions. The parser still recognizes the full Typst grammar; evaluating an excluded construct reports `unsupported` with its span, allowing the host fallback. `function.where` remains specific to equation show-set rules. There is no parallel full-runtime configuration.
 
 **Never supported.**
 - **Other `show` rules.** Rules with a function or content rewrite content during layout and need Typst's realization engine, and show-set rules for elements other than equations would need matching at every element. The common uses have other routes: an equation color maps to CSS `color`, and a math font would map to a font option.
@@ -242,12 +244,12 @@ Typlet supports code in levels. It refuses everything else with a clear error.
 
 ### 6.4 Coverage
 
-Level 1 alone covers the sampled real-world formulas, whose code is `#none`, `#left` and `#right`. Of the paired corpus's 81 formulas, 19 use code, and Levels 1 to 3 render 79 of the 81; the other 2 use a loop (Level 4) and a show rule for text.
+Level 1 alone covers the sampled real-world formulas, whose code is `#none`, `#left` and `#right`. Of the paired corpus's 81 formulas, 19 use code, and Levels 1 to 3 render 79 of the 81; the others require generated matrices through `range`/methods or a show rule for text.
 
 ### 6.5 How the evaluator works
 
 The evaluator ports typst-eval's structure for the supported subset: code, calls, operators, math, markup, set rules, bindings and control flow.
-- **Values** mirror Typst's types: none, auto, bool, int, float, length, angle, ratio, relative length, color, string, content, array, dictionary, symbol, function, alignment, stroke and module. Integers are exact up to ±2^53. Beyond that, Typlet raises an error where Typst would still compute.
+- **Values** mirror Typst's types: none, auto, bool, int, float, length, angle, ratio, relative length, color, string, content, array, dictionary, symbol, function, arguments, type, label, alignment, stroke and module. Integers are 64-bit, with Typst's overflow errors.
 - **Operators** port the rules of typst-library's `ops.rs` for these types, including the error messages, such as "cannot add length and string".
 - **Builtins** are declared once, as signatures in a registry: positional and named parameters, types, defaults and variadic parameters. Argument checking and casting work the same way for every function, and the [list of supported features](supported.md) is generated from the registry.
 - **Content** from builtins is Typst's elements. For layout, `strong`, `emph`, `highlight`, `link` and `hide` become styles, as their show rules make them in Typst's paged output. For MathML, they become `<strong>`, `<em>`, `<mark>` and `<a>`, as in Typst's HTML export. A `box` is laid out on its own and placed as one item.
@@ -257,19 +259,45 @@ The evaluator ports typst-eval's structure for the supported subset: code, calls
 
 ### 6.6 Budgets for untrusted input
 
-Formulas from chat, comments or shared links are untrusted. Levels 1 and 2 always terminate, since they have no loops or user functions. Level 3 adds recursion, so the evaluator runs under budgets:
+Formulas from chat, comments or shared links are untrusted. Levels 1 and 2 always terminate, since they have no loops or user functions. Level 3 adds user functions and recursion, so the evaluator runs under budgets:
 
 | Budget | Default | Why |
 |---|---|---|
 | Call depth | 80 | Typst's own limit, with Typst's error message |
 | Parser nesting | 256 | Typst's own limit |
+| Syntax tree depth | 256, with the root at zero | Bounds recursive evaluation of flat operator chains |
+| Active evaluation depth | 512 expressions and rule tails combined per engine | Bounds the cumulative stack across macro bodies, syntax nesting and rule tails |
 | Function calls | 30,000 per formula | Bounds recursion: an exponential recursion stops within about 30 ms |
-| Collection size | 10,000 items; 100,000 characters per string | Stops repetition such as `"x" * 100000000`, and doubling with `+` |
-| Content elements | 10,000 per formula | Stops content that doubles, such as a chain of `#let x1 = [#x0 #x0]` |
+| Value-node visits | 100,000 per evaluation engine | Bounds repeated work on shared values, including repeated comparisons of shared values |
+| Active rule-tail depth | 256 | Bounds set/show chains independently of AST depth |
+| Runtime content depth | 256, with the root at zero | Protects recursive realization, backends and equation numbering |
+| Actual rendering depth | 256 active steps | Stops style-inherited recursion, shared across nested output contexts |
+| Content preflight visits | 100,000 | Bounds iterative traversal before consumers run |
+| Value traversal depth | 256 | Stops deeply nested values before the native stack runs out |
+| Collection size | 10,000 items; 100,000 characters per string | Checks construction, spreads, merging and repetition before collection growth |
+| Content elements and expanded text units | 10,000 per stage | Stops content that doubles and counts text before shaping or conversion |
 | Sizes of spacing, boxes and text | 1,000 em | Stops `#h(1e9pt)` and `#text(size: 1e6pt)` |
 | Output size | 1 MB per formula | A last line of defense |
 
-Typst has no budget on calls. Computation that Typst would finish slowly fails in Typlet with a `limit` error. Each budget can be changed through options: `maxCalls`, `maxCollectionSize`, `maxStringLength`, `maxElements`, `maxSize` and `maxOutputSize`.
+Typst has no budget on calls. Computation that Typst would finish slowly fails in Typlet with a `limit` error. The call, collection, string, content, size and output budgets can be changed through options: `maxCalls`, `maxCollectionSize`, `maxStringLength`, `maxElements`, `maxSize` and `maxOutputSize`.
+
+Syntax errors keep the parser's existing diagnostics, collected by iterative traversal. Before evaluation, each valid formula or preamble tree is checked iteratively for a structural depth of at most 256, counting the root at zero. This internal limit has no public option and can reject a deep branch even if short-circuit evaluation would skip it. Function-call depth and call counting are unchanged. Each engine also bounds the combined active expression and rule-tail stack at 512 steps, shared by closures and delayed callbacks. This conservative internal limit prevents independent syntax and call depths from multiplying into a native stack failure; ordinary calls retain Typst's 80-call boundary. Expression entry checks and increments the counter directly, without allocating a callback per node, and restores it in `finally`. Rule-tail entry checks the same combined limit after its own 256-rule check. Failures keep the current source span and become `limit` errors or controlled error markup. Set/show tails separately allow at most 256 active rules and restore their engine counter after failure. Before any content consumer runs, an iterative traversal checks the evaluated body and equation number for depth 256 and at most 100,000 visits. Iterator frames keep extra stack space proportional to depth; shared nodes are rechecked when reached at a greater depth. This includes content assembled across preamble definitions, nested boxes and numbering callbacks. A separate depth guard bounds actual resolver and output recursion, including content cycles introduced by inherited style fields. Each output carries this guard across nested math and paragraphs and restores it after failure.
+
+Syntax error queries and depth checks reuse per-call traversal frames across sibling branches, and remain separate checks over the current mutable tree. Parser wrapping keeps the child slice but avoids a second removed-node array when no trailing trivia remains. The parser reuses its current token record only after lexing completes; checkpoint and memo restore retain cloned token, node and newline state. Parser token reads consume fresh lexer nodes, bypassing the standalone lexer's kind/node result tuple; standalone lexer calls still return independent tuples and nodes. Content depth preflight checks known text, symbol and space leaves at every occurrence before skipping child enumeration; expansion preflight still charges each space visit. Dictionary representations collect bounded preview pieces and check field and running string lengths before concatenation or growth. These allocation changes retain traversal order, formatting, diagnostics and every resource limit.
+
+The collection limit applies to each array and dictionary, including literals, spreads, merges and repetition. Nested collections are checked separately; overwriting a dictionary key does not grow it. Nonempty argument spreads, argument-value merges and closure sinks also check generated counts. Fixed syntax parameters and empty spreads retain their behavior. Named argument lists preserve their raw duplicate entries until argument consumption.
+
+Each evaluation engine also shares an internal budget of 100,000 value-node visits and a traversal depth of 256 across representations, serialization and comparisons. Repeated visits to a shared subtree count separately, so a compact value graph can reach this limit. These limits have no public option and are independent of `maxCalls`. Representation strings, including implicit value displays and diagnostic representations, obey `maxStringLength` in JavaScript UTF-16 code units.
+
+Library-generated error and pending markup also obeys `maxOutputSize`, measured in UTF-16 code units. Full previews retain their existing format when they fit; otherwise they omit optional attributes and shorten escaped source text at code-point and entity boundaries. If the minimal span cannot fit, the markup is empty; an error result still reports `drawnAs: 'error'`. Thrown errors retain their complete diagnostics and source. Markup returned by the caller's `fallback` remains the caller's responsibility and is not truncated.
+
+The element budget also counts repeated prime units from custom prime counts, before allocating their characters or frame glyphs. Counts from one to four keep their combined glyphs. The expanded prime character count is checked against `maxOutputSize` before allocation; the final complete markup length is still checked. MathML and HTML use separate output allowances, shared by nested equations and boxes within each output.
+
+Ordinary text, mathematical glyphs, numbers and raw text consume expansion units in UTF-16 code units before styling, shaping or conversion. A structural preflight counts logical content occurrences and text before building IR, including repeated shared children. Paragraph collection also checks before concatenation. Number extraction counts content visits and text before joining, so a compact shared content graph cannot amplify without consuming work. Preflight, resolver, number-extraction and output stages have independent allowances; nested equations and boxes share the active output allowance. Render scopes restore the caller's element and size defaults after nested calls return or throw.
+
+Delayed HTML layout callbacks, such as cancel-line angles, use the formula evaluation engine, including calls and value work already consumed. Nested boxes and numbered equations share it. Collection and string construction use its limits; nested renders restore the caller, and independent renders have fresh engines even when they reuse a cached preamble. Callback warnings join the output warnings once, in their original order.
+
+Normal and hash comparisons retain their distinct NaN, signed-zero, dictionary-order and function-identity rules. Comparisons retain no result cache; shared subtrees consume work on every visit. A synchronous scope shares the engine budget through nested calls and restores the caller after return or failure. Independent renders, including renders using a cached preamble, start with fresh budgets.
 
 ### 6.7 Errors and fallback
 
@@ -284,11 +312,11 @@ Typst has no budget on calls. Computation that Typst would finish slowly fails i
 - **Values:** Typlet's `repr` of an expression is compared with Typst's. A generator produces thousands of expressions over literals and operators, including invalid ones, whose error messages must match too.
 - **Formulas with code:** content trees, MathML, frames and diagnostics, as for any formula (§5.3).
 - **Preambles and set rules:** the oracle compiles the preamble and the formula together.
-- **Budgets:** adversarial inputs (`test/budget-cases.mjs`), such as deep nesting, recursion bombs and huge repetition, must fail with a `limit` error within 50 ms.
+- **Budgets:** adversarial inputs (`test/budget-cases.mjs`), such as deep nesting, recursion bombs, huge repetition and high-order callbacks, must fail with a `limit` error within 50 ms. The gate also times bounded string/collection operations and macro calls that succeed. Expensive structural stress runs only in disposable 128 MiB child processes with a five-second deadline.
 
 ## 7. Size and startup
 
-**Size budgets.** CI checks the brotli size of each entry point against `scripts/size-budgets.json`: 125 KB for the full browser bundle and 70 KB for `typlet/mathml`, which leaves out the layout and metrics. KaTeX's script is about 61 KB, plus its CSS. Typlet's extra size is mostly the parser for all of Typst's syntax, Typst's error messages, embedded code and the font metrics.
+**Size budgets.** CI checks Brotli quality 11 sizes against `scripts/size-budgets.json`: 128 KiB for the full browser bundle, 72 KiB for `typlet/mathml`, and 40 KiB for the separately measured font module. The narrowed production build measures 128,025, 72,901 and 40,494 bytes respectively, leaving 3,047, 827 and 466 bytes of headroom. The full script includes the full Typst parser, original error messages, the formula evaluator, layout and font metrics; the MathML entry omits layout and metrics. No general runtime or optional runtime framework is shipped.
 
 **Compact metrics.** The metrics of the 7,500 glyphs Typst reaches are columns of characters, decoded as glyphs are used: numbers are two base-92 digits per glyph, read where they are, and the tables few glyphs have are comma-separated fields, found by skipping from the nearest of a column's steps. Nothing is decoded at import.
 
@@ -303,6 +331,10 @@ Typlet is MIT-licensed. Parts of it are ported from Typst and codex, which are A
 - **Notices.** [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) credits each third-party work and its license.
 - **Changed files are marked.** Every ported file starts with a header that names the upstream file and says the file was modified. `npm run check` rejects ported files without one (`scripts/check-headers.mjs`).
 - **Bundles keep the notices.** The minified builds carry a license comment that points to `THIRD_PARTY_NOTICES.md`.
+
+The MathML operator and inline-axis tables in `src/generated/mathml.ts` derive from W3C MathML Core through typst-assets 0.15.1. Their separate W3C Software and Document License (2023), original copyright and disclaimers, source URI and TypeScript-generation change notice are retained in `LICENSES/W3C-2023.txt`; Apache-2.0 covers the upstream crate code. The font sources are New Computer Modern Math Book 4.0 and Bold 5.3.0, distributed under the GUST Font License with their existing renamed-font manifest.
+
+The documentation site ships `LICENSE`, `THIRD_PARTY_NOTICES.md` and all `LICENSES/` files both at its root and beside the JavaScript bundles, so their relative notice references remain available. Every page links to the root license and notices. The existing font license/manifest and KaTeX license also remain in the site. `check:package` compares the installed tarball's legal materials byte for byte; `docs:build` and `check:licenses` check the actual site copies and local footer targets.
 
 This is how projects commonly meet Apache-2.0's conditions. It is not legal advice.
 
