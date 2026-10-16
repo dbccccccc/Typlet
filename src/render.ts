@@ -112,7 +112,33 @@ export interface TypletDiagnostic {
   readonly in: 'formula' | 'preamble';
 }
 
-export type TypletWarning = TypletDiagnostic & { readonly severity: 'warning' };
+/** What a warning is about. */
+export type WarningKind =
+  /** The HTML could not draw the formula, which is drawn as MathML instead. */
+  | 'fallback'
+  /** A deprecated name, such as a renamed symbol. */
+  | 'deprecation'
+  /** Anything else Typst or Typlet warns about. */
+  | 'other';
+
+export type TypletWarning = TypletDiagnostic & { readonly severity: 'warning'; readonly kind: WarningKind };
+
+/** What rendering a formula produced, beyond the markup `renderToString` returns. */
+export interface RenderResult {
+  /** The markup, as `renderToString` returns it. */
+  readonly markup: string;
+  /**
+   * What the markup draws the formula with: Typlet's layout as HTML; MathML,
+   * which the browser lays out, in the `mathml` output or when the HTML can't
+   * draw the formula; the `fallback` option's markup for a refused formula;
+   * or the source in the error color, when `throwOnError` is off.
+   */
+  readonly drawnAs: 'html' | 'mathml' | 'fallback' | 'error';
+  /** The warnings, which the `strict` option has already handled. */
+  readonly warnings: readonly TypletWarning[];
+  /** The number of a numbered display equation, as text. */
+  readonly number: string | null;
+}
 
 /** Why a formula failed. */
 export type ErrorKind =
@@ -153,6 +179,11 @@ export class TypletError extends Error {
 function diagnostic(d: SourceDiagnostic): TypletDiagnostic {
   const span = d.span && { start: d.span.start, end: d.span.end };
   return { severity: d.severity, message: d.message, hints: d.hints, span, in: d.span?.file ?? 'formula' };
+}
+
+function warningOf(d: SourceDiagnostic): TypletWarning {
+  const kind: WarningKind = d.kind === 'fallback' || d.kind === 'deprecation' ? d.kind : 'other';
+  return { ...diagnostic(d), severity: 'warning', kind };
 }
 
 /** The text of content, such as an equation's number. */
@@ -236,12 +267,18 @@ function preambleFor(code: string, limits: Limits, source: string): [Preamble, r
 }
 
 function sourceError(e: SourceError, source: string): TypletError {
-  const kind = e.diagnostics.find((d) => d.kind)?.kind ?? 'eval';
+  let kind: ErrorKind = 'eval';
+  for (const d of e.diagnostics) {
+    if (d.kind === 'unsupported' || d.kind === 'limit') {
+      kind = d.kind;
+      break;
+    }
+  }
   return new TypletError(kind, e.diagnostics.map(diagnostic), source);
 }
 
 /** Renders a formula in an output, or throws a `TypletError`. */
-function render(source: string, options: RenderOptions, output: Output, backend: HtmlBackend | null): string {
+function render(source: string, options: RenderOptions, output: Output, backend: HtmlBackend | null): RenderResult {
   const root = parseMath(source);
   if (root.erroneous()) throw syntaxError(source, root);
 
@@ -310,12 +347,11 @@ function render(source: string, options: RenderOptions, output: Output, backend:
       try {
         html = backend.draw(layoutItem, display, warnings, styles, number, ctx);
       } catch (e) {
-        // A formula the HTML can't draw shows as MathML instead.
-        if (!(e instanceof SourceError) || output !== 'htmlAndMathml' || !e.diagnostics.some((d) => d.kind === 'unsupported')) {
-          throw e;
-        }
+        // A formula the HTML can't draw shows as MathML instead, in both HTML outputs.
+        if (!(e instanceof SourceError) || !e.diagnostics.some((d) => d.kind === 'unsupported')) throw e;
         const reason = e.diagnostics[0]!;
-        warnings.push({ ...reason, severity: 'warning', message: `${reason.message}; drawn as MathML` });
+        warnings.push({ ...reason, severity: 'warning', message: `${reason.message}; drawn as MathML`, kind: 'fallback' });
+        if (mathml === null) mathml = itemToMathml(item, display, [], source, trust, styles, true);
       }
     }
   } catch (e) {
@@ -343,27 +379,32 @@ function render(source: string, options: RenderOptions, output: Output, backend:
     throw new TypletError('limit', [{ severity: 'error', message: `the output is longer than ${maxOutput} characters`, hints: [], span: null, in: 'formula' }], source);
   }
 
-  for (const w of warnings) {
-    const warning = { ...diagnostic(w), severity: 'warning' as const };
+  const reported = warnings.map(warningOf);
+  for (const warning of reported) {
     const strict = typeof options.strict === 'function' ? options.strict(warning) : (options.strict ?? 'warn');
     if (strict === 'error') throw new TypletError('eval', [{ ...warning, severity: 'error' }], source);
     if (strict === 'warn' && typeof console !== 'undefined') console.warn(`Typlet warning: ${warning.message}`);
   }
-  return out;
+  return { markup: out, drawnAs: html === null ? 'mathml' : 'html', warnings: reported, number: numberText };
 }
+
+/** The result of a formula drawn by something other than Typlet's outputs. */
+const otherResult = (markup: string, drawnAs: 'fallback' | 'error'): RenderResult => ({ markup, drawnAs, warnings: [], number: null });
+
+const isResult = (value: RenderResult | Promise<string>): value is RenderResult => typeof (value as RenderResult).markup === 'string';
 
 /**
  * Renders a formula, in `defaultOutput` unless the options choose an output,
  * drawing HTML with `backend`. Without one, as in `typlet/mathml`, only
  * MathML renders. A formula Typlet refuses goes to the `fallback` option,
- * whose markup, or promise of markup, is the result.
+ * whose markup is the result, or whose promise of markup is returned as is.
  */
 export function renderWithFallback(
   source: string,
   options: RenderOptions,
   defaultOutput: Output,
   backend: HtmlBackend | null,
-): string | Promise<string> {
+): RenderResult | Promise<string> {
   try {
     const output = options.output ?? defaultOutput;
     if (output !== 'mathml' && !backend) {
@@ -372,8 +413,11 @@ export function renderWithFallback(
     }
     return render(source, options, output, backend);
   } catch (e) {
-    if (e instanceof TypletError && e.kind === 'unsupported' && options.fallback) return options.fallback(source, e);
-    return failed(e, source, options);
+    if (e instanceof TypletError && e.kind === 'unsupported' && options.fallback) {
+      const markup = options.fallback(source, e);
+      return typeof markup === 'string' ? otherResult(markup, 'fallback') : markup;
+    }
+    return otherResult(failed(e, source, options), 'error');
   }
 }
 
@@ -384,6 +428,20 @@ function failed(e: unknown, source: string, options: RenderOptions): string {
   return `<span class="typlet-error" title="${escape(e.toString())}" style="color:${escape(color)}">${escape(source)}</span>`;
 }
 
+/** Renders a formula to a result, using the fallback only if it returns markup right away. */
+export function renderResultWith(
+  source: string,
+  options: RenderOptions,
+  defaultOutput: Output,
+  backend: HtmlBackend | null,
+): RenderResult {
+  const result = renderWithFallback(source, options, defaultOutput, backend);
+  if (isResult(result)) return result;
+  // The promise can't be waited for: render as without a fallback.
+  result.catch(() => {});
+  return renderResultWith(source, { ...options, fallback: undefined }, defaultOutput, backend);
+}
+
 /** Renders a formula to a string, using the fallback only if it returns markup right away. */
 export function renderWith(
   source: string,
@@ -391,11 +449,7 @@ export function renderWith(
   defaultOutput: Output,
   backend: HtmlBackend | null,
 ): string {
-  const result = renderWithFallback(source, options, defaultOutput, backend);
-  if (typeof result === 'string') return result;
-  // The promise can't be waited for: render as without a fallback.
-  result.catch(() => {});
-  return renderWith(source, { ...options, fallback: undefined }, defaultOutput, backend);
+  return renderResultWith(source, options, defaultOutput, backend).markup;
 }
 
 /**
@@ -410,8 +464,8 @@ export function renderInto(
   backend: HtmlBackend | null,
 ): void {
   const result = renderWithFallback(source, options, defaultOutput, backend);
-  if (typeof result === 'string') {
-    element.innerHTML = result;
+  if (isResult(result)) {
+    element.innerHTML = result.markup;
     return;
   }
   const pending = `<span class="typlet-pending">${escape(source)}</span>`;
