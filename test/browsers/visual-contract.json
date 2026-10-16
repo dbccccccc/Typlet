@@ -1,0 +1,2625 @@
+{
+  "schemaVersion": 1,
+  "typstVersion": "0.15.1",
+  "cases": [
+    {
+      "id": "features/abs-norm",
+      "sourceHash": "18ce1615fe920f94ea5503f06f5a3bbb4d1c623fdec28af35821a97b9cd73e6b",
+      "expected": "html"
+    },
+    {
+      "id": "features/abs-size",
+      "sourceHash": "9da2557102e2b16d6a95c2aea0601997c8eaf2f03bdb71e2372c2a844ef7f465",
+      "expected": "html"
+    },
+    {
+      "id": "features/accent-below",
+      "sourceHash": "ee599daebe0b507a0cd2648d53ba9b90ea793dd38c26b8e1a611bf506ee55196",
+      "expected": "html"
+    },
+    {
+      "id": "features/accent-dotless",
+      "sourceHash": "76c22f2c94889678c657060c1a28fb2b31b3f6a37e92cbf1f9d917dd2d609208",
+      "expected": "html"
+    },
+    {
+      "id": "features/accent-int-error",
+      "sourceHash": "17744ec008495df11694f40ed6922fdb6631b8ed430b4b67fd9438e143b6e5d1",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "features/accent-size",
+      "sourceHash": "15f24749f7d09ca236b4ea4112f39137f11322a5537471941ee1c9f7559eee63",
+      "expected": "html"
+    },
+    {
+      "id": "features/accent-string",
+      "sourceHash": "1d07df80640d74c1e56be0525474aa5989476b61db288a0343cb27512b742cb6",
+      "expected": "html"
+    },
+    {
+      "id": "features/accent-wide",
+      "sourceHash": "85e95c34163eb6055b75345eb1bd92425be914742d503b85b21b83bead8c0d40",
+      "expected": "html"
+    },
+    {
+      "id": "features/accents",
+      "sourceHash": "2c6b4d29703916a154a344cd0a758bbe1bf05429b749a109f192ca4c8f6b388f",
+      "expected": "html"
+    },
+    {
+      "id": "features/alignment-display",
+      "sourceHash": "24b3b9eba75db88cacf4e69af96b896b2a9fb17b701dc79dd6d50497ee9c20ad",
+      "expected": "mathml"
+    },
+    {
+      "id": "features/arabic-math-letters",
+      "sourceHash": "7fd1721997a312d9ef9208ab3293ae043649e018683f5ddf42992c122c4ab054",
+      "expected": "html"
+    },
+    {
+      "id": "features/attach-all",
+      "sourceHash": "291e20238c9c30e302d722f0d6c46ffe2330865afa873e6794709c6d0aa69163",
+      "expected": "html"
+    },
+    {
+      "id": "features/attach-equation-base",
+      "sourceHash": "5bc1b667fa6a556f6e69809c7663e6416507f51016c00d4c9712efcb023e4b56",
+      "expected": "html"
+    },
+    {
+      "id": "features/attach-integral",
+      "sourceHash": "49447565b296cd38c123a5027efaf868c23bd9246a33c9212de3355a6d3595d4",
+      "expected": "html"
+    },
+    {
+      "id": "features/attach-large",
+      "sourceHash": "70b73107005c0a6d94fa403f88b36a5d9554deca81983d7254b7274d65e095cd",
+      "expected": "html"
+    },
+    {
+      "id": "features/attach-limits",
+      "sourceHash": "0c855778bcf6dba53ec298fbe34aa4fe22f712b2af72d48041c6060f2ce5a157",
+      "expected": "html"
+    },
+    {
+      "id": "features/attach-limits-inline",
+      "sourceHash": "11d1c8047ce0aeb897e1220b20d620149c4d4a15d9715f82603b92cf22839310",
+      "expected": "html"
+    },
+    {
+      "id": "features/attach-nested",
+      "sourceHash": "4b57e6d5e8386a79a095067d319a59013e59f73c560a5054cc91648eaeec5adb",
+      "expected": "html"
+    },
+    {
+      "id": "features/attach-nested-top",
+      "sourceHash": "45e961db06eacbbb56b9d5b5dffdfe913f777af30ae0e4db0621d36d2e1d7f90",
+      "expected": "html"
+    },
+    {
+      "id": "features/attach-op-custom",
+      "sourceHash": "deb31b3cdfe9736d6daa9435155122c79551b232d472887f55c2252438cce30a",
+      "expected": "html"
+    },
+    {
+      "id": "features/attach-paren",
+      "sourceHash": "6a3c289065a6db0237e0840cc7395467fce8e7c800aec9ffbe63c8d30c5a333d",
+      "expected": "html"
+    },
+    {
+      "id": "features/attach-prescripts",
+      "sourceHash": "4feb785caddb5e09a28db8e6c2a83efd282a2ab0bef0418e4a2b169fc087a6d7",
+      "expected": "html"
+    },
+    {
+      "id": "features/attach-scripts",
+      "sourceHash": "fb9a32ab277e3bc3dbd562e21061ff951c464e93d9d766eb1c64ac83bf1afb06",
+      "expected": "html"
+    },
+    {
+      "id": "features/attach-text-op",
+      "sourceHash": "1184f84528567701f1170d5d89d34d679c8fd77990e72b9a52a2fd3077ac5c2a",
+      "expected": "html"
+    },
+    {
+      "id": "features/binom-many",
+      "sourceHash": "7a44a3064d0fa3ffcdd82ccbbf362fedd537a4632b21d82613afebcac2d6080e",
+      "expected": "html"
+    },
+    {
+      "id": "features/cancel",
+      "sourceHash": "4dccf0c371a15c12aa2945c55167bb35c15fb7bfac5899fe4b01c9d346eff8c9",
+      "expected": "html"
+    },
+    {
+      "id": "features/cases-align",
+      "sourceHash": "c237b1447c0032599f6d9a33e2c9c5f2a100594981672d8114200d093cf1d11b",
+      "expected": "html"
+    },
+    {
+      "id": "features/cases-reverse",
+      "sourceHash": "0f57e382b1d7b611e0e25e2216f8ba2807175975d7ca2fe015e18f3ae32d93b7",
+      "expected": "html"
+    },
+    {
+      "id": "features/class-large",
+      "sourceHash": "5505f3a6b10ff04e0bb8d47b8a7bd73b1670fc27421efa75df3bac5d9d300b98",
+      "expected": "html"
+    },
+    {
+      "id": "features/class-punct-close",
+      "sourceHash": "29445a5fbe9c88aa7825330a803e693f1ee76133f1c7c8b8870f8a8083ce3697",
+      "expected": "html"
+    },
+    {
+      "id": "features/class-relation",
+      "sourceHash": "0ad8aec09156aac65365110e718f8bca9ab2c4d415b44641d65ab79a03ba1192",
+      "expected": "html"
+    },
+    {
+      "id": "features/combining",
+      "sourceHash": "a97e150258494a76e7273c1be58d1ad0a691d8efd787f9315fee77a2b4168383",
+      "expected": "html"
+    },
+    {
+      "id": "features/delim-callable",
+      "sourceHash": "ef51f88acd87addff6d7d442e0fd505fe97f3d85311f4c5b4127ed906368ab03",
+      "expected": "html"
+    },
+    {
+      "id": "features/dif",
+      "sourceHash": "228523f04a114cd89cfe239248e269e7dd2c6f9681a350702b0257205f92b9e3",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-accent-block",
+      "sourceHash": "2ffc0389c8fd047f7fa6a3915879777cc146a2e7cc7851b55a5c479100291ffd",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-accent-inline",
+      "sourceHash": "ebfa6cdee77f7847c55bf4167f706eb7423760a7e29067f7fd4df182a3bc4d9d",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-binom-block",
+      "sourceHash": "d6e73ccfc12dd8437ff923f9fb6f0a3bbf4ae8284290bfe2b3d5659c9ebf7ef9",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-binom-inline",
+      "sourceHash": "ccad8e78d48f1c673096d1e443aa074c50c81572014703043597d578730018e5",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-cases-block",
+      "sourceHash": "42d8ac6ac4ce7156e504cf419e860026effc8af9e522d1c02844f633fa5bc2c8",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-cases-inline",
+      "sourceHash": "05be05a3f3d5af3e20ebfc97dd3b3b86fe430ecea645f4a9f485e09bd54ea57f",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-class-large-block",
+      "sourceHash": "ca5d004161b538597b2ef1625fb210f54a28f1062787ced572d24a575a506c61",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-class-large-inline",
+      "sourceHash": "9d35f4530ad6e84529ecd1cc7e55fb6fdb192655f6e4473fa650588bb9012584",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-frac-block",
+      "sourceHash": "b9af47f0a99a23852e30683df81437815d57a228401c75ce0779a478a18d2a46",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-frac-inline",
+      "sourceHash": "848941702b083bc77a5ee9d6fc0b1f3831101250e283b7f7ca4c6d797ac1da27",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-large-block",
+      "sourceHash": "2014b5ab589414139e6d8fbf157d68343c777faca92fb2521ecb45e77ca7958c",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-large-inline",
+      "sourceHash": "9eca2ccf94e43bac5237466f81310ce10d3b1a9852e41fd9bef5d3090d917d5b",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-limits-block",
+      "sourceHash": "bfa75b1dfac5129795dde4c35fc371ff4c03c2fd2b30436176932de903f44b33",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-limits-inline",
+      "sourceHash": "7b753109a791fac699fd180086a5be30ebc47c1dad1835f0f0e2618b6d23cc75",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-mat-block",
+      "sourceHash": "d20d7279d2bec896a462ca8c44e6c3f6d76009f053bd2064b59451e525b2b90d",
+      "expected": "html"
+    },
+    {
+      "id": "features/display-mat-inline",
+      "sourceHash": "4445b1b4e418fe5c5c8e016611c9c260853cb975f2dccd64dc75997a663190ea",
+      "expected": "html"
+    },
+    {
+      "id": "features/emoji-text",
+      "sourceHash": "94b447baf0bd3c4687c3a0f84be6beb5b6d62682cfdf09f8e83a135d10e36a5f",
+      "expected": "html"
+    },
+    {
+      "id": "features/factorial",
+      "sourceHash": "48f3c0f67cfff5e8d2ec3ac2edc46d1e6644bea93860efc01072ef75409e7692",
+      "expected": "html"
+    },
+    {
+      "id": "features/fence-bars",
+      "sourceHash": "fb6a6685e4a069e3f04cd3924bb1ef36fb7dc60a24630c1ff5291ecc5193198c",
+      "expected": "html"
+    },
+    {
+      "id": "features/fence-brackets",
+      "sourceHash": "efa5f63833ce4f468eb7655f22c67a8e0591afce431c4179571ec1a27cabaee7",
+      "expected": "html"
+    },
+    {
+      "id": "features/frac-horizontal",
+      "sourceHash": "f1ad69e6e365bce144f151a35554773c8fe494f2f7cafdc3d0371579895fd568",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "features/frac-horizontal-paren",
+      "sourceHash": "7f3f5bbfef9173fa01f1055b4644dcd4c7393f708c0265e00c605688b484af28",
+      "expected": "html"
+    },
+    {
+      "id": "features/frac-nested",
+      "sourceHash": "c41d42719c12f1d67981bcf94d1d1aeb66f95caf00d0b1daa4c0bb3fb059c603",
+      "expected": "html"
+    },
+    {
+      "id": "features/frac-paren",
+      "sourceHash": "45c234b5e90f4abd55915ed33a86347342c4c4a4d32ff5761701ceb1262fe9d5",
+      "expected": "html"
+    },
+    {
+      "id": "features/frac-skewed",
+      "sourceHash": "ab890a4c7901677882afe38deb1da5902e3957a1005a1efac241dad33cc2cfe5",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "features/h-fraction",
+      "sourceHash": "50426dba1039192955f0a8410536a41617760e8295ee844faaf224b11825412d",
+      "expected": "html"
+    },
+    {
+      "id": "features/h-mixed",
+      "sourceHash": "229ca30ac38fa094a106c9987c56a037da688bf208894056cbf96c26d75d6e68",
+      "expected": "html"
+    },
+    {
+      "id": "features/h-negative",
+      "sourceHash": "34dcdf9c23fd7b3ca946b70a37e216263e78f3e09a43cf4eda0d7988314f5b52",
+      "expected": "html"
+    },
+    {
+      "id": "features/h-points",
+      "sourceHash": "fc964c9ad1ab860bbbbb84f5b5ec7d0f5358cb25325ea18b47bfd239072e1b34",
+      "expected": "html"
+    },
+    {
+      "id": "features/h-relative",
+      "sourceHash": "34e1f70ee058037e517a94324dd1e49c3fc621329a5a33c15382dacc662f8346",
+      "expected": "html"
+    },
+    {
+      "id": "features/h-weak",
+      "sourceHash": "16c97adddb8ab31e7c25543c1b04fa36d3175a406f34f9099233d8b738df2fd5",
+      "expected": "html"
+    },
+    {
+      "id": "features/h-weak-script",
+      "sourceHash": "9bf47822bee840fd73de67ef19e65f4812004d259b8ab52532d6a839b6b44961",
+      "expected": "html"
+    },
+    {
+      "id": "features/invisible",
+      "sourceHash": "9c51ee28c69862757012ecb61645c1a29a6f7b3421d939ca6ee083c252275c6c",
+      "expected": "html"
+    },
+    {
+      "id": "features/large-before-paren",
+      "sourceHash": "0e831c3bec025c0fe038024f040495944428d6ef6681318172c8a674eae27a5d",
+      "expected": "html"
+    },
+    {
+      "id": "features/large-op",
+      "sourceHash": "0b59c28e54189c7af93f00b65c7ead5bfc6106afa68bcb479d6ba228389c7049",
+      "expected": "html"
+    },
+    {
+      "id": "features/lines",
+      "sourceHash": "ae7f8e5266a193f014391645a1436330acf9f5caef4e41ef04bd86c214cab6c1",
+      "expected": "html"
+    },
+    {
+      "id": "features/lr-auto",
+      "sourceHash": "f1ea1afb45961088e020fc39ea1dc7a025ec8a3b15ba98612d3f779882db7ac8",
+      "expected": "html"
+    },
+    {
+      "id": "features/lr-mid",
+      "sourceHash": "30aede855f5876f3010d110a4d57c91223e2a925db87446b46f14c07eeb67a2b",
+      "expected": "html"
+    },
+    {
+      "id": "features/lr-single",
+      "sourceHash": "f5f2abfc7b11f90aaa52a11ca268423cc2fd182c476f2e30fbcf506ccda27b83",
+      "expected": "html"
+    },
+    {
+      "id": "features/lr-size",
+      "sourceHash": "749b26b155868adc548d195db1f31e9046b830ea20418d4bd7ae9d6c24fe861c",
+      "expected": "html"
+    },
+    {
+      "id": "features/lr-unbalanced",
+      "sourceHash": "57294e1a62474cb99dfe68697fc6d093b1d78c92dd066e50b231d316b79bba69",
+      "expected": "html"
+    },
+    {
+      "id": "features/lr-weak-space",
+      "sourceHash": "1df0df4b7c91eb47df2fbfd14087cc8b2d9a1bf449dd9e21b65c585536824e2c",
+      "expected": "html"
+    },
+    {
+      "id": "features/mat-align-points",
+      "sourceHash": "eac855d171a554de411fe1d850a677cfe5a9f1b570f4f16ed2ee0b516e304443",
+      "expected": "html"
+    },
+    {
+      "id": "features/mat-augment-int",
+      "sourceHash": "7b07218adcaf4587feac76457490aab8453ac24cd3d066af1326a19f9a90b0b4",
+      "expected": "html"
+    },
+    {
+      "id": "features/mat-augment-negative",
+      "sourceHash": "3893f8550d81640751b1b96b08c075cca61a619c4f6b966d3cba332708953aba",
+      "expected": "html"
+    },
+    {
+      "id": "features/mat-augment-offset-error",
+      "sourceHash": "cf6ecfc8b0d31fdd7cb570935e61e14416fa600a8ed18800e675f979b99b0c9a",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "features/mat-delims",
+      "sourceHash": "8134ce867600e1822aec601eceea2a366d2a5f237b362a5a250eca0f6875e48b",
+      "expected": "html"
+    },
+    {
+      "id": "features/mat-empty-cell",
+      "sourceHash": "8b18e144712f6a8de63c3e3513be5f06a9280f39d3429909852cd81052438a44",
+      "expected": "html"
+    },
+    {
+      "id": "features/mat-gap",
+      "sourceHash": "acbaa462366632a498603bee9bbd1e6603945d0713244dca3e9594dbcc85e405",
+      "expected": "html"
+    },
+    {
+      "id": "features/mat-gaps",
+      "sourceHash": "ee090ca40d29b7b7b82890da0cde04aba9ef07a43ee0831c0947cd24a01c8d57",
+      "expected": "html"
+    },
+    {
+      "id": "features/mat-linebreak-warning",
+      "sourceHash": "c56cf471bee99e49bc4ced5c989700a23ddc9041f1fdaaf94987b73c84e0d187",
+      "expected": "html"
+    },
+    {
+      "id": "features/mat-ragged",
+      "sourceHash": "f9cc0bc58eb074f31c90323ea0021c07682fc28b5d2a658c26da6b16f63aeb06",
+      "expected": "html"
+    },
+    {
+      "id": "features/multiline",
+      "sourceHash": "d858ddb966ffb9d7abfc0867ef6ebd116948efb090f2ff0d1f2b017401c58263",
+      "expected": "html"
+    },
+    {
+      "id": "features/multiline-align",
+      "sourceHash": "893c594448868d4a95d732db62eb5460bbc9b23aa4977dea1e0df763b5b00925",
+      "expected": "html"
+    },
+    {
+      "id": "features/multiline-align-many",
+      "sourceHash": "85014d4a9db55b16a2ba0ca23ab5e57d78b90e7eaf21f711d2592423fb4dfbfd",
+      "expected": "html"
+    },
+    {
+      "id": "features/multiline-fence",
+      "sourceHash": "52e3937843cb08792fa8babfff6d34a925bf58764921df07e62dcab86a1f6741",
+      "expected": "html"
+    },
+    {
+      "id": "features/multiline-trailing",
+      "sourceHash": "a14fd6f9aa6068ac4807a7a879ec4c32c29aecb37b3ed4a965c9eb872ab69bfd",
+      "expected": "html"
+    },
+    {
+      "id": "features/nested-module",
+      "sourceHash": "824e44ae25fa7332737f848f6828edfacb961f526c9febabe5a537f7e10c133d",
+      "expected": "mathml"
+    },
+    {
+      "id": "features/number-decimal",
+      "sourceHash": "ddf7f18a2284e5a00f06cbd05d95ef995a2bd19079a01aa822cd27a4e47b4c9a",
+      "expected": "html"
+    },
+    {
+      "id": "features/number-grouped",
+      "sourceHash": "fe4484b38265a5d98045eb421036a4e3296f72007e37ad7ff17d3cb1a503f465",
+      "expected": "html"
+    },
+    {
+      "id": "features/op-latin-extended",
+      "sourceHash": "babd09a13c80243bb711c6da389598e789aeb442bee64168f7306cf7d5fd8464",
+      "expected": "html"
+    },
+    {
+      "id": "features/primes-many",
+      "sourceHash": "5f86badf773508e70b58ab80a98b636ad5ec2b8a1e41066b4e222d3387a55363",
+      "expected": "html"
+    },
+    {
+      "id": "features/primes-script",
+      "sourceHash": "bd875a82c0e8a029babf4adee476a0426eab0e8f74f80719596ce63227436844",
+      "expected": "html"
+    },
+    {
+      "id": "features/punctuation",
+      "sourceHash": "12c0bf91587ee54fc25b836b3f9e0ed7f646222ebc6b28c6a37e39cefd0a65c4",
+      "expected": "html"
+    },
+    {
+      "id": "features/relation-chain",
+      "sourceHash": "bba50c29c5c5755e8d6b90477794ab4372b87af35360b887756de6415e74bba8",
+      "expected": "html"
+    },
+    {
+      "id": "features/root-func",
+      "sourceHash": "60d276deb3c4b7f615dde57cd9d4f597a8a027c0a11a5e28ddbe54974001f83f",
+      "expected": "html"
+    },
+    {
+      "id": "features/root-sign",
+      "sourceHash": "613ddce792fb5da4f122ec867c2f89896a4faf3cccb502fef679934d987af8a8",
+      "expected": "html"
+    },
+    {
+      "id": "features/root-text-index",
+      "sourceHash": "18a35ea184ddd14a967e42005d7ea28a8b2ede2315a8a8e0a55922a2f64f9784",
+      "expected": "html"
+    },
+    {
+      "id": "features/shorthands",
+      "sourceHash": "1b644acbb787f137e90a74630581ed1f45b5cf459fb3885e78916f5555d78e12",
+      "expected": "html"
+    },
+    {
+      "id": "features/shorthands-brackets",
+      "sourceHash": "18d0aad7e142ef9033cd45848b9fc9708a71f2a5095b83092386b6af8ecf75ef",
+      "expected": "html"
+    },
+    {
+      "id": "features/sizes",
+      "sourceHash": "e7c45197d18f1ff1de13616b7b50dd2cc6a3c9fa9b55e69408ef896a827c2754",
+      "expected": "html"
+    },
+    {
+      "id": "features/sizes-cramped",
+      "sourceHash": "2673f5f8e319cd81b76410afed409d08d8be4f1f7897b04dde56f5b1e5023d44",
+      "expected": "html"
+    },
+    {
+      "id": "features/space-symbol",
+      "sourceHash": "09b8ba143771fc932308176d82b3253169ebed49caa00aa8ecdd62bbb99ecfce",
+      "expected": "html"
+    },
+    {
+      "id": "features/spacings",
+      "sourceHash": "c2d663e51daa301d108b1e03c39c77cf073388acf0231a68dc3e63ac81e3cf08",
+      "expected": "html"
+    },
+    {
+      "id": "features/stretch",
+      "sourceHash": "9e7a8d3132a596121a5b2b091a639a8f792fcf10d52e719a12847f798735985d",
+      "expected": "html"
+    },
+    {
+      "id": "features/styles-bold-italic",
+      "sourceHash": "098bae05afdc6a5bf689f5ab60f6d4068d4f9aca8ddce4ab7e577e5d4de9a774",
+      "expected": "html"
+    },
+    {
+      "id": "features/styles-digits",
+      "sourceHash": "b04ad5872234cf933c365dd52886769bb557e33a83d70f6ca8d476ea8831abde",
+      "expected": "html"
+    },
+    {
+      "id": "features/styles-dotless",
+      "sourceHash": "c2f7939532e85d0e2af8e767c57ec2c146907b7238ffa7b748b09c13deda4217",
+      "expected": "html"
+    },
+    {
+      "id": "features/styles-greek",
+      "sourceHash": "90add71ec07b64662d20948cab207673cb8fc54048c2c0f44489bebefa6a89bc",
+      "expected": "html"
+    },
+    {
+      "id": "features/styles-hebrew",
+      "sourceHash": "ba24a0d3f123152c6323883328c0572bfeae2e3cbe93fe52b63048f8679112e6",
+      "expected": "html"
+    },
+    {
+      "id": "features/styles-text",
+      "sourceHash": "c7c79c59bda7d4561403aba8045b034c62637eecd1211b4fcc55d38b5e728c8b",
+      "expected": "html"
+    },
+    {
+      "id": "features/styles-variants",
+      "sourceHash": "36b2c2b9a507ecad6419cd97961d928d8a791d05e4298257b65d893269373a63",
+      "expected": "html"
+    },
+    {
+      "id": "features/text-kerning",
+      "sourceHash": "dbb86915097e96c8f6da75285095da6e81965cf8f32d67193fcf29ebac60f758",
+      "expected": "html"
+    },
+    {
+      "id": "features/text-latin-extended",
+      "sourceHash": "6830217bd4e9c520fc9873d921f649fe5760d80eec69e26f41b2b9e721d0a968",
+      "expected": "html"
+    },
+    {
+      "id": "features/text-leading-space",
+      "sourceHash": "64216cc0d4bc9c0789c2055f2d71f09381a37b91918ed858bc15e07705cc9e3e",
+      "expected": "html"
+    },
+    {
+      "id": "features/text-ligature-chars",
+      "sourceHash": "13427761fc51c92b39adcc3f7920ff87d98b50c1229f951616c3212e4cdb37a5",
+      "expected": "html"
+    },
+    {
+      "id": "features/text-newline",
+      "sourceHash": "de9267c97234d68d75412588740d3dd7b350e29ebf3b508d0122568a39b7a3ad",
+      "expected": "html"
+    },
+    {
+      "id": "features/text-quoted",
+      "sourceHash": "80d1282a4d2c6fc96e54b74ad777adf8803bc2f5f50d5b38fc9cac4a2bd2d869",
+      "expected": "html"
+    },
+    {
+      "id": "features/text-tab",
+      "sourceHash": "9911c3056d004f8ef6888a65d6d56dc6ada0ab29305cd1ab72281fdc4cfe4115",
+      "expected": "mathml"
+    },
+    {
+      "id": "features/text-trailing-space",
+      "sourceHash": "f4163e33d8f416c7407a3f66576c4bc424370b242b24e39dc2193d34aa73fb34",
+      "expected": "html"
+    },
+    {
+      "id": "features/text-two-spaces",
+      "sourceHash": "8647cdd6725c6bf52948b7089df9f77b3318ef52222ccd94b3cb304a5e477e8e",
+      "expected": "html"
+    },
+    {
+      "id": "features/text-vietnamese",
+      "sourceHash": "c4fd9c179001a6d09245e94ff2a23abac71da2b29274bbb15a538acc5791e6a9",
+      "expected": "html"
+    },
+    {
+      "id": "features/under-over",
+      "sourceHash": "81fc9e4259dc92c2b3dbb3a229497421d84578457737a9bf77888ecd8aeb5c94",
+      "expected": "html"
+    },
+    {
+      "id": "features/under-shell",
+      "sourceHash": "70352b7b44ca8bc2bf17590fc10a62882045803e4479f5afbf6ac5e958f900d3",
+      "expected": "html"
+    },
+    {
+      "id": "features/variation-selector",
+      "sourceHash": "d7d84b76e446df88ef95211a13cb2a77a86a86bfe8f9797b6223945ee4ce0b84",
+      "expected": "html"
+    },
+    {
+      "id": "features/vary-after-relation",
+      "sourceHash": "befd0cda8bf56a14a21b336b366f60e8ab5b6574675f2debe0c4679d59a1823b",
+      "expected": "html"
+    },
+    {
+      "id": "features/vary-binary",
+      "sourceHash": "b78f3d575c1ea6e96c0c17097f8efcde9790b0e7485d178f1e627f3063915376",
+      "expected": "html"
+    },
+    {
+      "id": "features/vary-unary",
+      "sourceHash": "157228dd712067086a25731f3afbd899499cb4534c88afed6a2bfbd907bd3728",
+      "expected": "html"
+    },
+    {
+      "id": "features/vec-align",
+      "sourceHash": "013c47dd275e3a4646a76e347e8dc1fbdfd5d94a73c7053b55dbd3fa82618b04",
+      "expected": "html"
+    },
+    {
+      "id": "features/vec-gap",
+      "sourceHash": "b7c7f4115744a1948eeb4ba1d65ea6091ca7a2928cb7a4bc7a252a10cb09d358",
+      "expected": "html"
+    },
+    {
+      "id": "levels/assert",
+      "sourceHash": "13b17ec368aca12782ca00a2396330ab418bcebd0d8d6c37bf9437ad13f56c0f",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/assert-fail",
+      "sourceHash": "3c0ff8f05607af5e805a064e673af025cc406be50a6d424fc42e476e88459a03",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/assign",
+      "sourceHash": "343792a5877f4bfa9f38ad372d26a57b0d60a278cc78271df9d1dae2dbb229e0",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/assign-captured",
+      "sourceHash": "44db9941e430a7e65468c02344c7ea6865e0f9ca817ef7e55a3f4b5aec1ae01b",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/assign-constant",
+      "sourceHash": "15322ebb8d5282bb92e33605bdf31754135c47bb7f04ae391703ef34507fcb01",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/assign-destructure",
+      "sourceHash": "9ddeddb4a5416467531aa86df529a576f711a094f570f650c76f7b835ad3dbec",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/assign-field",
+      "sourceHash": "aa9726871ee217fc28593ee428d27a7d7f46e7947467ac7190c48131be912c3b",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/box-baseline",
+      "sourceHash": "0f34d4d74cecc70388cafb30bc861b9776e93a979969a77725aeb93be3aa6b7f",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-block-equation",
+      "sourceHash": "c12bb91164751322f8d1ea5b4bdea537464dcadd3f7d75dbb63d25e3f1c3c67a",
+      "expected": "mathml"
+    },
+    {
+      "id": "levels/box-block-equation-text",
+      "sourceHash": "48bdd4a23ed61632181de90e3646ed81098a7afca1bf1d4c0c1ee99f761d3933",
+      "expected": "mathml"
+    },
+    {
+      "id": "levels/box-empty",
+      "sourceHash": "121850ce700554cd339ef5e2964563e8d0b6455427b30e02909c68c016f39dff",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-fill",
+      "sourceHash": "2ecbcf2318cee8e073167be514952a2d2f218a9f15db8ffbfc4cf23378a79c76",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-height",
+      "sourceHash": "06b690d34a7c7c4dd52cdc46de92baf0ed61d1bf88f81b2db7d89c6d972ffc16",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-hide-lone-paragraph",
+      "sourceHash": "d26ca9c1bae76c2db24a24a2a9e7d5946478e02d68ffb633b94d16a4038a9aec",
+      "expected": "mathml"
+    },
+    {
+      "id": "levels/box-hide-paragraphs",
+      "sourceHash": "6e2189ff5c25a578c2cea8e5cedcee80723612f110c8d48df7633ea59800034a",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-in-box-region",
+      "sourceHash": "7d92fa6ed1f74046dd48e4fdc9f6610291b7c94bdcfa8276317f6cc85864c43e",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-in-equation-region",
+      "sourceHash": "f7e711080ab5657a501d606b96d10983d91f01f0afc7869c456b99a54b7f6cc8",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-lone-box",
+      "sourceHash": "10bd966db71d987afc9e2a6a055c5aeb9c464d658060ff1d327689e367cff12d",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-nested-paragraphs",
+      "sourceHash": "8a7c887f963278fb60f53595826ca69a514ff1cb12719ca3b984c4f2886ea3ae",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-outset",
+      "sourceHash": "4b1a5e228c4be68c83f9cc04b4bcd18ba37a746f4e81138bc72fcdd15b4649c0",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-paragraph-quotes",
+      "sourceHash": "b840c8e35946db54c8acdb844828ba9085dfeab0b1ae69470eb8758d425f950f",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-parbreak",
+      "sourceHash": "172b50e3de2f2d87e8190bc398cd014db7c002cdaab5fb7133ab4396ce883b20",
+      "expected": "mathml"
+    },
+    {
+      "id": "levels/box-quote-after-number",
+      "sourceHash": "8e970865b29d2126bfa850abf695b775c877e2926bb0214160cea02053f48f35",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-radius",
+      "sourceHash": "eb55e9e0429ae9223aa56387c38690d566868fbeaa7ab6c6ad422ca75642e5d9",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-side-stroke",
+      "sourceHash": "f75cf2c8f45662d22ab22dcebd245653330988bfcd2d51d39435798461b08819",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-stroke",
+      "sourceHash": "6085516da669d47aad5a78bebb475d9749e0d6369bd554c2e565932ff9afdb0a",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-text",
+      "sourceHash": "8b68b6d08ad9ae6457281e06a26513143b778fc766fd91b7f9994552b1a7c9f9",
+      "expected": "html"
+    },
+    {
+      "id": "levels/box-width",
+      "sourceHash": "1f4d6300c24326f3e7f3e21e0eb51bec95ad9d550de276084585083eb4dc8627",
+      "expected": "html"
+    },
+    {
+      "id": "levels/break-outside",
+      "sourceHash": "acad99819cbc1f01f7a2a8c4472cf9d8af5e35e1b9eb4363934f6ce2fec31952",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/calc-constants",
+      "sourceHash": "c1e9967336e4eb5c2f071df5e1995e3c6659035bd10af601f57449584fda72b4",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/calc-error",
+      "sourceHash": "d68e398e8d7d5a5b01f8e6b4837c98dee25a6811ea6caa21b1a25b96e7b1b82a",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/calc-pow",
+      "sourceHash": "ecd6c37e3981b87867454295bce3a88a5031c02890c692f7820c21899b8da5a2",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/calc-round",
+      "sourceHash": "1fb765396ccb4b0d8f0d0a59e4ab178fb363cbf809e8b7da6b5aaad32b6a1315",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/calc-trig",
+      "sourceHash": "cef1a4bae8882d17b73c2bcbffccbe58e804a73e8230a5f4dd54f1d82e5d0ff2",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/cancel-box-cramped",
+      "sourceHash": "c32d4b8fb87bab72927ff404bcf53649f3ac25d85a363696e9a117323939bfbe",
+      "expected": "html"
+    },
+    {
+      "id": "levels/closure-capture",
+      "sourceHash": "e9b78e06b4370a683006451260f7d54d541ebad03ca2ceee60f7710ae66cfb44",
+      "expected": "html"
+    },
+    {
+      "id": "levels/closure-missing-arg",
+      "sourceHash": "eadae5a93c7de164fc2b37d627d8d0c9de730b41dfe206119c6433f5b94857f5",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/closure-unexpected-arg",
+      "sourceHash": "2bfb0df098dbb729cbfec4334cd0874c127c544b74ab9fd608ccc366720c5096",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/closure-unknown-named",
+      "sourceHash": "aab31e95640c0ed66d3a2d2071848884b8352728c75c953ea06c28af252b72e0",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/code-block",
+      "sourceHash": "03d787bbd358e04eff991e7d445745c620f23276ddba4d6b37d73338d207daf3",
+      "expected": "html"
+    },
+    {
+      "id": "levels/code-block-content",
+      "sourceHash": "a60966c9ef12ab64741c11e5eb9d0172753517f3d4913dedb413b4426130e813",
+      "expected": "html"
+    },
+    {
+      "id": "levels/code-block-join",
+      "sourceHash": "15335ec6b9c127b34aa2c10b54080796c0e52a736e14d1054d0a2940dbb63f3a",
+      "expected": "html"
+    },
+    {
+      "id": "levels/code-block-join-error",
+      "sourceHash": "2a492f47581160ee20dc9f0639a6aba574d8fca74a0108967631834dd56456a7",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/conditional",
+      "sourceHash": "57c2692cecc9c40567b649ce47d7c0e1763617b38d252089fca0115aa9a279a1",
+      "expected": "html"
+    },
+    {
+      "id": "levels/conditional-math",
+      "sourceHash": "30f8e1d7c79a05eda1ce097202907198f9c837d23038bacffd5fc16637e62d29",
+      "expected": "html"
+    },
+    {
+      "id": "levels/conditional-not-bool",
+      "sourceHash": "14bcbd482a7e966a003118816ac02903cc7a33f1d4b2fec6b9a5f217ee63dc0e",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/content-block",
+      "sourceHash": "61fe862621eddbfaa94daa1e65d9d7171fab33978a23f8384fedc0dc425b16f9",
+      "expected": "html"
+    },
+    {
+      "id": "levels/content-code",
+      "sourceHash": "26b132682e96dba428f693c7e409a04c267fa40af498dc8c447232a6ae795bd4",
+      "expected": "html"
+    },
+    {
+      "id": "levels/content-emph",
+      "sourceHash": "fc8b0149522ffb556194fabde35fe54e89dd84591975fa10cbd909cdf15f4260",
+      "expected": "html"
+    },
+    {
+      "id": "levels/content-equation",
+      "sourceHash": "1c01bb4489481f0923ee694c449f7c3307ecd5a4ef0227b2642329f40d8d0cce",
+      "expected": "html"
+    },
+    {
+      "id": "levels/content-escape",
+      "sourceHash": "042986aac97a1e33ae568bbc91dbee9f86aad36a81c9973f2fc8b947fc10f765",
+      "expected": "html"
+    },
+    {
+      "id": "levels/content-fields",
+      "sourceHash": "1557bbe0bebe3ee66ff43d284848d1a5fbb600a51363470b3b8622c5953da49d",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/content-func",
+      "sourceHash": "4d3a84301964750095552895ed170de0b9b94f9df2d6cdcb54613e4226621684",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/content-heading",
+      "sourceHash": "f1c7c6bf4712b58edd529464e100f680ede6a2aca148fa8ba033e00f3248262f",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/content-label",
+      "sourceHash": "3e6628b324f2e59d53961eaf97b629ac0848099871c6670d6a1adf794b69d4fc",
+      "expected": "html"
+    },
+    {
+      "id": "levels/content-link",
+      "sourceHash": "b7f51dcc92aacd4673f8e4a533012c789febde4ae0e498091270b84a1f0ddc58",
+      "expected": "html"
+    },
+    {
+      "id": "levels/content-parbreak",
+      "sourceHash": "a4631557e442a4543abff48b3c6ce8ee630fcee9400185e4c6a4af170a58e2ee",
+      "expected": "html"
+    },
+    {
+      "id": "levels/content-raw",
+      "sourceHash": "ab9c7e9dec2e6400771cc993b66451f01a25f22928066242fc00489e9d536b66",
+      "expected": "mathml"
+    },
+    {
+      "id": "levels/content-shorthand",
+      "sourceHash": "b7ba001362016f7361c006832624727d4babe689da1ecc0aaaaa48adbdd2cfb7",
+      "expected": "html"
+    },
+    {
+      "id": "levels/content-smartquote",
+      "sourceHash": "754499875e0915ce8edc22cc91f816d094a0dac87caba311a06b099a63727536",
+      "expected": "html"
+    },
+    {
+      "id": "levels/content-strong",
+      "sourceHash": "e768732830e2fc3c14dc0e432e1fca56ab33154f499a48652cb147886f46b213",
+      "expected": "html"
+    },
+    {
+      "id": "levels/conversion-error",
+      "sourceHash": "797306cd29c22707a86a9afe7df0dc595d2144144e29407103afdd3880f9e7dc",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/conversion-float",
+      "sourceHash": "6b312988ac9259e2e9068cc255c64caa2776b01f70b9a4fa8c30fff806867323",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/conversion-int",
+      "sourceHash": "ad813304997522873a5d6b350f543cd7f9170829df22517dc50348d0d7d94634",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/conversion-str",
+      "sourceHash": "bf26fb823e251f0696a3152f21be9cb322d187297660ef1dd8ca3de91443a1fb",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/emph",
+      "sourceHash": "12b246e4b17bcb442c987b8b43491695d3d382ae123fe38419e34de6567e4e48",
+      "expected": "html"
+    },
+    {
+      "id": "levels/equation-value",
+      "sourceHash": "bc05e12b03137b8adca36bf90ab8d89c100da3ef758fb4f9fca54213f786607c",
+      "expected": "html"
+    },
+    {
+      "id": "levels/function-with",
+      "sourceHash": "6e135870c9360783e2b6b4c4ed519ae71f783402877eec466a82b3a9037b662f",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/hide",
+      "sourceHash": "d90f381a423d50903dcc028a4c19c3d78c2319618d7c82077b91eeab6a870646",
+      "expected": "html"
+    },
+    {
+      "id": "levels/hide-text",
+      "sourceHash": "18198c2a867ddb2a986f7987d244255d9ec9112476ac1cb6352a7bbf0cbb2ca5",
+      "expected": "html"
+    },
+    {
+      "id": "levels/highlight",
+      "sourceHash": "a708760409d108b75394ed03baf06c568ccbaa85666021bc221c15c470a30993",
+      "expected": "html"
+    },
+    {
+      "id": "levels/highlight-math",
+      "sourceHash": "e835a61a338830dc6bb4b84596754d048cf9f6666bff32e3e963b1746e7dc936",
+      "expected": "html"
+    },
+    {
+      "id": "levels/let-closure",
+      "sourceHash": "417596c2244b567acaabe3f49e82b2a8fc19f2c141a33ffa4e9a46e092a16d5a",
+      "expected": "html"
+    },
+    {
+      "id": "levels/let-content",
+      "sourceHash": "7bed3d5a4ba745a16a02934d49fe4adb26b6cfad6def4db0b9b0cdb2c4fac3a2",
+      "expected": "html"
+    },
+    {
+      "id": "levels/let-destructure",
+      "sourceHash": "e95666b502f42cc74fca52c7de4748e86d12ec0d5baea1a1e9f45e5763025516",
+      "expected": "html"
+    },
+    {
+      "id": "levels/let-destructure-dict",
+      "sourceHash": "ed8d3bde1f81f693912d73f41d4a6c34eb9edd3c09c4fe8282c8b8f4f927a507",
+      "expected": "html"
+    },
+    {
+      "id": "levels/let-destructure-error",
+      "sourceHash": "2e9314f3abe16062210c3c22d9f79f59a2f18f6de92e34d18551c1b0cf353a6c",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/let-function",
+      "sourceHash": "906c4cf679b90dab6679ab3216383b3fbd755023b2e8749ed3742e3b515d92be",
+      "expected": "html"
+    },
+    {
+      "id": "levels/let-function-math-call",
+      "sourceHash": "83bb89d9eeb5e8f325a7278a97aba9bf486f4273a5a77f537465739a63f4426a",
+      "expected": "html"
+    },
+    {
+      "id": "levels/let-named-param",
+      "sourceHash": "6eba742a0b103c73a81817797144b07ec51bfea7d3d0b16de95ff0520c630374",
+      "expected": "html"
+    },
+    {
+      "id": "levels/let-shadow",
+      "sourceHash": "f64454a237b2f48bf8d77d1b4554f7f56745f7ed66428d1dd4cc9231f55757a0",
+      "expected": "html"
+    },
+    {
+      "id": "levels/let-single-letter",
+      "sourceHash": "d629e27d167eb6e0be6ead05d4e48dd11f6c42fcff5a30de97fc838819eb0b82",
+      "expected": "html"
+    },
+    {
+      "id": "levels/let-sink",
+      "sourceHash": "e127daa7532255cffe44e493b0130cd83bd3948aea32eabac4594a0216fc7495",
+      "expected": "mathml"
+    },
+    {
+      "id": "levels/let-value",
+      "sourceHash": "c4902edaf95bb836b76321c56a87532439f7bb62ac99a2a83248e8a5be043865",
+      "expected": "html"
+    },
+    {
+      "id": "levels/link",
+      "sourceHash": "877940a64a40be8a944b0f8516be6a162ad2f04f58122256260a8ac1cac3d0c7",
+      "expected": "html"
+    },
+    {
+      "id": "levels/link-text",
+      "sourceHash": "fa392c9368ea95f6b165bd4ee7d416fd7e7022914bce8d7cf8b3601397ece101",
+      "expected": "html"
+    },
+    {
+      "id": "levels/loop-break",
+      "sourceHash": "5145a3f7fcd66bc53c25074f5aa5e56cbf72f03a9486bdb42fcc47729f2fd2db",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/loop-captures",
+      "sourceHash": "eff0495f828a9f4c200865d554b751ebb4d16e9014f84cc822da03daf0c5fc34",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/loop-continue",
+      "sourceHash": "6c9d0d8d42176a2700b59d22f7f264178e62e2b9aac4c833ca5aaccf464c22f7",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/loop-for-content",
+      "sourceHash": "706dfa9890043fa19c639651f2d4f105f42fdd15ca00ad9f60b3fe564b296be4",
+      "expected": "error",
+      "errorKind": "syntax"
+    },
+    {
+      "id": "levels/loop-for-destructure",
+      "sourceHash": "74aac33a46673222981a1582d1ad9e1e6724afd30d8f14584b4e65e9f0f8df4b",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/loop-for-dict",
+      "sourceHash": "d757ba204f06e918ef00ef76b45217ea6368642115a24f6d5afb52a9ff7a47ce",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/loop-for-math",
+      "sourceHash": "698b7fcd4ed037abaecad06d016b7e358aa1ffd927fa8ede99dc567bd4ca9f5f",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/loop-for-string",
+      "sourceHash": "448a6174a52397884adb85ed1a6ffdbad0fdce98202ec19b3b5087975cfa4a4b",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/loop-identity",
+      "sourceHash": "886f182b3321b28876b0065bb05e1735606d337f96a4ba3ceeb6014683f10cb8",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/loop-join",
+      "sourceHash": "8748e088c20ec922e0a5d7ae38f2df91829c1b920ce013d0d965d1d1e2d371d0",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/loop-join-error",
+      "sourceHash": "bd62feb3fd4fad148e77c5f21a9504d37de9f9e7e2c20bb1e4faad80b74d36ea",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/loop-matrix",
+      "sourceHash": "f6ae3cf8f520502fd60fa655471af98de362704e2b0dfb0d11fa7eea9bddfd59",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/loop-not-iterable",
+      "sourceHash": "b22d112a50aca076e6b7b3793ffe21b15600516237e02f1b7cacd1f7ecc5bda2",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/loop-refused",
+      "sourceHash": "0c40c745469ff23c227452244e270f1d97e341d418381b869266003b079fe750",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/loop-while",
+      "sourceHash": "51d4e121230094cd2782463c2e64d6da2788b29d66306dc6ffe4259152658776",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/method-arguments",
+      "sourceHash": "08bd519d9a057036e90d6ff39ab9abe3cb69523cfade08ad8198962565e0d6fd",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/method-array",
+      "sourceHash": "1aed9b36fe04c385bbca41f78da39d8f44a2d9d9eccc2f36bcddc7d8f9b0e32c",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/method-chain",
+      "sourceHash": "20db3a0850c4afacabcea902aed2ade9a1e8392f071fe294eeeb2ba9adb9f71f",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/method-dict-pairs",
+      "sourceHash": "32365ffd13671211a00a730050ed1b5092932a21c37e0a9ed303f6c480b7c035",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/method-int",
+      "sourceHash": "8a8fcedc64109f1d879becb00167fab611c91c5bff21eedc4005b21413a7a1a3",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/method-length",
+      "sourceHash": "d0d1c08873888988000ee1fea123963b5a33915f16ab175e08f2b12df5513825",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/method-length-em",
+      "sourceHash": "287ea447ff221bdc8b9a61afff6c093e6e72d90b55ac4d1ed0708274b002401d",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/method-mutating",
+      "sourceHash": "2b4ce6500b15d9c6b7bb117c85aac212258c45d8e15bcd09e4e980f1d8eb8416",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/method-split-math",
+      "sourceHash": "ffbdb53792b82633e0c15e2979d2e4ff0cedacb48775b7988578759eff7e484c",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/method-string",
+      "sourceHash": "bf378774c03d30d491507edd11420dc31c1a8434699d2f0f56d6f07fb46d2532",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/method-temporary",
+      "sourceHash": "1f6c9dde049ed0466bccd7e49ed12fa0d43ca9282368f7ab9d8e6b0dc473e424",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/method-unknown",
+      "sourceHash": "09f8c73c3f3b09198278017701db5bdbd96f962b47b94015cf40aad7e13a4e4b",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/panic",
+      "sourceHash": "9516aef207800b44a6e2f1640eb4a424689f3f3dbb81381f33978b14d5193ca1",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/preamble-cases-reverse",
+      "sourceHash": "6028f37d70bbe869c36f0847b9ff6ac0cad2a63632972eb3a3cbad2d84a82c3e",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-error",
+      "sourceHash": "a86f8927e0c0dc185654a1d755c3e01ba79f3075ec03d71ee63ccd5a12b93fcf",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/preamble-loop",
+      "sourceHash": "add4f10be1fa2b9b8b115c5022bac02cf227cb98f5615f2f45fa6912f5370fd0",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-macro",
+      "sourceHash": "0c68bc63a923d56a7d02bfd41bf2b25c5515d0a23564be38c534992282637d6f",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-mat-delim",
+      "sourceHash": "d00cb8f5149409995917ca77dd6d91ee8e09167535320f6afebe6cb2939d1f3f",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-norm",
+      "sourceHash": "8a360abf1836ebdc61a49f6269c37e1fdc6d4156c8ab6e0a9ef23d3a28976236",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-numbering",
+      "sourceHash": "ed7460e8e251953731abb891862ae8ffddbee265bf9cf2b2137907bca09a29c8",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-numbering-align",
+      "sourceHash": "bf89b009fff3f5ee4380552ee740ec69c0d87b1b30867d3189e7a874a54b3d7c",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-numbering-func",
+      "sourceHash": "734fe37bd4f5812c1e23d577e8b74e6d67363a82dfcf5d34d52e2c320d3988a4",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-numbering-inline",
+      "sourceHash": "296bd51682b2a1eef4272acb2909e7f1a851d7ce3ae4f643219df31e9c208e56",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-numbering-roman",
+      "sourceHash": "6e9844dc8570439a4ac08e78e75e392d2db93a6a74bf5cd541c00f60413f76fe",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-several",
+      "sourceHash": "73f7ee3fd1a1d69606fde892e47f3c9ac7ab888ab18d761e0141f152098eb422",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-show",
+      "sourceHash": "f0d60ad22d90ee0d7ebe83a956bd9be0e0e7c100b40bbdaf5fe90f3b80a6b63f",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-show-bad-transform",
+      "sourceHash": "79b6d6bd12d6248790c2380af6572ae1971277e1397124ff378ff32854f10eef",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/preamble-show-block",
+      "sourceHash": "7ad7d4ea1fa72cdfc76643e73b174962fa1f9206cdbf94ed007a430d2f51a2fb",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-show-block-inline",
+      "sourceHash": "020a7d4170b0cda5ea0d20de3f0291521b4cee53f29ef6d3e65d86d21eca9466",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-show-closure",
+      "sourceHash": "5f4f5fae7542f3d0f069d405286603d9fd7adaf350fc4a61343ebfe92403756c",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/preamble-show-function",
+      "sourceHash": "6d3e8dcaf941ca942142fd0e0410ca64942999ca92d0d025d08e37efee0dfaf1",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/preamble-show-inline",
+      "sourceHash": "dbfd9de3c5d34f65bf4a469a3422c203c62c2c18f0c46f66cebeab41fd1e8b96",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-show-mat",
+      "sourceHash": "8f39c38cf2238e05308c369ad8cc6522108a0c1ad702bb58dde257dd3a516819",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-show-numbering",
+      "sourceHash": "823cfd94ce7ad8b2de6691a6a004037542f69a286fce3341cf2e20bd7e8a12c4",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-show-over-set",
+      "sourceHash": "bd7ab3c5b2ef0450728ea568533f7bd562e6a56fb2c4e07b937920e187e2c8ba",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-show-set-if",
+      "sourceHash": "d2755dca86ffb2f357b9c3577ee37dcbe6568e26df078836881e0768b984dff5",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-show-size",
+      "sourceHash": "5ae9c910058e859967f3fa2e7834e48644b6c855da845f479caeb7f53bab0ec9",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-show-size-box",
+      "sourceHash": "7be7a5c6dce8cc1d7df5830064ce9c98d4be504ce08873f40de264c30e33965c",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-show-strong",
+      "sourceHash": "2a116caf501045b45febad2270377846ec0ce210aebe7961ad6325e32c89f3ea",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/preamble-show-twice",
+      "sourceHash": "621f980eace71fa1284e0c077442e34ad8ca49188c88069cfcc443f68d19b070",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-show-under-set",
+      "sourceHash": "7abd5fcf424c81e2669009d4704507aa740ad2b934d145b36c22fed215dfc16f",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-show-where-closure",
+      "sourceHash": "cb8d0b2843944ef96793349762e0f47cc97314755fe43d18580c06444975a170",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/preamble-show-where-field",
+      "sourceHash": "16389946b24f71b326e0e10a3a024b0bcd20ac74bec8906033b85f8adab41c66",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/preamble-show-where-positional",
+      "sourceHash": "6cd61b48a01435447130ec186cfb14c04f64297274e304d95ae2575e783fd044",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/preamble-show-where-string",
+      "sourceHash": "f9f9be104a35c7c21792dfc769ca53c00e55eb7e8ecd28c04d2409be26782d45",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-show-where-unknown",
+      "sourceHash": "2ee93914b18228d2304009d5b97de5e5f006d2a000850231873f98879c19288c",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/preamble-strong-delta",
+      "sourceHash": "e7ef832e1e7cea8a065d1542cb39eb04879130151eca165796fc27e5973c5980",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-text",
+      "sourceHash": "471c65f0e281f5a1c62c7b3e3ffd93d62eea2b9faf34dd819b118dbcb97b8728",
+      "expected": "skip",
+      "reason": "The oracle SVG includes the preamble text as well as the formula."
+    },
+    {
+      "id": "levels/preamble-text-fill",
+      "sourceHash": "07ef4024be938a2ffe0b28c4572bfb9fb7418e415aef7440db4025813436cee4",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-text-font",
+      "sourceHash": "77c65f57952daaed74fda6ff23a0f018e6eeee9b695f6ca9e492a8b2f7f818e9",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-text-lang",
+      "sourceHash": "dbc18c7f7a687375b4d9e948fe3cc68952a6e656b7e9bef3aae8191250e2f5e1",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-text-layout",
+      "sourceHash": "54c6f117f0af4deac814a35be5e1868917604bee09f738e8aea9cc4009b47bd1",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-text-size",
+      "sourceHash": "1c27bc3f8d22345a6032feba3c57e1dee128ca154bc2b7390c073929333b864a",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-tracking-scripts",
+      "sourceHash": "a1a8ddd2c43f7256d705dc29ba80cd73b346650956692cb1a46a6918a7ab605c",
+      "expected": "html"
+    },
+    {
+      "id": "levels/preamble-vec-gap",
+      "sourceHash": "ffcc123c5173d345f9a13b7bc0e5c2b6c6b6db80b0e2beeda524018711f5654e",
+      "expected": "html"
+    },
+    {
+      "id": "levels/recursion",
+      "sourceHash": "62f39d08b0c4e3235f523347bac7dedcf2daa88e1fc3599c00887ad92e5c09e7",
+      "expected": "html"
+    },
+    {
+      "id": "levels/recursion-depth",
+      "sourceHash": "11a09a6852706d7b952ebf0b92ec2ff7abc824a382d668a346618d08cecbe189",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/repr-value",
+      "sourceHash": "d397a18e1f5dbe87f3710625b330a24a33034e0e91aa26381b29816b36294fbf",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/return-discards",
+      "sourceHash": "001e4f1ab35b64687186b6e3c0bcd5a7555bebe8675baae09de28a40fa015634",
+      "expected": "html"
+    },
+    {
+      "id": "levels/return-in-function",
+      "sourceHash": "d2ab07874e3b693e5504c140ba84efc8f812f31239f6b964ab4f1d416a8effbd",
+      "expected": "html"
+    },
+    {
+      "id": "levels/return-outside",
+      "sourceHash": "46f72022e827bdc583bccd343e8283d3431a820e94bbef23f0c91ec949a4d6bb",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/set-conditional",
+      "sourceHash": "4920c965156070976badc297680bd4a70531ddaea003202026eb0d750ad075fe",
+      "expected": "html"
+    },
+    {
+      "id": "levels/set-in-code",
+      "sourceHash": "86e737f0357a55c8422484cd4071844c7f4a451adad9f418fc6109d416568840",
+      "expected": "html"
+    },
+    {
+      "id": "levels/set-in-content",
+      "sourceHash": "295681f8a9c7a76b7707b6918f74ebb8f513af131dfd9cb25e9d99f2b7a7fffd",
+      "expected": "html"
+    },
+    {
+      "id": "levels/set-in-math",
+      "sourceHash": "31981da57a1b0def2776c6763b5103f239dbb0f8299a5df0360921763831575b",
+      "expected": "error",
+      "errorKind": "syntax"
+    },
+    {
+      "id": "levels/set-non-element",
+      "sourceHash": "0caf919d30bfc4827c1db114d769d08b8ee309c1900cf2411945c6a2510a2397",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/show-in-code",
+      "sourceHash": "9886a8a8e569295b49274d3c5db806c517e675a83439c527ac33868f9bf423a8",
+      "expected": "html"
+    },
+    {
+      "id": "levels/show-in-content",
+      "sourceHash": "29f7560cf8f9ac1d0ac358f82cec88a29bb7af38a82c698bac30f3cdd3ee9fde",
+      "expected": "html"
+    },
+    {
+      "id": "levels/show-in-content-box",
+      "sourceHash": "b8dbaee8cf215720187609db738252a8de2c9fa1f838487d428c53e7758a3b5c",
+      "expected": "html"
+    },
+    {
+      "id": "levels/show-in-math",
+      "sourceHash": "e6f4a467963d93eac5bb8f4a3ba27f76413fb9b97ae458ffe1c96720df85f37b",
+      "expected": "error",
+      "errorKind": "syntax"
+    },
+    {
+      "id": "levels/show-refused",
+      "sourceHash": "55bbcf886e6bf28d87382d586a5a72cb04fdd25584a73fa7fe7f9f4fe3409142",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/stroke-bad-key",
+      "sourceHash": "d39b626721deb93b042f392c739649b9c982c1eccd8326ea02afca27a966f5cb",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/stroke-dashed",
+      "sourceHash": "1256e2f5e0bdc10c24daa3fc55283d2eb2726b440b05414b47ed5fa00bedad3b",
+      "expected": "html"
+    },
+    {
+      "id": "levels/stroke-dict",
+      "sourceHash": "a2dd3456efa27e4eec3621b0998234bfdbcce2575225970b5b8faf1ed4b16a5d",
+      "expected": "html"
+    },
+    {
+      "id": "levels/stroke-sum",
+      "sourceHash": "570b33009125ca8aa712c409d88c419891bde9f5f35f5587f0c23f65a8106c81",
+      "expected": "html"
+    },
+    {
+      "id": "levels/strong",
+      "sourceHash": "b9effbdbc42268cb99318f693886e2200a6cc461ddc81c3ab74139c4e8f96c65",
+      "expected": "html"
+    },
+    {
+      "id": "levels/strong-delta",
+      "sourceHash": "dac96e4fd5f836aed4aec55c169d0dc38659b5bd88e99a51a338882f394e41aa",
+      "expected": "html"
+    },
+    {
+      "id": "levels/strong-hide-paragraphs",
+      "sourceHash": "b24c529ea2b6c24d3685c397d4866ed8e2a7830f2ed07d9e8c39821b82dcb085",
+      "expected": "html"
+    },
+    {
+      "id": "levels/strong-math",
+      "sourceHash": "e399db97a1613ad2da83e06ee15a7db136a73f449185ece2480b610add411bb4",
+      "expected": "mathml"
+    },
+    {
+      "id": "levels/strong-number",
+      "sourceHash": "a8e446954948e67fde1527d1af30c1e9ee49382e2a2b8929b22018bfb7ab5d02",
+      "expected": "html"
+    },
+    {
+      "id": "levels/strong-quote-after-number",
+      "sourceHash": "080d56b80282924fec48a607053985f57f53291fad8a8c2f0627b5bcc54c8972",
+      "expected": "mathml"
+    },
+    {
+      "id": "levels/text-baseline",
+      "sourceHash": "40022f5b53c95d8ff0b619d382f472999bb50a260fa11c7f8416009108ee2028",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-baseline-highlight",
+      "sourceHash": "e6e8b006ea4337c6ace5438920e3a10b6fd1d9bbd276f1f5c55eb6c8a3fb289c",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-composed",
+      "sourceHash": "b59fd589539509dd10b6a33f84cfedb0b8370c026e4cec5cb327b3ef34ec91b4",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-features",
+      "sourceHash": "05af1e41338ee809e9abb66469008ce548c67bbc67682ce440fc9bd143f50529",
+      "expected": "mathml"
+    },
+    {
+      "id": "levels/text-fill",
+      "sourceHash": "587fefb28f51d504f685d904c3284b970f1587e26455599059bc932467f45e61",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-fill-call",
+      "sourceHash": "04947585ce88cccf08773cb0a4510525477ee5ddfd7714f829fb9224042b9086",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-fill-math",
+      "sourceHash": "6820995506b1e1b034d7195f469a0751c1edcfe7149c66d25005b0ec34111b58",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-font",
+      "sourceHash": "e186fe20afd6a92334e6c3add1b6294a33b4cfb68d8786d5ff4fca940a8808b3",
+      "expected": "mathml"
+    },
+    {
+      "id": "levels/text-lang-quotes",
+      "sourceHash": "e9f4111b347f03715f4797e8d0c9d9786ccffdf895d4e5a09b317ba33e78c411",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-lang-rtl",
+      "sourceHash": "5f1901204f5dcf01d5b79421b70f15dc625bb8ae3f760fe7980faf8957ba9c9c",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-lang-rtl-punctuation",
+      "sourceHash": "31ec3c7ed7252b96cd246309b8e193ad89f9a3bb2007e2b1d32253c8442b5c44",
+      "expected": "mathml"
+    },
+    {
+      "id": "levels/text-missing-body",
+      "sourceHash": "42b1649df6beda5dfc9b499a3c5465b0c1c3d057630b5997cacbc55648cd9bc0",
+      "expected": "error",
+      "errorKind": "eval"
+    },
+    {
+      "id": "levels/text-size",
+      "sourceHash": "99ae54ade81c87479de7e479ad6f311c833a8d2d3164366f954ec5a3e6ca012f",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-size-abs",
+      "sourceHash": "617752e11b9ec06204272ff7950d5be41056d366fe59237c6b285087d749173b",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-spacing",
+      "sourceHash": "d035c3fdfec9e85e2ba41dedb485343a688c500bf2fde8acb479e9b1da1231bf",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-string",
+      "sourceHash": "106c4c12c21ba817c5689cdbce0547651289d2818b136bcf5ad503b10fec86e7",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-stroke",
+      "sourceHash": "7866e05256800f10e3e5b30e8484623b1c12b583f7ee37138dbdbbadf4eb6ecb",
+      "expected": "mathml"
+    },
+    {
+      "id": "levels/text-style",
+      "sourceHash": "6453df8b019c233ca4c2cf8231aa1449ecce7b004e2b440da6e22567a34fd273",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-tracking",
+      "sourceHash": "2c32adb5ecb79d7c20e7b653c386e1247b9d97c08abae19c6d6af999c1a6370a",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-tracking-math",
+      "sourceHash": "3bd6fb7f2695e5be27a32c13db3f5fadfae573b3e7652f6aee4335464acd0162",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-weight",
+      "sourceHash": "52b24f739ae50a1d9b736b4df5f67fe7eed8bf5aefe1daca25da97a90d3da4a2",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-weight-575",
+      "sourceHash": "4d8ce6fcea669145404a7feff0f945db26344f33f2709c259c5a1e44b6b2eb1e",
+      "expected": "html"
+    },
+    {
+      "id": "levels/text-weight-regular",
+      "sourceHash": "9ee43bfc78c68aebfeae0c8929392ec518ed97e6af4e336804e14a19f60f84ce",
+      "expected": "mathml"
+    },
+    {
+      "id": "levels/type-value",
+      "sourceHash": "d0b39c2ee9162cb161afb6dad5364f6f63acbde7a6eea48d62fe5f5cbfd1ed4d",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/upper",
+      "sourceHash": "dfd485ee869e580c7f1cb89f775d8ba7602cf0b6f920fab67564a54ab1fc096a",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/while-always-true",
+      "sourceHash": "b404b33ff62b7ae331e8bc0fd4d506f7a052f68de33a4931744fdcb45a724351",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "levels/while-infinite",
+      "sourceHash": "2360ddd7c68ef0bf3875b171db7170b6d848dc82de04f43d75ccb4dedac20adb",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "paired/accents",
+      "sourceHash": "a85ecd8a48edf9319ad846206428ba1fffb59f80e8db2285430fe6aa4e254692",
+      "expected": "html"
+    },
+    {
+      "id": "paired/alignat",
+      "sourceHash": "94b54967909119de7fa87c6081da9dac255f619a2f4fbe2471b47004a3024f1b",
+      "expected": "html"
+    },
+    {
+      "id": "paired/aligned",
+      "sourceHash": "7ec0ab7b0ab4a7163b3b05f0a5c95ccc0c8b0c6b32534bd5d513f83048a3602b",
+      "expected": "html"
+    },
+    {
+      "id": "paired/array-hline",
+      "sourceHash": "878435b453e70687b3745ed3827680f1b4b4150c91a36b7c88828bd5c864970d",
+      "expected": "html"
+    },
+    {
+      "id": "paired/array-rules",
+      "sourceHash": "d498baa6d114c38f652e4f7cde1d21eb2293971a681e838f1898b7d3c780b630",
+      "expected": "html"
+    },
+    {
+      "id": "paired/arrows",
+      "sourceHash": "97a9d250eb1b47e75d43be40913ce29c374fb93cb28cdcd455829260d21cd27b",
+      "expected": "html"
+    },
+    {
+      "id": "paired/auto-paren",
+      "sourceHash": "a4b5d12a457940c7342370fab1dbb8cf624eff6067231f2727023a23d92f21c5",
+      "expected": "html"
+    },
+    {
+      "id": "paired/bayes",
+      "sourceHash": "408e84b85cf1d4aec3edd76e5bd6196a6d4959cafe9aa12c671d0c26f2dd9a63",
+      "expected": "html"
+    },
+    {
+      "id": "paired/bb",
+      "sourceHash": "12676e5bfa5812113cae9cbf63e25bb7fb0183962d4462b3965fa67faab863b4",
+      "expected": "html"
+    },
+    {
+      "id": "paired/big-sizes",
+      "sourceHash": "2b4565dd18d0cef675b05f5afaa72ec1137beb7ba11a9805f99622230d7efd3e",
+      "expected": "html"
+    },
+    {
+      "id": "paired/binom",
+      "sourceHash": "d143e49581d9651f1f45b3d760920d24e5332d47e7d48609e28b1a2e2f7e94d8",
+      "expected": "html"
+    },
+    {
+      "id": "paired/bmatrix-dots",
+      "sourceHash": "0b368c2cc6bd6456562ee27deca79fa65418e97b4d04882cf0c43ea3350b9647",
+      "expected": "html"
+    },
+    {
+      "id": "paired/bold-sym",
+      "sourceHash": "4c9973e9731424fa2ac4815f9c56ababdb2abb197b414ee76bd9953681499703",
+      "expected": "html"
+    },
+    {
+      "id": "paired/boxed",
+      "sourceHash": "e417ca82fa987c472c601bf0a3cc522ed60089af00c4edbed63634224c2121ef",
+      "expected": "html"
+    },
+    {
+      "id": "paired/braces",
+      "sourceHash": "a8a3b30169bda9ba20e8a7b807c51ef8517f870c7b91816da9149c867530ca9f",
+      "expected": "html"
+    },
+    {
+      "id": "paired/braket",
+      "sourceHash": "131089ae244dd5fa2a6018356d98ebb4e940b0d2fe27a1fa4e7623481a178a42",
+      "expected": "html"
+    },
+    {
+      "id": "paired/cal-scr-frak",
+      "sourceHash": "455d059d9496aade4e259f3be55555eb3832bf7efc7a975a35ddb7e77c666930",
+      "expected": "html"
+    },
+    {
+      "id": "paired/cancel",
+      "sourceHash": "994694f9d116181c96a13c0ba28a98caca7583be3862f416ef15afb7b68a7b92",
+      "expected": "html"
+    },
+    {
+      "id": "paired/cases",
+      "sourceHash": "247dd2c43d8ed4525f78d72189c1eca7182e0e151d0ca4836d30f2465801b0a2",
+      "expected": "html"
+    },
+    {
+      "id": "paired/cd",
+      "sourceHash": "a65bf6bd00a4ed2cf1a18b3b5eb1679339bf492d8930075341ead76e9153495c",
+      "expected": "html"
+    },
+    {
+      "id": "paired/cfrac",
+      "sourceHash": "6d21bcbadec86e41f23419960b8b3725779f0ca341bfec8e9b501fa46e2bc435",
+      "expected": "html"
+    },
+    {
+      "id": "paired/clap",
+      "sourceHash": "c1428dea97989e1b2690f7078ee2f411f64a7fac69305783f1760230e9781acf",
+      "expected": "html"
+    },
+    {
+      "id": "paired/color",
+      "sourceHash": "b1b4772d03238cb2cef9244008343328e1a4002e601a27bd1065b78bd4922847",
+      "expected": "html"
+    },
+    {
+      "id": "paired/computed",
+      "sourceHash": "67ff5c69de7f18368cb672f6d70cb3cc844a4f4b0c4f3645930e3dfb289b5e44",
+      "expected": "html"
+    },
+    {
+      "id": "paired/dddot",
+      "sourceHash": "0c82df5ddadc94ae4ffdbefd61a690e9a1a33497c765416280783ace20342778",
+      "expected": "html"
+    },
+    {
+      "id": "paired/displaystyle",
+      "sourceHash": "8e696b061f7dae47a7a0532608940016af561ebeb29e4c2925ecf8d898ce8e2d",
+      "expected": "html"
+    },
+    {
+      "id": "paired/einstein",
+      "sourceHash": "67a88ad07c2c3a37d53ac95ccaca2539b51ee4f25e791f462015239a177d5f6d",
+      "expected": "html"
+    },
+    {
+      "id": "paired/euler",
+      "sourceHash": "9ab93ff812bd6db507daa0e01c5a06d1524b75e6bf58964771bfaa11d3d44751",
+      "expected": "html"
+    },
+    {
+      "id": "paired/euler-product",
+      "sourceHash": "d49da9b38d0ba9e7ccc1da03b443eea68b639538dbc10130ac74f601a4a0e282",
+      "expected": "html"
+    },
+    {
+      "id": "paired/floor-ceil",
+      "sourceHash": "ddd3c7de5fa62f2e715acd6419578496d70599c93d01538ac0e6cdc568adad1a",
+      "expected": "html"
+    },
+    {
+      "id": "paired/font-variants",
+      "sourceHash": "3f4fce27f72abc5f8f3d1a1b2460f25a7f4f54bb8760e016e23adf238e88efc6",
+      "expected": "html"
+    },
+    {
+      "id": "paired/fourier",
+      "sourceHash": "65bd0302afe588c7798c51942fe621a12dbd15d86159c1aabead1e4ffbda8339",
+      "expected": "html"
+    },
+    {
+      "id": "paired/frac-nested",
+      "sourceHash": "32a688f092d29d567f6f9eb1198ffbeb9995fd37e908290daee689a5dd240a4b",
+      "expected": "html"
+    },
+    {
+      "id": "paired/gathered",
+      "sourceHash": "a32a3ff68bad8f95156529a66d2c9caee8cb340ad571b89c6c00f62931d59f84",
+      "expected": "html"
+    },
+    {
+      "id": "paired/gauss",
+      "sourceHash": "c63d7ac39f7bd37ab653e035830b9718f37f179e3731d0784d74967cd5a892c7",
+      "expected": "html"
+    },
+    {
+      "id": "paired/greek",
+      "sourceHash": "1f72ba12227e193d442ab01545aa7d722abd89a3d454c952870ff8c278d07a34",
+      "expected": "html"
+    },
+    {
+      "id": "paired/href",
+      "sourceHash": "84616357cb8060803801397e2a35b6fd765c33b11b89ad9005b90402436f8934",
+      "expected": "html"
+    },
+    {
+      "id": "paired/iiint",
+      "sourceHash": "ac6add40aee1950f98b5a9c5466f5b9c855e6e399a7b5a60b6a299f98af3a183",
+      "expected": "html"
+    },
+    {
+      "id": "paired/lim",
+      "sourceHash": "bed33354e4279b0dbaf7c71da08f15190658f1630a69ba1b4199a9b8c5f992e8",
+      "expected": "html"
+    },
+    {
+      "id": "paired/logic",
+      "sourceHash": "2a1cbc11d763d829825f413aa58ec28b50dcdfd575969a5f0c419959d821a2c2",
+      "expected": "html"
+    },
+    {
+      "id": "paired/loop-matrix",
+      "sourceHash": "1ba648d0b2f53c62b85c97d13f5830228ce1d6682acc70c632d5fe2a15410213",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "paired/macros",
+      "sourceHash": "1ac8c770659509c4f91081106291cf54bb2187f4084c89e48f55bf6b52ec5550",
+      "expected": "html"
+    },
+    {
+      "id": "paired/math-font",
+      "sourceHash": "e2a11d03808cd6c31197f0e92e197d39c513ea53cf1c1864b1ed8c55520d990a",
+      "expected": "mathml"
+    },
+    {
+      "id": "paired/maxwell",
+      "sourceHash": "4fa2ea1fe40859bbc3f0b68e7df1a08ead01e884e483ab5db6e93a53e7d4f53b",
+      "expected": "html"
+    },
+    {
+      "id": "paired/mhchem",
+      "sourceHash": "e200b83374c41e11cf35ab5a39fa3bac4f211f8fe90770c24b8a9627f1f07cda",
+      "expected": "html"
+    },
+    {
+      "id": "paired/middle",
+      "sourceHash": "1294fceaa02d9dd81ec89f3212a218b9d233cda1cff2f49fc490b1ba21b9b751",
+      "expected": "html"
+    },
+    {
+      "id": "paired/misc-symbols",
+      "sourceHash": "a9fd2e8831b5adacf7b54cdbc3bde74a4dc63d872ccca0c6187d6cd945652882",
+      "expected": "html"
+    },
+    {
+      "id": "paired/negations",
+      "sourceHash": "add3dc60bf76acebd8e3a5b7d03944dcf65907c0824053288839f36091da95d1",
+      "expected": "html"
+    },
+    {
+      "id": "paired/norm-abs",
+      "sourceHash": "189a55c0af21da792c025486032a55c0ec4cfd688a26dd9359f842b23c6ff67c",
+      "expected": "html"
+    },
+    {
+      "id": "paired/null-delim",
+      "sourceHash": "ef936167dfc8194e0553d1a7fb8a7efe4d96416a3675e0cfeb1a0437fe7e94ed",
+      "expected": "html"
+    },
+    {
+      "id": "paired/oiint",
+      "sourceHash": "61b9b335ac67fa74ca2a94c3fa312d08d125e64aa04e596a1b22102c57ab4769",
+      "expected": "html"
+    },
+    {
+      "id": "paired/oint",
+      "sourceHash": "78e491bef53ea6272806f8f09c01e6132b7f3cd8db664d898127926667fdcfdb",
+      "expected": "html"
+    },
+    {
+      "id": "paired/operatorname",
+      "sourceHash": "186751df5660c45d6a91e2d8ee6328e8aa02a331abc37be37b826647c0e77156",
+      "expected": "html"
+    },
+    {
+      "id": "paired/over-under-line",
+      "sourceHash": "ce4edee8fc3ee2f6f0c115eedd25cdca28cb291f1d863569ee6e09a6820a0def",
+      "expected": "html"
+    },
+    {
+      "id": "paired/overset",
+      "sourceHash": "0c2c16281098c7f7de678648f4b0b0d5c1ffbd1321044d3f4b2a7c563529feea",
+      "expected": "html"
+    },
+    {
+      "id": "paired/pde",
+      "sourceHash": "241dcf90832c80c59cff7487e451d0cc6c3bdf1c35646b92265f64af44b383e2",
+      "expected": "html"
+    },
+    {
+      "id": "paired/phantom",
+      "sourceHash": "ea546ba40ee93ee1c3b22a660ca7ca31b50aac56ae3915778244c8033f882ef8",
+      "expected": "html"
+    },
+    {
+      "id": "paired/pmatrix",
+      "sourceHash": "901b5c4bfa6f420677bb1b1e4ca8b88c5e84b6fca637b1439b2d7feac75aa6b5",
+      "expected": "html"
+    },
+    {
+      "id": "paired/primes",
+      "sourceHash": "5a3c36cfce1d98b855f0b986f9c4cc21c74effa5e884a54f93a7c51b38516dbe",
+      "expected": "html"
+    },
+    {
+      "id": "paired/quadratic",
+      "sourceHash": "e7d85e51c6db93c53c1e29c00f32a77f81042870b6bb0d3be6dbda97f35408a3",
+      "expected": "html"
+    },
+    {
+      "id": "paired/rcases",
+      "sourceHash": "b4cb2816da2e2d6ff6e9db8aec6ccccb86f0f3b48349f2a705402e10b8161b7e",
+      "expected": "html"
+    },
+    {
+      "id": "paired/relations",
+      "sourceHash": "4231b4e8f4b8fd4316aae0e2e81cbab84e055c3579c013ede362f905cf7d1200",
+      "expected": "html"
+    },
+    {
+      "id": "paired/root-n",
+      "sourceHash": "b1cdd4b42cca2c00b9a0b0f46044c0725cd6e6c690c47ec73e2e6f630e373669",
+      "expected": "html"
+    },
+    {
+      "id": "paired/schrodinger",
+      "sourceHash": "0be33fd5cbc9a2138508ef835878d4b6b8e118d08294edc41f8d8857e7b29f59",
+      "expected": "html"
+    },
+    {
+      "id": "paired/sets",
+      "sourceHash": "56ee3786fbb3cb39e901bfd72ad56726d0b651f4f954c505c46050adbbe35a39",
+      "expected": "html"
+    },
+    {
+      "id": "paired/show-rule",
+      "sourceHash": "fbd34c621b0dcd59758ce32d70bfd48c6accb70f031de507bdbb6a98681176f1",
+      "expected": "error",
+      "errorKind": "unsupported"
+    },
+    {
+      "id": "paired/sideset",
+      "sourceHash": "d2b35a1caa9df97f32dc88e2a4d9c30ad9b0ba6365d4bc359533f8cc4863cfe1",
+      "expected": "html"
+    },
+    {
+      "id": "paired/smallmatrix",
+      "sourceHash": "8a37d1a802b2f087396dc8f9eef4d241c6e1757d0d8dda44a630176ae407ea6e",
+      "expected": "html"
+    },
+    {
+      "id": "paired/spacing",
+      "sourceHash": "b6773ff4feacf33e3b18346364b24606ee54b13c7ff25eba1a45f34ffc09ea87",
+      "expected": "html"
+    },
+    {
+      "id": "paired/stirling",
+      "sourceHash": "8be1ba797ec1d8e2e7e70bd9b6ec10da5edbd2a5d249b4076419d9d401fc7fb6",
+      "expected": "html"
+    },
+    {
+      "id": "paired/substack",
+      "sourceHash": "721e38d246e223e179753d369575e0f98b2f739f4f0c9cbe59d9ae5232a2145b",
+      "expected": "html"
+    },
+    {
+      "id": "paired/sum",
+      "sourceHash": "f517818c37f958320aba8d0ff9f612e6ba214c10fabdbed927639e1123233f42",
+      "expected": "html"
+    },
+    {
+      "id": "paired/sup-sub",
+      "sourceHash": "23acafef2157d76607f4659a2f12ea79be34cafb5dcd25ad7b3f215ca45ea17f",
+      "expected": "html"
+    },
+    {
+      "id": "paired/tag",
+      "sourceHash": "57a76d540894a39ab0ded8cffc4275e826aac87a964ae022b9363d775e1ceef4",
+      "expected": "html"
+    },
+    {
+      "id": "paired/taylor",
+      "sourceHash": "eb57fd71249020a291a80d75a45ccb5821e8728d98965a7f6a8a80006e3ca54f",
+      "expected": "html"
+    },
+    {
+      "id": "paired/text-in-math",
+      "sourceHash": "cc03f3ac773fa0d78e7e28e2de05430b725e300cad8fdb932f606ff3bb99394b",
+      "expected": "html"
+    },
+    {
+      "id": "paired/unicode-input",
+      "sourceHash": "9f0525bef17b283bca3622a0dfa8ed323103684b3b0d9c2dd2287448ee7b92e6",
+      "expected": "html"
+    },
+    {
+      "id": "paired/vector",
+      "sourceHash": "2d90a149ca3919558427dbfcbd5335157f1cbda21980dd07990d8644c19446b9",
+      "expected": "html"
+    },
+    {
+      "id": "paired/vmatrix",
+      "sourceHash": "831d7e1f76d44585ce20cd5ef91f4be3ad80b8abf99bd4b2a868ba0e6c75438a",
+      "expected": "html"
+    },
+    {
+      "id": "paired/wide-accents",
+      "sourceHash": "33469279e0bf4a04856540073f73b7fd3fc7a2fbf8c982d804053a15a2734da8",
+      "expected": "html"
+    },
+    {
+      "id": "paired/xarrow",
+      "sourceHash": "adf2e58133fef9364e0f3cca332d1481f991a3a6258f248c4d8500a8655de454",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/accent-1-1",
+      "sourceHash": "efbe9636b4a15957b28ae39338c43d6d5d04a800c18812fed43a2e0dbb3ef5b3",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/accent-1-2",
+      "sourceHash": "55c6783c72d367295cadf97df5ae4b3c9b7a73c1075b2cfe3300ad9ffb56e90f",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/accent-1-3",
+      "sourceHash": "96360b3b34694c09a5a64705744eb2da75de31bb0c1935ac74eec26692f3a6f5",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/accent-2-1",
+      "sourceHash": "2d1f44584555d3345cd515b0e0c9e1399a7d6cc90125d25fd768dc032be1f23e",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/accent-3-1",
+      "sourceHash": "a4ce93eac14a7ead7126f30ae6d3110819e79153feabec31248de946a17ac79e",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/attach-1-1",
+      "sourceHash": "b2113881803260e5ad99a84e4e86227eb3d47043802b9f9306d54b1aeb3f2b1a",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/attach-2-1",
+      "sourceHash": "9b24799e2874cca4b55b068b447d047254cf757b4edf6619840bc3002078b0b8",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/attach-3-1",
+      "sourceHash": "11a9b386775ccb574b9556f6a73fcd64afd713dccf61ebde1d81306cedba8de7",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/attach-4-1",
+      "sourceHash": "a1f7614ba9967fbf7df35848dd9de60135a11246096d50e3ea23cf2405768d75",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/attach-5-1",
+      "sourceHash": "75e5a9327f80117af534660506fde57bc95e1b5abfbc53155004a1ab2406c73c",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/attach-5-2",
+      "sourceHash": "311df8c2042fa3a433f884302a1a87625afb557ccfe0186515f33de297cdf095",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/attach-5-3",
+      "sourceHash": "295b8a54bb4f75ac75d67177523baae5c50ba35779d7edd53c6f6c43fcfb8c60",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/cancel-1-1",
+      "sourceHash": "42c05391954ddcbc705c7a10ea580c74c47007665c93d060e5d4820dd856d3e4",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/cancel-2-1",
+      "sourceHash": "2d4c539783dc1cb16b1d2eb9242961e468628ca55c2fe5688d7fdc67e6f9c835",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/cancel-3-1",
+      "sourceHash": "5312e19a2ad445024312318d28bb104010a50b99d3cbc0f7c9d874d28495fee0",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/cancel-4-1",
+      "sourceHash": "dfe9b10f5238897555a6cd8e3a8245866a64b5ff5e3c5e696876c507f5dbd38b",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/cancel-5-1",
+      "sourceHash": "c68ec740edc0d0b6cbda39395e5a4bfbf5ea4c6c93207d3e26f723ff855bc4d2",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/cancel-6-1",
+      "sourceHash": "e7d13dbcd1bcdffaf774ec8732218a599caaeb2ff21bd321301934d5963fb95a",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/equation-1-1",
+      "sourceHash": "71abbf0c899bcc8dd62f14d05b83fc7544d50b011763803f9d88c3c9f4b51ae7",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/equation-1-2",
+      "sourceHash": "6e3c97812f207ba28c4748bee2fa7690e8812dfb06627fdd731d89b95b232a39",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/equation-1-3",
+      "sourceHash": "2235e411ebdb2c77d5fd812e29bd41078fa7fb645c2c7f9d49d4f12d69d618ef",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/equation-1-4",
+      "sourceHash": "aad67ba50facfa30a408231ad7b819925231f9415286bdadb6acc5609dff2d42",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/equation-1-5",
+      "sourceHash": "8326b52210d14acd014603a3ffacce6854d4e53c30ff9a1cb53c0a48136dab35",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/equation-2-1",
+      "sourceHash": "9584b73cde542d69171ffecf245690618d9952bc5a40e1785d10f6aa7eead43e",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/equation-2-2",
+      "sourceHash": "730c7787b2b36c3cbc0ad2f2aed44aa5e65cd4b3d730f9c11f3269b72b2ddec7",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/equation-3-1",
+      "sourceHash": "5d9dc27088cd8175f146155f9cdcac6139987d10e48200580b2baec65c3e0eab",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/equation-4-1",
+      "sourceHash": "079c47422cd7593c45f0102f9bae16440220367bc37fcdc6f1b0b223f46b9b3d",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/equation-4-2",
+      "sourceHash": "d29117cea0b8e1e65f47b44987d2a342b65157b6a77f087de5c1fdef940af2bb",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/frac-1-1",
+      "sourceHash": "2d38c9466ba7712ebdaa0f9a725c0481cce1779a1341487ea0462aa979e2c648",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/frac-1-2",
+      "sourceHash": "9e5c94fac2a3ac3a5b74ba7c5558084906cd5ce6194ba1be4a1ac6155c9c93e7",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/frac-2-1",
+      "sourceHash": "c98e067d9a945a9ab2727bb097835f2ffb53c6b42c13fba9267a5c3656edded8",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/frac-2-2",
+      "sourceHash": "297534d77b1414f86c455cae92704e0d96e0f87ae1256fa446848d629bf2e6ec",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/lr-1-1",
+      "sourceHash": "f0ca79384e1524dd1b506b30bbd2faf16ee9c8a7bd27300254610110d0ee8a06",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/lr-2-1",
+      "sourceHash": "6ee74595cccac0cff9f684d58ff2b32726154add6915b253c7312d3932a04230",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/lr-3-1",
+      "sourceHash": "94fda34e1b17b1c2d3b267a1e3aaa3ac8137a4167bc09ab8379366ad59f965f8",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/lr-4-1",
+      "sourceHash": "303020cea9864e3df44635216a3604593efea22aa8366ee590c4786e4c40836c",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/lr-5-1",
+      "sourceHash": "042437adbee3a984089ecbf9d14f1a341762e22bd6f3907450e955c96bf47ac9",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/lr-6-1",
+      "sourceHash": "d3ea7a2eb3e495646fedcf455cd8e2724b68d0031b0a5ef6e14b8abe3cf11757",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-1-1",
+      "sourceHash": "cbc59de331d657c815dd550d51fa765951cb2d2b94785a0338333c2974d93f72",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-10-1",
+      "sourceHash": "8666c4dac4b1b7b8e50a864beac8ff74fc0d6305cd6ede371c25face4b5bc930",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-11-1",
+      "sourceHash": "75713d81654a24a5a2bc0b36b391bcda8435d205f2673ebc7819606543ba3ca8",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-12-1",
+      "sourceHash": "36703b620b9c0fc37a0dd68ab0f588fdf86c456b6297899f4c66f844c5f9aade",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-13-1",
+      "sourceHash": "20d27de0f629afafff6b8cddb810a72b296921465744afca8ab45a64247318c8",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-14-1",
+      "sourceHash": "f8bb9a32c934511e24c513a809e01794b5764984cb47427a92481c8297d8d817",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-15-1",
+      "sourceHash": "d58b27163d4ba4d2564936c2f044a3f1a45eee55871dacb94ac3b868b8b3ac35",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-2-1",
+      "sourceHash": "8e340b18397ff7c5e2b21fa95b112e74bfe11cdc5eff9891386d4115703fc493",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-3-1",
+      "sourceHash": "871cdfbb356312f51986df5e6c0dbac2f802e687219636d0a4462337ed30a42d",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-4-1",
+      "sourceHash": "0fd8364156ae321188f5f6c39219a056f819e09747c96f43344fcaea2f43cee8",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-5-1",
+      "sourceHash": "e368f3cdb08db8cd704bace4d087aa4b06158abc0f9d5539c1c7b3c610c6d60a",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-6-1",
+      "sourceHash": "aa819ed3985dba00b8485c18c1951c8875cd13d782fbeff82b9219b7915f3baf",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-7-1",
+      "sourceHash": "75e1bc3523223388e739e6b1b53e2c273372d92ce3698e080f9b3bef094b4d0d",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-8-1",
+      "sourceHash": "194b13e2a88409c60cd9deca7da5dfbfb5407288fa344afac0f9332ac283e528",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/matrix-9-1",
+      "sourceHash": "ead775003f3bbfa32a291fa7f470a72a0269b06ed105016c40eaf5918f5478be",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/mod-1-1",
+      "sourceHash": "e536c63cb001a7c10d4a73481acc6404a1aa056abc49127470b369d381ea2a5c",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/op-1-1",
+      "sourceHash": "baff08f2cd3cf0fa7fd12d6d0bf5739b94e9d61e22ac3552eb20aa8ae922e23a",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/op-1-2",
+      "sourceHash": "248a7c8bdd59d724e58e48f895295ee1e8cd8344d55d2665dbd92a91fbd89a6d",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/root-1-1",
+      "sourceHash": "6df8e8a35a0f3dc16851190a8e436361a878b0765bfed952f2f57cdfb33e2791",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/root-2-1",
+      "sourceHash": "2ce4e72d00b5ecd16b0d90feb6db6aa0e64650880c2b82c5684852902ab8d378",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-1-1",
+      "sourceHash": "7600722c371341880ef2e167a5b624adda83372a52ab4357b8c24794c1a674b3",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-10-1",
+      "sourceHash": "51e1a884924a9ae25730fc61b7976a923e1d079767c32f34766c989ab3378c0c",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-11-1",
+      "sourceHash": "f77a47a871b465293a54da17ea36a25e21583887bb0ba9754e05b63bbc8c1738",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-12-1",
+      "sourceHash": "df9fd265faa9c4e791f7adb905ef76034158211794bd63f8a242d61f2093b2a8",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-2-1",
+      "sourceHash": "bf806bbaeca017dba5c8910e5c7f2acfaa82dfed31625acb97be18f5004f8848",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-3-1",
+      "sourceHash": "2ab6b2545b4352d5241efe9f7c62c48a49568d2be877f2babd02289ea1a84d6a",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-4-1",
+      "sourceHash": "f20721a2f65a2a04535c42ccbc7c48cfccda0bc6f6cc387a48ed896b75817c97",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-5-1",
+      "sourceHash": "c113ce12c439989022e4be6d20d01036dde176bdb15af5f25b91fde4f7586a44",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-5-2",
+      "sourceHash": "9c9f9fb37fcd8359074c636f127f7c900c6211476f42b6560a34292adbf42456",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-6-1",
+      "sourceHash": "9f0f917171eae2ef38c8de974b2c6f53d1deac1759c9cc32bae7fee88d721965",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-7-1",
+      "sourceHash": "7d6707d1cc89a2da476392653d3a36516960441fa5c8059d9dae19fb27695d94",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-8-1",
+      "sourceHash": "0666530a6b1ab1d93b13f40e0abc2767b3ebee14750f10a530407e4d067db33b",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-8-2",
+      "sourceHash": "e214c7e86ecffbc2092d5e6b4ae5be1d938ff99677f80f8c1164f1eae13f0fa3",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-8-3",
+      "sourceHash": "4097614d2c24897f54c85767060bba13c6fad020294950bc53cdcdd92d1a160d",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/style-9-1",
+      "sourceHash": "14c48f4c08db6b5cc2c18faff739bb52c3ff0f7a959bdabcb937365763a02803",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/underover-1-1",
+      "sourceHash": "4e094ef67af3a6a3b3b9cfbcff3aa7e90aa2690d879b75ec026dd27c334aeea9",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/underover-10-1",
+      "sourceHash": "987a521f15ff48fd948c3fbe3f33353613d80973491fa924a7741877e1d69b22",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/underover-2-1",
+      "sourceHash": "7eaf07d3408bf80a427758c20dec390e6a551aae25d58327efe40037e13abc79",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/underover-3-1",
+      "sourceHash": "ef758708e5f4a2488f99f9961180d81233a9baa3347e240b930dc1790bf5f4e4",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/underover-4-1",
+      "sourceHash": "ca8309fee38dd6c4e05dbadc140b1471eb00672576c6f045d17c7c4f9ab10d05",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/underover-5-1",
+      "sourceHash": "7c04383ab19d8bec9c79f5fe5ed6cb3fe6e8b28fbc39a7442ffed64e9daae667",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/underover-6-1",
+      "sourceHash": "917a6549cb06440b1d7f746a361f25d1a57f89c56d53e55b1652b6a0124a0e07",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/underover-7-1",
+      "sourceHash": "1724a0d41393d9b0b908bf11d7c5627a0330398dfbe37c96b693f3718deefbba",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/underover-8-1",
+      "sourceHash": "0c96f96057c4cbcfaab7b3cf99afa19c035ed4746b036f60463244183d9a7f35",
+      "expected": "html"
+    },
+    {
+      "id": "typst-docs/underover-9-1",
+      "sourceHash": "1701c63f03d6840ffdb565a4715cdd202b9798350545a1b0b327757aeaa49b36",
+      "expected": "html"
+    }
+  ]
+}

@@ -70,7 +70,7 @@ const ATOMS = [
   'Gamma', 'infinity', 'dots', 'dots.c', 'RR', 'NN', 'ZZ', 'emptyset', 'arrow.r', 'arrow.l.double', 'partial', 'nabla',
   'sum', 'product', 'integral', 'plus.minus', 'times', 'dot', 'eq.not', 'lt.eq', 'gt', 'approx', 'prime', 'dif',
   '"text"', '"if "', '"for all"', 'sin', 'cos', 'log', 'ln', 'max', 'lim', 'det', 'quad', 'thin', 'wide', 'hat', 'tilde',
-  '#none', '#1', '#(1 + 2)', '#(2 * 3em)', '#"s"', '#(1, 2).len()', '#true', '#1em', '#(a: 1)', '#red', '#left',
+  '#none', '#1', '#(1 + 2)', '#(2 * 3em)', '#"s"', '#(1, 2)', '#true', '#1em', '#(a: 1)', '#red', '#left',
   'foo', 'xy', 'x_1', 'a_(i j)', "f'", 'oo', '#x', 'ℝ', 'α', '∑', '中',
 ];
 const JOINS = [' + ', ' - ', ' = ', ' < ', ' <= ', ' -> ', ' => ', ' times ', ' dot ', ', ', ' ', ' ', ' &= ', ' & ', ' \\\n ', '; ', ' / ', '^', '_'];
@@ -92,7 +92,8 @@ const TEMPLATES = [
   '#[text $@$ text]', '#$@$', '#{let z = 2; z * 3}', '#{let (p, q) = (1, 2); p + q}', '#((u) => u + 1)(2)',
   '#if 1 < 2 [yes] else [no]', '#if 1 > 2 {1} else {2}', '#[#set text(fill: blue); $@$]',
   '#{set math.mat(delim: "["); $mat(@)$}', '#{let f(n) = if n < 2 { n } else { f(n - 1) + f(n - 2) }; f(8)}',
-  '#let g = 3; #g', '#(1em + 2pt)', '#calc.pow(2, 3)', '#(-1)', '#("a" + "b")', '#(1, 2, 3).map(x => x)',
+  '#let g = 3; #g', '#(1em + 2pt)', '#(2 * 4)', '#(-1)', '#("a" + "b")', 'vec(..#("a", "b"))',
+
 ];
 const PREAMBLES = [
   '#let RR = $bb(R)$',
@@ -108,6 +109,7 @@ const PREAMBLES = [
   '#show math.equation: set text(fill: blue)',
   '#show math.equation.where(block: true): set text(size: 1.2em)',
   '#set text(fill: red)\n#show math.equation: set math.mat(delim: "[")',
+  '#let names = ("a", "b", "c")',
 ];
 
 function expr(depth) {
