@@ -212,3 +212,197 @@ describe('<typlet-math>', () => {
     expect(document.querySelector('typlet-math math')!.textContent).toContain('ℝ');
   });
 });
+
+
+describe('clipboard fragment serialization', () => {
+  const fragmentOf = (html: string) => {
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    return template.content;
+  };
+  const copy = (element: Element, range?: Range) => {
+    if (!range) {
+      range = document.createRange();
+      range.selectNodeContents(element);
+    }
+    const selection = document.getSelection()!;
+    selection.removeAllRanges();
+    selection.addRange(range);
+    const data = new Map<string, string>();
+    const event = new Event('copy', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: { setData: (type: string, value: string) => data.set(type, value) } });
+    element.dispatchEvent(event);
+    return { event, data };
+  };
+
+  it('preserves literal tags and entities beside a formula', () => {
+    document.body.innerHTML = '<p></p>';
+    const p = document.body.firstElementChild!;
+    p.append('<em>text</em> &amp; ', fragmentOf(renderToString('x')), ' after');
+    const original = p.innerHTML;
+    const { event, data } = copy(p);
+    expect(event.defaultPrevented).toBe(true);
+    expect(data.get('text/plain')).toBe('<em>text</em> &amp; $x$ after');
+    const parsed = fragmentOf(data.get('text/html')!);
+    expect(parsed.querySelector('em')).toBeNull();
+    expect(parsed.firstChild?.textContent).toBe('<em>text</em> &amp; ');
+    expect(typletReplaceWithSource(parsed).textContent).toBe('<em>text</em> &amp; $x$ after');
+    expect(p.innerHTML).toBe(original);
+  });
+
+  it('serializes multiple top-level text nodes and formulas in order', () => {
+    document.body.innerHTML = '<p></p>';
+    const p = document.body.firstElementChild!;
+    p.append('a <b> ', fragmentOf(renderToString('x')), ' &amp; ', '"quotes" ', fragmentOf(renderToString('y')), ' end >');
+    const { event, data } = copy(p);
+    expect(event.defaultPrevented).toBe(true);
+    expect(data.get('text/plain')).toBe('a <b> $x$ &amp; "quotes" $y$ end >');
+    const parsed = fragmentOf(data.get('text/html')!);
+    expect(parsed.querySelector('b')).toBeNull();
+    expect(parsed.querySelectorAll('.typlet')).toHaveLength(2);
+    expect(typletReplaceWithSource(parsed).textContent).toBe('a <b> $x$ &amp; "quotes" $y$ end >');
+  });
+
+  it.each(['<>&"\'', '&amp; &lt; &#38;', '<span>literal</span>', '😀 &amp;\nline'])('preserves literal mixed text %j', (literal) => {
+    document.body.innerHTML = '<p></p>';
+    const p = document.body.firstElementChild!;
+    p.append(literal + ' ', fragmentOf(renderToString('x')), ' ' + literal);
+    const { event, data } = copy(p);
+    const expected = literal + ' $x$ ' + literal;
+    expect(event.defaultPrevented).toBe(true);
+    expect(data.get('text/plain')).toBe(expected);
+    const parsed = fragmentOf(data.get('text/html')!);
+    expect(parsed.firstChild?.nodeType).toBe(Node.TEXT_NODE);
+    expect(parsed.firstChild?.textContent).toBe(literal + ' ');
+    expect(parsed.lastChild?.textContent).toBe(' ' + literal);
+    expect(typletReplaceWithSource(parsed).textContent).toBe(expected);
+  });
+
+  it('preserves real strong and em formatting around copied formulas', () => {
+    document.body.innerHTML = '<p></p>';
+    const p = document.body.firstElementChild!;
+    const strong = document.createElement('strong');
+    strong.textContent = '<literal &amp;>';
+    const em = document.createElement('em');
+    em.textContent = 'emphasis';
+    p.append('prefix ', strong, ' ', fragmentOf(renderToString('x')), ' ', em, ' suffix');
+    const original = p.innerHTML;
+    const { data } = copy(p);
+    const parsed = fragmentOf(data.get('text/html')!);
+    expect(parsed.querySelectorAll('strong')).toHaveLength(1);
+    expect(parsed.querySelector('strong')?.textContent).toBe('<literal &amp;>');
+    expect(parsed.querySelectorAll('em')).toHaveLength(1);
+    expect(parsed.querySelector('em')?.textContent).toBe('emphasis');
+    expect(typletReplaceWithSource(parsed).textContent).toBe('prefix <literal &amp;> $x$ emphasis suffix');
+    expect(data.get('text/plain')).toBe('prefix <literal &amp;> $x$ emphasis suffix');
+    expect(p.innerHTML).toBe(original);
+  });
+
+  it('expands both formula boundaries without modifying the original range', () => {
+    document.body.innerHTML = '<p></p>';
+    const p = document.body.firstElementChild!;
+    p.append('before ', fragmentOf(renderToString('x')), ' between ', fragmentOf(renderToString('y')), ' after');
+    const [first, last] = p.querySelectorAll('.typlet-html');
+    const range = document.createRange();
+    range.setStart(first!, 0);
+    range.setEnd(last!, 0);
+    const original = p.innerHTML;
+    const { data } = copy(p, range);
+    expect(data.get('text/plain')).toBe('$x$ between $y$');
+    const parsed = fragmentOf(data.get('text/html')!);
+    expect(parsed.querySelectorAll('.typlet')).toHaveLength(2);
+    expect(typletReplaceWithSource(parsed).textContent).toBe('$x$ between $y$');
+    expect(range.startContainer).toBe(first);
+    expect(range.startOffset).toBe(0);
+    expect(range.endContainer).toBe(last);
+    expect(range.endOffset).toBe(0);
+    expect(p.innerHTML).toBe(original);
+  });
+
+  it.each(['htmlAndMathml', 'html', 'mathml'] as const)('copies numbered display %s source without its number', (output) => {
+    document.body.innerHTML = '<p></p>';
+    const p = document.body.firstElementChild!;
+    p.append('before ', fragmentOf(renderToString('a + b', { output, displayMode: true, preamble: NUMBERING })), ' after');
+    const { data } = copy(p);
+    expect(data.get('text/plain')).toBe('before $ a + b $ after');
+    const parsed = fragmentOf(data.get('text/html')!);
+    expect(parsed.querySelector('.typlet-display.n')?.textContent).toContain('(1)');
+    expect(typletReplaceWithSource(parsed).textContent).toBe('before $ a + b $ after');
+  });
+
+  it('allows custom delimiters when replacing the serialized clipboard fragment', () => {
+    document.body.innerHTML = '<p></p>';
+    const p = document.body.firstElementChild!;
+    p.append(fragmentOf(renderToString('x')), ' and ', fragmentOf(renderToString('y', { displayMode: true })));
+    const { data } = copy(p);
+    expect(data.get('text/plain')).toBe('$x$ and $ y $');
+    const parsed = fragmentOf(data.get('text/html')!);
+    const delimiters = { inline: ['\\(', '\\)'] as const, display: ['\\[', '\\]'] as const };
+    expect(typletReplaceWithSource(parsed, delimiters).textContent).toBe('\\(x\\) and \\[y\\]');
+  });
+
+  it.each(['htmlAndMathml', 'html', 'mathml'] as const)('copies %s source with whitespace in a custom number', (output) => {
+    const source = ' x + "a<&" \n ';
+    document.body.innerHTML = '<p></p>';
+    const p = document.body.firstElementChild!;
+    p.append(fragmentOf(renderToString(source, {
+      output, displayMode: true, preamble: '#set math.equation(numbering: n => [ #n ])',
+    })));
+    const { data } = copy(p);
+    expect(data.get('text/plain')).toBe(`$ ${source} $`);
+    expect(typletReplaceWithSource(fragmentOf(data.get('text/html')!)).textContent).toBe(`$ ${source} $`);
+  });
+
+  it('preserves carriage returns in the HTML-only source attribute', () => {
+    const source = ' x + y\r\n ';
+    const html = renderToString(source, { output: 'html', displayMode: true, preamble: NUMBERING });
+    expect(typletReplaceWithSource(fragmentOf(html)).textContent).toBe(`$ ${source} $`);
+  });
+
+  it.each([
+    ['paragraphs', '<p>First FORMULA</p><p>Second OTHER</p>', 'First $x$\n\nSecond $y$'],
+    ['line breaks', '<div>First FORMULA<br>Second OTHER<br></div>', 'First $x$\nSecond $y$\n'],
+    ['list items', '<ul><li>First FORMULA</li><li>Second OTHER</li></ul>', 'First $x$\nSecond $y$'],
+    ['table cells', '<table><tr><td>First FORMULA</td><td>Second OTHER</td></tr><tr><td>Next</td><td>cell</td></tr></table>', 'First $x$\tSecond $y$\nNext\tcell'],
+    ['empty table cells', '<table><tr><td></td><td>FORMULA</td><td></td></tr><tr><td>OTHER</td><td></td><td>C</td></tr></table>', '\t$x$\t\n$y$\t\tC'],
+    ['empty table rows and headers', '<table><caption>Title</caption><tr><th></th></tr><tr><th>FORMULA</th><th></th><th></th><th>OTHER</th></tr><tr><td></td></tr></table>', 'Title\n\n$x$\t\t\t$y$\n'],
+  ])('preserves %s in copied plain text', (_, markup, expected) => {
+    document.body.innerHTML = '<div></div>';
+    const div = document.body.firstElementChild!;
+    div.innerHTML = markup!.replace('FORMULA', renderToString('x')).replace('OTHER', renderToString('y'));
+    const original = div.innerHTML;
+    const { data } = copy(div);
+    expect(data.get('text/plain')).toBe(expected);
+    expect(fragmentOf(data.get('text/html')!).querySelectorAll('.typlet')).toHaveLength(2);
+    expect(div.innerHTML).toBe(original);
+  });
+
+  it('preserves empty cells in a real Range crossing table columns', () => {
+    document.body.innerHTML = `<table><tr><td>${renderToString('x')}</td><td></td><td>C</td></tr></table>`;
+    const table = document.querySelector('table')!;
+    const range = document.createRange();
+    range.setStart(table.querySelector('.typlet-html')!, 0);
+    range.setEnd(table.querySelectorAll('td')[2]!.firstChild!, 1);
+    expect(copy(table, range).data.get('text/plain')).toBe('$x$\t\tC');
+  });
+
+  it('preserves leading and trailing empty rows when row wrappers are omitted', () => {
+    document.body.innerHTML = `<table><tr><td></td></tr><tr><td>${renderToString('x')}</td></tr><tr><td></td></tr></table>`;
+    const body = document.querySelector('tbody')!;
+    const range = document.createRange();
+    range.selectNodeContents(body);
+    expect(copy(body, range).data.get('text/plain')).toBe('\n$x$\n');
+  });
+
+  it('does not intercept a selection without formulas', () => {
+    document.body.innerHTML = '<p></p>';
+    const p = document.body.firstElementChild!;
+    p.textContent = '<em>literal</em> &amp;';
+    const original = p.innerHTML;
+    const { event, data } = copy(p);
+    expect(event.defaultPrevented).toBe(false);
+    expect(data.size).toBe(0);
+    expect(p.innerHTML).toBe(original);
+  });
+
+});
