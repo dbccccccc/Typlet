@@ -46,6 +46,11 @@ export class Vm {
     this.engine.warnings.push(warning(span, message, ...hints));
   }
 
+  /** Emits a deprecation warning, which the API marks as one. */
+  deprecated(span: Span, message: string): void {
+    this.engine.warnings.push({ ...warning(span, message), kind: 'deprecation' });
+  }
+
   /** Defines a variable in the innermost scope, like `Vm::define`. */
   define(name: string, span: Span, value: Value): void {
     if (name === 'is') {

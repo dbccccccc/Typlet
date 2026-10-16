@@ -50,7 +50,18 @@ Pages need `typlet.css` and the fonts (see [Fonts](#fonts)). The `output` option
 | `html` | Typlet's HTML | An `aria-label` with the source |
 | `mathml` | The browser, from MathML that matches Typst's own HTML export | The MathML |
 
-Inline formulas wrap after binary operators and relations, where Typst breaks lines. A formula that Typlet cannot draw yet, such as one with a symbol that New Computer Modern Math lacks, falls back to MathML with a warning.
+Inline formulas wrap after binary operators and relations, where Typst breaks lines. A formula that Typlet cannot draw yet, such as one with a symbol that New Computer Modern Math lacks, falls back to MathML with a warning, in both HTML outputs.
+
+`renderToResult()` returns the markup together with what drew the formula, the warnings and the equation number, for pages that need to know, such as an editor's preview:
+
+```js
+import { renderToResult } from 'typlet';
+
+const { markup, drawnAs, warnings, number } = renderToResult('x^2', { strict: 'ignore' });
+// drawnAs: 'html' | 'mathml' | 'fallback' | 'error'
+// warnings: each with a kind, 'fallback', 'deprecation' or 'other'
+// number: '(1)' for a numbered display equation, else null
+```
 
 The MathML follows Typst's own HTML export, and keeps what that export drops: `overline` and `underline` as stretchy accents, `cancel` as `<menclose>`, colors, box borders and backgrounds, and `hide` as `<mphantom>`.
 

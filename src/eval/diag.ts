@@ -19,10 +19,12 @@ export interface SourceDiagnostic {
   /** The function calls that led to the problem, innermost first. */
   trace: { point: string; span: Span }[];
   /**
-   * Set for Typlet's own errors: `unsupported` when Typlet refuses a construct
-   * that Typst supports, `limit` when a resource budget runs out.
+   * Set for Typlet's own errors, `unsupported` when Typlet refuses a construct
+   * that Typst supports and `limit` when a resource budget runs out, and for
+   * the warnings the API tells apart: `deprecation` for a deprecated name,
+   * `fallback` when the HTML output draws a formula as MathML.
    */
-  kind?: 'unsupported' | 'limit';
+  kind?: 'unsupported' | 'limit' | 'deprecation' | 'fallback';
 }
 
 /**

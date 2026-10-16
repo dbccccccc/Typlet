@@ -6,7 +6,7 @@
  */
 
 import { HTML_BACKEND } from './html/index.js';
-import { type RenderOptions, renderInto, renderWith } from './render.js';
+import { type RenderOptions, type RenderResult, renderInto, renderResultWith, renderWith } from './render.js';
 import { parse as parseMarkup, parseCode, parseMath, type SyntaxNode } from './syntax/index.js';
 
 export { SyntaxKind, SyntaxNode, kindName, type SyntaxDiagnostic } from './syntax/index.js';
@@ -15,16 +15,26 @@ export {
   type ErrorKind,
   type Output,
   type RenderOptions,
+  type RenderResult,
   type Strictness,
   type TypletDiagnostic,
   TypletError,
   type TrustContext,
   type TypletWarning,
+  type WarningKind,
 } from './render.js';
 
 /** Renders a formula to a string of HTML, MathML or both. */
 export function renderToString(source: string, options: RenderOptions = {}): string {
   return renderWith(source, options, 'htmlAndMathml', HTML_BACKEND);
+}
+
+/**
+ * Renders a formula and returns the markup with what drew it, the warnings
+ * and the equation number, for pages that need more than the markup.
+ */
+export function renderToResult(source: string, options: RenderOptions = {}): RenderResult {
+  return renderResultWith(source, options, 'htmlAndMathml', HTML_BACKEND);
 }
 
 /** Renders a formula into an element, replacing its content. */
