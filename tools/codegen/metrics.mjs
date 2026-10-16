@@ -257,6 +257,11 @@ writeJsonl(join(fixtureDir, 'font-bold.jsonl'), [
 write('metrics-bold.ts', 'the Bold face, for Latin text', encode(bold, boldGlyphs, boldTexts), [
   `export const BOLD_FONT = ${JSON.stringify({ postScriptName: boldFont.header.postScriptName, glyphCount: boldFont.header.glyphCount })};`,
   ``,
+  `export const BOLD_LINE_CONSTANTS = ${JSON.stringify(Object.fromEntries([
+    'overbarExtraAscender', 'overbarRuleThickness', 'overbarVerticalGap',
+    'underbarExtraDescender', 'underbarRuleThickness', 'underbarVerticalGap',
+  ].map((name) => [name, boldFont.header.math[name]])), null, 2)};`,
+  ``,
 ], boldFont);
 
 console.log(

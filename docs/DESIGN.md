@@ -128,6 +128,8 @@ HTML can only address characters, but OpenType MATH size variants and assembly p
 
 The metrics are generated from the oracle's dump of the font as Typst reads it, through ttf-parser and rustybuzz, and the tests check them against it. Text runs such as `"if"` or `argmax` use the extracted advances and kerning pairs, and the browser shapes them. Bold text needs New Computer Modern Math Bold, so the pipeline adds a small Latin subset of it, declared with `font-weight: bold`, which browsers load only when a page shows bold text.
 
+Underlines and overlines select their six math line constants from the actual glyph font. Framed and space content uses the equation-entry font, preserving the prior Book fallback when empty content needs no supported font validation. Both Book and Bold values come from the existing oracle font dumps.
+
 The font is under the GUST Font License, which allows modification and redistribution and asks that derived fonts be renamed. The fonts therefore ship as "Typlet NewCM Math", with the license and a manifest.
 
 `npm run test:browsers` checks the result in Chromium, Firefox and WebKit: a glyph, a script-size alternate, a size variant, the parts of an assembly, a wide accent and a display operator, each placed from the metrics, must draw within a pixel of their predicted ink.
@@ -314,7 +316,7 @@ Normal and hash comparisons retain their distinct NaN, signed-zero, dictionary-o
 
 ## 7. Size and startup
 
-**Size budgets.** CI checks Brotli quality 11 sizes against `scripts/size-budgets.json`: 128 KiB for the full browser bundle, 72 KiB for `typlet/mathml`, and 40 KiB for the separately measured font module. The narrowed production build measures 127,797, 72,897 and 40,615 bytes respectively, leaving 3,275, 831 and 345 bytes of headroom. The full script includes the full Typst parser, original error messages, the formula evaluator, layout and font metrics; the MathML entry omits layout and metrics. No general runtime or optional runtime framework is shipped.
+**Size budgets.** CI checks Brotli quality 11 sizes against `scripts/size-budgets.json`: 128 KiB for the full browser bundle, 72 KiB for `typlet/mathml`, and 40 KiB for the separately measured font module. The narrowed production build measures 128,103, 72,897 and 40,494 bytes respectively, leaving 2,969, 831 and 466 bytes of headroom. The full script includes the full Typst parser, original error messages, the formula evaluator, layout and font metrics; the MathML entry omits layout and metrics. No general runtime or optional runtime framework is shipped.
 
 **Compact metrics.** The metrics of the 7,500 glyphs Typst reaches are columns of characters, decoded as glyphs are used: numbers are two base-92 digits per glyph, read where they are, and the tables few glyphs have are comma-separated fields, found by skipping from the nearest of a column's steps. Nothing is decoded at import.
 
