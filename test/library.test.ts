@@ -17,7 +17,8 @@ interface TypstParam {
 }
 
 interface TypstName {
-  scope: 'global' | 'math';
+  /** `global`, `math`, `calc`, `constructor`, or the type whose scope the name is in. */
+  scope: string;
   name: string;
   type: string;
   params?: TypstParam[];

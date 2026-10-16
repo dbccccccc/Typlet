@@ -2,7 +2,7 @@
 // Copyright The Typst Project Developers. Licensed under Apache-2.0.
 // Modified for Typlet. See THIRD_PARTY_NOTICES.md.
 
-import { type Span, error, warning } from './diag.js';
+import { type Span, error, warn, warning } from './diag.js';
 import type { Engine } from './func.js';
 import { Scopes } from './scope.js';
 import type { Library } from './scope.js';
@@ -43,12 +43,12 @@ export class Vm {
 
   /** Emits a warning. */
   warn(span: Span, message: string, ...hints: string[]): void {
-    this.engine.warnings.push(warning(span, message, ...hints));
+    warn(this.engine.warnings, warning(span, message, ...hints));
   }
 
   /** Emits a deprecation warning, which the API marks as one. */
   deprecated(span: Span, message: string): void {
-    this.engine.warnings.push({ ...warning(span, message), kind: 'deprecation' });
+    warn(this.engine.warnings, { ...warning(span, message), kind: 'deprecation' });
   }
 
   /** Defines a variable in the innermost scope, like `Vm::define`. */

@@ -34,6 +34,18 @@ $ #{ let sq(x) = $#x^2$; set math.mat(delim: "["); $mat(sq(a), sq(b))$ } $
 
 Show-set rules for equations work too, most usefully in a preamble: `#show math.equation: set text(fill: blue)` styles every formula, and `#show math.equation.where(block: true): set text(size: 1.2em)` only display formulas. Their styles apply inside each equation, over the set rules around it, as in Typst. Other show rules are refused.
 
+## Basic collections
+
+Arrays and dictionaries, joins, repetition, spreads and destructuring `let` bindings support reusable formulas without a general computation library:
+
+```typ
+#{ let row = ("a", "b"); $vec(..#row)$ }
+```
+
+$ #{ let row = ("a", "b"); $vec(..#row)$ } $
+
+The supported language deliberately follows v0.1.1. Loops, assignments, `calc`, `range`, general collection/string methods and type conversions raise `unsupported`; applications can compute data in their own language and pass formula source or use an external fallback. Equation show-set `.where` rules remain supported.
+
 ## Preambles
 
 The `preamble` option holds code that comes before every formula, like the start of a document: definitions and set rules that formulas share. It replaces KaTeX's `macros`. Typlet evaluates a preamble once for each set of options.
@@ -65,7 +77,7 @@ renderToString('#link("https://typst.app")[Typst]', { trust: ({ protocol }) => p
 
 ## What Typlet refuses
 
-Code that needs Typst's document engine raises a `TypletError` of kind `unsupported`: `show` rules other than `show math.equation: set …`, loops, introspection such as `context` and `counter`, imports and file access, and document elements such as headings. The `fallback` option can render those formulas another way, for example with Typst compiled to WebAssembly, loaded only when a formula needs it:
+Code that needs Typst's document engine raises a `TypletError` of kind `unsupported`: `show` rules other than `show math.equation: set …`, introspection such as `context` and `counter`, imports and file access, document elements such as headings, and the types Typlet has no values of, such as `regex` and `datetime`. The `fallback` option can render those formulas another way, for example with Typst compiled to WebAssembly, loaded only when a formula needs it:
 
 ```js
 render(source, element, { fallback: (source, error) => renderWithTypst(source) });

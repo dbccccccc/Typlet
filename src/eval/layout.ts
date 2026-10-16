@@ -31,6 +31,9 @@ export const absMm = (mm: number): Abs => sc(mm * RAW_PER_MM);
 export const absCm = (cm: number): Abs => sc(cm * RAW_PER_CM);
 export const absIn = (inches: number): Abs => sc(inches * RAW_PER_IN);
 export const absToPt = (abs: Abs): number => abs / RAW_PER_PT;
+export const absToMm = (abs: Abs): number => abs / RAW_PER_MM;
+export const absToCm = (abs: Abs): number => abs / RAW_PER_CM;
+export const absToIn = (abs: Abs): number => abs / RAW_PER_IN;
 
 /** The epsilon for approximate comparisons of absolute lengths, in raw units. */
 export const ABS_EPS = 1e-4;

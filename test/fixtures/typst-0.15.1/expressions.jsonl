@@ -3914,3 +3914,914 @@
 {"diagnostics":[],"id":"x-2e24defd0449","value":{"json":{"body":{"func":"text","text":"x"},"func":"cancel","stroke":"(cap: \"round\", join: \"bevel\", miter-limit: 2.0)"},"repr":"cancel(\n  body: [x],\n  stroke: (cap: \"round\", join: \"bevel\", miter-limit: 2.0),\n)","type":"content"}}
 {"diagnostics":[{"at":"expr","message":"expected \"solid\", \"dotted\", \"densely-dotted\", \"loosely-dotted\", \"dashed\", \"densely-dashed\", \"loosely-dashed\", \"dash-dotted\", \"densely-dash-dotted\", \"loosely-dash-dotted\", array, dictionary, none, or auto","severity":"error","span":[25,39]}],"id":"x-805342a2ad31","value":null}
 {"diagnostics":[{"at":"expr","message":"expected color, gradient, tiling, or auto, found integer","severity":"error","span":[25,35]}],"id":"x-d4b23cdf617a","value":null}
+{"diagnostics":[],"id":"x-cf6e9f427e50","value":{"json":6,"repr":"6","type":"int"}}
+{"diagnostics":[],"id":"x-4248d6e72028","value":{"json":6,"repr":"6","type":"int"}}
+{"diagnostics":[],"id":"x-660f5a5687d1","value":{"json":["a1","b2"],"repr":"(\"a1\", \"b2\")","type":"array"}}
+{"diagnostics":[],"id":"x-f69c2dfb6d89","value":{"json":["h","é","l","l","o"],"repr":"(\"h\", \"é\", \"l\", \"l\", \"o\")","type":"array"}}
+{"diagnostics":[],"id":"x-15791535b683","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-94cbad9f5050","value":{"json":[2,12],"repr":"(2, 12)","type":"array"}}
+{"diagnostics":[],"id":"x-5eceb2ad4170","value":{"json":[[2,3]],"repr":"((2, 3),)","type":"array"}}
+{"diagnostics":[],"id":"x-5dd6949998c6","value":{"json":[3,4,6,8],"repr":"(3, 4, 6, 8)","type":"array"}}
+{"diagnostics":[],"id":"x-080df511780a","value":{"json":{"func":"text","text":"1"},"repr":"[1]","type":"content"}}
+{"diagnostics":[],"id":"x-54585049e3f7","value":{"json":{"children":[{"func":"text","text":"1"},{"func":"text","text":"3"}],"func":"sequence"},"repr":"sequence([1], [3])","type":"content"}}
+{"diagnostics":[],"id":"x-8926f4f8c997","value":{"json":{"children":[{"func":"text","text":"1"},{"func":"text","text":"2"},{"func":"text","text":"3"}],"func":"sequence"},"repr":"sequence([1], [2], [3])","type":"content"}}
+{"diagnostics":[{"at":"expr","message":"cannot join integer with integer","severity":"error","span":[19,24]}],"id":"x-666a7042928c","value":null}
+{"diagnostics":[],"id":"x-46bf24fc5ea6","value":{"json":"123","repr":"\"123\"","type":"str"}}
+{"diagnostics":[],"id":"x-3b7896253ec9","value":{"json":[1,2,3],"repr":"(1, 2, 3)","type":"array"}}
+{"diagnostics":[],"id":"x-ee12554069f0","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[{"at":"expr","message":"cannot loop over integer","severity":"error","span":[9,10]}],"id":"x-37c5b6b44b68","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot loop over none","severity":"error","span":[9,13]}],"id":"x-036849528870","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot destructure values of string","severity":"error","span":[4,10]}],"id":"x-b2189e5e9e81","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot destructure integer","severity":"error","span":[4,10]}],"id":"x-d5f31c78b5d5","value":null}
+{"diagnostics":[{"at":"expr","hints":["the provided array has a length of 1, but the pattern expects 2 elements"],"message":"not enough elements to destructure","severity":"error","span":[4,10]}],"id":"x-207c8cc70faa","value":null}
+{"diagnostics":[],"id":"x-9d6bc0e143f2","value":{"json":["a",1],"repr":"(\"a\", 1)","type":"array"}}
+{"diagnostics":[],"id":"x-c6ebf242cf8c","value":{"json":"a","repr":"\"a\"","type":"str"}}
+{"diagnostics":[],"id":"x-484ed52adeeb","value":{"json":5,"repr":"5","type":"int"}}
+{"diagnostics":[],"id":"x-2bba59da4427","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-3512e513b732","value":{"json":[2,4,6],"repr":"(2, 4, 6)","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"condition is always true","severity":"error","span":[8,12]}],"id":"x-d9308a15db53","value":null}
+{"diagnostics":[{"at":"expr","message":"loop seems to be infinite","severity":"error","span":[13,28]}],"id":"x-d103fc8d8e77","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot join integer with integer","severity":"error","span":[25,38]}],"id":"x-9edf0ef28d0d","value":null}
+{"diagnostics":[],"id":"x-56ee7f6f6bc3","value":{"json":{"children":[{"func":"text","text":"1"},{"func":"text","text":"2"},{"func":"text","text":"3"}],"func":"sequence"},"repr":"sequence([1], [2], [3])","type":"content"}}
+{"diagnostics":[{"at":"expr","message":"expected boolean, found integer","severity":"error","span":[6,7]}],"id":"x-72381cbb3399","value":null}
+{"diagnostics":[{"at":"expr","message":"expected boolean, found integer","severity":"error","span":[19,20]}],"id":"x-58f4cc906236","value":null}
+{"diagnostics":[],"id":"x-ea7c755fab4d","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-780644050f14","value":{"json":4,"repr":"4","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"cannot return outside of function","severity":"error","span":[20,28]}],"id":"x-c649a76edd71","value":null}
+{"diagnostics":[],"id":"x-df2e02a07ce9","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-4ef9cffa4fef","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-7b92f1f48ff3","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-bb41ea9628bd","value":{"json":6,"repr":"6","type":"int"}}
+{"diagnostics":[],"id":"x-d7a40ffde867","value":{"exact":{"float":1.5},"json":1.5,"repr":"1.5","type":"float"}}
+{"diagnostics":[],"id":"x-0d221e77d268","value":{"json":"ab","repr":"\"ab\"","type":"str"}}
+{"diagnostics":[],"id":"x-2feebe86ba1e","value":{"json":[1,2],"repr":"(1, 2)","type":"array"}}
+{"diagnostics":[],"id":"x-d71546520e97","value":{"json":{"children":[{"func":"text","text":"a"},{"func":"text","text":"b"}],"func":"sequence"},"repr":"sequence([a], [b])","type":"content"}}
+{"diagnostics":[{"at":"expr","message":"cannot add integer and string","severity":"error","span":[13,21]}],"id":"x-135c380932a3","value":null}
+{"diagnostics":[],"id":"x-d434244b9218","value":{"json":{"a":1,"b":2},"repr":"(a: 1, b: 2)","type":"dictionary"}}
+{"diagnostics":[],"id":"x-3ee1721d853c","value":{"json":{"a":2},"repr":"(a: 2)","type":"dictionary"}}
+{"diagnostics":[],"id":"x-414c529e2c25","value":{"json":{"a":{"b":2}},"repr":"(a: (b: 2))","type":"dictionary"}}
+{"diagnostics":[{"at":"expr","hints":["use `insert` to add or update values"],"message":"dictionary does not contain key \"b\"","severity":"error","span":[18,21]}],"id":"x-bed9ab278e9a","value":null}
+{"diagnostics":[],"id":"x-82c47f90fd5b","value":{"json":[5,2],"repr":"(5, 2)","type":"array"}}
+{"diagnostics":[],"id":"x-deb0a684ed1d","value":{"json":[1,12],"repr":"(1, 12)","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"array index out of bounds (index: 2, len: 2)","severity":"error","span":[18,25]}],"id":"x-80dadfc03601","value":null}
+{"diagnostics":[],"id":"x-46d82ddb889d","value":{"json":[5,2],"repr":"(5, 2)","type":"array"}}
+{"diagnostics":[],"id":"x-ade85c08d8f4","value":{"json":[1,5],"repr":"(1, 5)","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"array is empty","severity":"error","span":[14,23]}],"id":"x-4ebcf23e25b8","value":null}
+{"diagnostics":[{"at":"expr","hints":["use `insert` to add or update values"],"message":"dictionary does not contain key \"b\"","severity":"error","span":[18,27]}],"id":"x-1b895631f50c","value":null}
+{"diagnostics":[{"at":"expr","hints":["use `insert` to add or update values"],"message":"dictionary does not contain key \"b\"","severity":"error","span":[18,27]}],"id":"x-71cc10ff589a","value":null}
+{"diagnostics":[],"id":"x-a420ee3eac51","value":{"json":[[1,2],[9,4]],"repr":"((1, 2), (9, 4))","type":"array"}}
+{"diagnostics":[],"id":"x-3a94a09aa1a9","value":{"json":{"a":[1,2,3]},"repr":"(a: (1, 2, 3))","type":"dictionary"}}
+{"diagnostics":[{"at":"expr","message":"integer does not have accessible fields","severity":"error","span":[13,14]}],"id":"x-d82f0e0bb5df","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot mutate fields on content","severity":"error","span":[15,16]}],"id":"x-1d216243d04c","value":null}
+{"diagnostics":[{"at":"expr","message":"none does not have accessible fields","severity":"error","span":[16,17]}],"id":"x-8a6780659297","value":null}
+{"diagnostics":[{"at":"expr","hints":["try creating a new length with the updated field value instead"],"message":"fields on length are not yet mutable","severity":"error","span":[15,16]}],"id":"x-83e984e52b96","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot mutate fields on module","severity":"error","span":[16,17]}],"id":"x-8f3d2f23f2a7","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot mutate fields on function","severity":"error","span":[16,17]}],"id":"x-6d2576554654","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot mutate fields on symbol","severity":"error","span":[21,22]}],"id":"x-6bd7865cdc31","value":null}
+{"diagnostics":[{"at":"expr","message":"unknown variable: x","severity":"error","span":[2,3]}],"id":"x-c143992f3991","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot mutate a constant: calc","severity":"error","span":[2,6]}],"id":"x-569a640811ef","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot mutate a constant: calc","severity":"error","span":[2,6]}],"id":"x-ce83fc28e655","value":null}
+{"diagnostics":[],"id":"x-883e7b43a1ed","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[{"at":"expr","message":"cannot mutate a temporary value","severity":"error","span":[0,6]}],"id":"x-a1f3179c644d","value":null}
+{"diagnostics":[],"id":"x-7659112e90ba","value":{"json":[1,2,3],"repr":"(1, 2, 3)","type":"array"}}
+{"diagnostics":[],"id":"x-ce3a4f53bcbf","value":{"json":[1,2,3],"repr":"(1, 2, 3)","type":"array"}}
+{"diagnostics":[],"id":"x-431eef8b4d15","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"cannot join integer with array","severity":"error","span":[27,28]}],"id":"x-f3b96b34493f","value":null}
+{"diagnostics":[{"at":"expr","message":"array is empty","severity":"error","span":[14,21]}],"id":"x-4659cc7aead3","value":null}
+{"diagnostics":[],"id":"x-fb03af748347","value":{"json":[1,2,3],"repr":"(1, 2, 3)","type":"array"}}
+{"diagnostics":[],"id":"x-6c33f37706e5","value":{"json":[1,3,2],"repr":"(1, 3, 2)","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"array index out of bounds (index: 5, len: 2)","severity":"error","span":[18,32]}],"id":"x-acecbe39d9f9","value":null}
+{"diagnostics":[],"id":"x-3606a4e1f4d7","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"cannot join integer with array","severity":"error","span":[34,35]}],"id":"x-77d267143323","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot join integer with array","severity":"error","span":[35,36]}],"id":"x-7943d696dcfc","value":null}
+{"diagnostics":[{"at":"expr","message":"array index out of bounds (index: 3, len: 3) and no default value was specified","severity":"error","span":[21,32]}],"id":"x-6fe5694b3357","value":null}
+{"diagnostics":[],"id":"x-6f8a94e3e42e","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-853a0cf57c67","value":{"json":{"a":1,"b":2},"repr":"(a: 1, b: 2)","type":"dictionary"}}
+{"diagnostics":[],"id":"x-24e94d39ed76","value":{"json":{"a":2},"repr":"(a: 2)","type":"dictionary"}}
+{"diagnostics":[],"id":"x-c62a25049405","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"cannot join integer with dictionary","severity":"error","span":[33,34]}],"id":"x-d93f783f7653","value":null}
+{"diagnostics":[{"at":"expr","message":"dictionary does not contain key \"b\"","severity":"error","span":[18,31]}],"id":"x-adbb23f5484a","value":null}
+{"diagnostics":[],"id":"x-027c3d981d5c","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"type string has no method `push`","severity":"error","span":[15,21]}],"id":"x-0c0202251f77","value":null}
+{"diagnostics":[{"at":"expr","message":"type integer has no method `push`","severity":"error","span":[13,19]}],"id":"x-1132725511a5","value":null}
+{"diagnostics":[],"id":"x-c3b2f8e01f6c","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"variables from outside the function are read-only and cannot be modified","severity":"error","span":[25,26]}],"id":"x-99d2faac4fcf","value":null}
+{"diagnostics":[{"at":"expr","message":"variables from outside the function are read-only and cannot be modified","severity":"error","span":[25,26]}],"id":"x-f3db0ef21073","value":null}
+{"diagnostics":[],"id":"x-836c09f7e5d6","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"variables from outside the function are read-only and cannot be modified","severity":"error","span":[30,31]}],"id":"x-dd09fb49e620","value":null}
+{"diagnostics":[{"at":"expr","message":"variables from outside the function are read-only and cannot be modified","severity":"error","span":[28,29]}],"id":"x-13e6b992f901","value":null}
+{"diagnostics":[],"id":"x-1f23cdd94177","value":{"json":[2,1],"repr":"(2, 1)","type":"array"}}
+{"diagnostics":[{"at":"expr","hints":["the provided array has a length of 1, but the pattern expects 2 elements"],"message":"not enough elements to destructure","severity":"error","span":[24,30]}],"id":"x-56932f6a8511","value":null}
+{"diagnostics":[],"id":"x-337563c2b567","value":{"json":[1,[2,3]],"repr":"(1, (2, 3))","type":"array"}}
+{"diagnostics":[],"id":"x-41e6d273fb72","value":{"json":[1,2],"repr":"(1, 2)","type":"array"}}
+{"diagnostics":[],"id":"x-3b460309058d","value":{"json":[1,2],"repr":"(1, 2)","type":"array"}}
+{"diagnostics":[{"at":"expr","hints":["use `insert` to add or update values"],"message":"dictionary does not contain key \"x\"","severity":"error","span":[16,19]}],"id":"x-f18a5019083a","value":null}
+{"diagnostics":[{"at":"expr","message":"unknown variable: a","severity":"error","span":[3,4]}],"id":"x-886538dbef48","value":null}
+{"diagnostics":[],"id":"x-211a69dcf476","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-012f8429488d","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-5e2b4936c44e","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-e188d499e621","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-3da8cb92c073","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"array is empty","severity":"error","span":[0,10]}],"id":"x-6a6e03e7993b","value":null}
+{"diagnostics":[{"at":"expr","message":"array is empty","severity":"error","span":[0,9]}],"id":"x-5d10e378b5d8","value":null}
+{"diagnostics":[],"id":"x-17f69d0d5a86","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-72f4fa495941","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-775c01498ed6","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"array index out of bounds (index: 3, len: 3) and no default value was specified","severity":"error","span":[0,15]}],"id":"x-339a3fd1e549","value":null}
+{"diagnostics":[],"id":"x-7a4c145edab4","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"array index out of bounds (index: -4, len: 3) and no default value was specified","severity":"error","span":[0,16]}],"id":"x-f5d9564086f5","value":null}
+{"diagnostics":[{"at":"expr","message":"expected integer, found float","severity":"error","span":[13,16]}],"id":"x-227bf0fe930d","value":null}
+{"diagnostics":[{"at":"expr","message":"expected integer, found string","severity":"error","span":[13,16]}],"id":"x-082b87950192","value":null}
+{"diagnostics":[],"id":"x-ec4201161fe8","value":{"json":[2,3],"repr":"(2, 3)","type":"array"}}
+{"diagnostics":[],"id":"x-ee86fd246c6c","value":{"json":[2],"repr":"(2,)","type":"array"}}
+{"diagnostics":[],"id":"x-20be18ee6c86","value":{"json":[2,3],"repr":"(2, 3)","type":"array"}}
+{"diagnostics":[],"id":"x-975fad806ffb","value":{"json":[2],"repr":"(2,)","type":"array"}}
+{"diagnostics":[],"id":"x-4cc57fe9ada7","value":{"json":[],"repr":"()","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"array index out of bounds (index: 5, len: 3)","severity":"error","span":[0,21]}],"id":"x-3f54457029ff","value":null}
+{"diagnostics":[{"at":"expr","message":"`end` and `count` are mutually exclusive","severity":"error","span":[0,31]}],"id":"x-43445fdbda3f","value":null}
+{"diagnostics":[],"id":"x-6d1fa92ae197","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-8594e68d97c7","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[],"id":"x-d0c0f6b8cae0","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-7009d10f59e0","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-050ac19cee28","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-8a1372125694","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[],"id":"x-5e9c78b9d687","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-a73d4084d19a","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[],"id":"x-031a0ed725ac","value":{"json":[1,3],"repr":"(1, 3)","type":"array"}}
+{"diagnostics":[],"id":"x-c77c3bda64b5","value":{"json":[1,4,9],"repr":"(1, 4, 9)","type":"array"}}
+{"diagnostics":[],"id":"x-c4453190275e","value":{"json":["1","2","3"],"repr":"(\"1\", \"2\", \"3\")","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"unexpected argument","severity":"error","span":[19,20]}],"id":"x-97a7ee6d2ad2","value":null}
+{"diagnostics":[{"at":"expr","message":"missing argument: mapper","severity":"error","span":[0,12]}],"id":"x-92ad5663cc13","value":null}
+{"diagnostics":[{"at":"expr","message":"expected function, found integer","severity":"error","span":[11,12]}],"id":"x-911e02063a5b","value":null}
+{"diagnostics":[{"at":"expr","message":"symbol α is not callable","severity":"error","span":[11,20]}],"id":"x-e92c8de2cedd","value":null}
+{"diagnostics":[{"at":"expr","message":"type boolean does not have a constructor","severity":"error","span":[11,15]}],"id":"x-fc5e6081ed2f","value":null}
+{"diagnostics":[{"at":"expr","message":"expected boolean, found integer","severity":"error","span":[14,15]}],"id":"x-7f0d1a615fe8","value":null}
+{"diagnostics":[],"id":"x-95e1612f3958","value":{"json":[[0,1],[1,2],[2,3]],"repr":"((0, 1), (1, 2), (2, 3))","type":"array"}}
+{"diagnostics":[],"id":"x-edb0b0e1f5bc","value":{"json":[[1,1],[2,2],[3,3]],"repr":"((1, 1), (2, 2), (3, 3))","type":"array"}}
+{"diagnostics":[],"id":"x-4eba2c17747c","value":{"json":["0a","1b"],"repr":"(\"0a\", \"1b\")","type":"array"}}
+{"diagnostics":[],"id":"x-48a57851d1ef","value":{"json":[[1,3],[2,4]],"repr":"((1, 3), (2, 4))","type":"array"}}
+{"diagnostics":[],"id":"x-b0d3648235f8","value":{"json":[[1,4],[2,5]],"repr":"((1, 4), (2, 5))","type":"array"}}
+{"diagnostics":[],"id":"x-cd4d632249da","value":{"json":[[1,3,5],[2,4,6]],"repr":"((1, 3, 5), (2, 4, 6))","type":"array"}}
+{"diagnostics":[],"id":"x-b5d4fea7faaa","value":{"json":[[1],[2]],"repr":"((1,), (2,))","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"second array has different length (2) from first array (3)","severity":"error","span":[14,20]}],"id":"x-47688c202478","value":null}
+{"diagnostics":[{"at":"expr","message":"expected array, found integer","severity":"error","span":[11,12]}],"id":"x-36684ebc3836","value":null}
+{"diagnostics":[],"id":"x-fa4efcd11101","value":{"json":6,"repr":"6","type":"int"}}
+{"diagnostics":[],"id":"x-bebf2750fd5c","value":{"json":"ab","repr":"\"ab\"","type":"str"}}
+{"diagnostics":[],"id":"x-577d8fc037dd","value":{"json":6,"repr":"6","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"cannot calculate sum of empty array with no default","severity":"error","span":[0,8]}],"id":"x-264ce6fe084b","value":null}
+{"diagnostics":[],"id":"x-900a702010ba","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-74df40515d21","value":{"exact":{"float":3.5},"json":3.5,"repr":"3.5","type":"float"}}
+{"diagnostics":[],"id":"x-e9ac2653083a","value":{"json":"ab","repr":"\"ab\"","type":"str"}}
+{"diagnostics":[],"id":"x-846c926efd3b","value":{"exact":{"abs":3,"em":0},"json":"3pt","repr":"3pt","type":"length"}}
+{"diagnostics":[{"at":"expr","message":"cannot add integer and string","severity":"error","span":[0,14]}],"id":"x-7aa69faf0889","value":null}
+{"diagnostics":[],"id":"x-de21f6009c12","value":{"json":6,"repr":"6","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"cannot calculate product of empty array with no default","severity":"error","span":[0,12]}],"id":"x-cda0e1e70991","value":null}
+{"diagnostics":[],"id":"x-b516b11e186d","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-af79282ba7ec","value":{"exact":{"float":3},"json":3,"repr":"3.0","type":"float"}}
+{"diagnostics":[],"id":"x-ffcedbf5b18e","value":{"json":"aa","repr":"\"aa\"","type":"str"}}
+{"diagnostics":[],"id":"x-7f3fff1352c3","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-6cfa774a5f2a","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[],"id":"x-da55fe94524a","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[],"id":"x-0ba902710e26","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[{"at":"expr","message":"expected boolean, found integer","severity":"error","span":[11,12]}],"id":"x-5b359e7360f0","value":null}
+{"diagnostics":[],"id":"x-ee9bed7bd248","value":{"json":[1,2,3,4],"repr":"(1, 2, 3, 4)","type":"array"}}
+{"diagnostics":[],"id":"x-cf215b47ed67","value":{"json":[],"repr":"()","type":"array"}}
+{"diagnostics":[],"id":"x-728844320019","value":{"json":[3,2,1],"repr":"(3, 2, 1)","type":"array"}}
+{"diagnostics":[],"id":"x-afa439537ebf","value":{"json":[[1],[3],[]],"repr":"((1,), (3,), ())","type":"array"}}
+{"diagnostics":[],"id":"x-74d1a0857516","value":{"json":[[1,2]],"repr":"((1, 2),)","type":"array"}}
+{"diagnostics":[],"id":"x-b7676c6e1753","value":{"json":"a, b","repr":"\"a, b\"","type":"str"}}
+{"diagnostics":[],"id":"x-2209ba924913","value":{"json":"a, b and c","repr":"\"a, b and c\"","type":"str"}}
+{"diagnostics":[],"id":"x-17b843a773fb","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[],"id":"x-7b959042d4c1","value":{"json":"a","repr":"\"a\"","type":"str"}}
+{"diagnostics":[],"id":"x-b9342c3e1776","value":{"json":{"children":[{"func":"text","text":"a"},{"func":"text","text":"+"},{"func":"text","text":"b"}],"func":"sequence"},"repr":"sequence([a], [+], [b])","type":"content"}}
+{"diagnostics":[{"at":"expr","message":"cannot join integer with integer","severity":"error","span":[0,13]}],"id":"x-b6394a2835d4","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot join integer with string","severity":"error","span":[0,17]}],"id":"x-3e1bb35821f5","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot join string with integer","severity":"error","span":[0,15]}],"id":"x-6b89cf3f9cdb","value":null}
+{"diagnostics":[],"id":"x-79c696a4fe7f","value":{"json":[1,0,2,0,3],"repr":"(1, 0, 2, 0, 3)","type":"array"}}
+{"diagnostics":[],"id":"x-5f676bd57d72","value":{"json":[],"repr":"()","type":"array"}}
+{"diagnostics":[],"id":"x-542efe0769a3","value":{"json":[1],"repr":"(1,)","type":"array"}}
+{"diagnostics":[],"id":"x-f4238fa06fb6","value":{"json":[[1,2],[3,4],[5]],"repr":"((1, 2), (3, 4), (5,))","type":"array"}}
+{"diagnostics":[],"id":"x-962f10986824","value":{"json":[[1,2],[3,4]],"repr":"((1, 2), (3, 4))","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"number must be positive","severity":"error","span":[14,15]}],"id":"x-0bc277c9784c","value":null}
+{"diagnostics":[],"id":"x-5f876d0409e6","value":{"json":[[1,2],[2,3]],"repr":"((1, 2), (2, 3))","type":"array"}}
+{"diagnostics":[],"id":"x-0a5795ff62c0","value":{"json":[],"repr":"()","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"number must be positive","severity":"error","span":[15,16]}],"id":"x-67a976a9bfa9","value":null}
+{"diagnostics":[],"id":"x-aa6e1c806100","value":{"json":[1,2,3],"repr":"(1, 2, 3)","type":"array"}}
+{"diagnostics":[],"id":"x-6ff6c79bca41","value":{"json":[3,2,1],"repr":"(3, 2, 1)","type":"array"}}
+{"diagnostics":[],"id":"x-cf34f63d6d1c","value":{"json":[3,2,1],"repr":"(3, 2, 1)","type":"array"}}
+{"diagnostics":[],"id":"x-8e08338d652c","value":{"json":["a","b"],"repr":"(\"a\", \"b\")","type":"array"}}
+{"diagnostics":[{"at":"expr","hints":["consider choosing a `key` or defining the comparison with `by`"],"message":"cannot compare string and integer","severity":"error","span":[0,17]}],"id":"x-ff0581c62998","value":null}
+{"diagnostics":[],"id":"x-158b781bdd6e","value":{"json":[[1,2],[2,1]],"repr":"((1, 2), (2, 1))","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"expected boolean from `by` function, got integer","severity":"error","span":[0,30]}],"id":"x-0efc993c79fa","value":null}
+{"diagnostics":[],"id":"x-bbcdaf8e14ed","value":{"json":[1,1.5],"repr":"(1, 1.5)","type":"array"}}
+{"diagnostics":[],"id":"x-55d011561898","value":{"json":[1,1],"repr":"(1, 1.0)","type":"array"}}
+{"diagnostics":[],"id":"x-f00062bded04","value":{"json":[1,2,3],"repr":"(1, 2, 3)","type":"array"}}
+{"diagnostics":[],"id":"x-0d43c0d98f13","value":{"json":[1,2],"repr":"(1, 2)","type":"array"}}
+{"diagnostics":[],"id":"x-40e7ab690548","value":{"json":[],"repr":"()","type":"array"}}
+{"diagnostics":[],"id":"x-68b836833637","value":{"json":{"a":1,"b":2},"repr":"(a: 1, b: 2)","type":"dictionary"}}
+{"diagnostics":[{"at":"expr","message":"expected key of type str, found integer","severity":"error","span":[0,19]}],"id":"x-ca06d639e92e","value":null}
+{"diagnostics":[{"at":"expr","message":"expected pairs of length 2, found length 3","severity":"error","span":[0,24]}],"id":"x-84f2f8726668","value":null}
+{"diagnostics":[{"at":"expr","message":"expected (str, any) pairs, found string","severity":"error","span":[0,16]}],"id":"x-c9719cadc057","value":null}
+{"diagnostics":[],"id":"x-ad27a2634190","value":{"json":6,"repr":"6","type":"int"}}
+{"diagnostics":[],"id":"x-a98796da3a8e","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[],"id":"x-f7614834eaa1","value":{"json":5,"repr":"5","type":"int"}}
+{"diagnostics":[],"id":"x-a5f795eb8292","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-6b95bbe7870e","value":{"json":[0,1,2,3,4],"repr":"(0, 1, 2, 3, 4)","type":"array"}}
+{"diagnostics":[],"id":"x-c806f8251c1f","value":{"json":[2,3,4],"repr":"(2, 3, 4)","type":"array"}}
+{"diagnostics":[],"id":"x-46a7345f7948","value":{"json":[0,3,6,9],"repr":"(0, 3, 6, 9)","type":"array"}}
+{"diagnostics":[],"id":"x-eb1c1ce8b647","value":{"json":[5,3,1],"repr":"(5, 3, 1)","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"number must not be zero","severity":"error","span":[18,19]}],"id":"x-ff5a064f1f28","value":null}
+{"diagnostics":[],"id":"x-d71aa43674b1","value":{"json":[],"repr":"()","type":"array"}}
+{"diagnostics":[],"id":"x-ff5f97191450","value":{"json":[],"repr":"()","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"missing argument: end","severity":"error","span":[0,7]}],"id":"x-bc5e0348a3eb","value":null}
+{"diagnostics":[{"at":"expr","message":"unexpected argument","severity":"error","span":[12,13]}],"id":"x-f1e7e7405536","value":null}
+{"diagnostics":[{"at":"expr","message":"expected integer, found float","severity":"error","span":[6,9]}],"id":"x-335e81537751","value":null}
+{"diagnostics":[],"id":"x-ba643d658799","value":{"json":10000,"repr":"10000","type":"int"}}
+{"diagnostics":[],"id":"x-34d1ef49d3a1","value":{"json":[1,2,3],"repr":"(1, 2, 3)","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"number must be at least zero","severity":"error","span":[0,11]}],"id":"x-0bfb29b017b7","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot multiply array with float","severity":"error","span":[0,12]}],"id":"x-5fd88a2a69c6","value":null}
+{"diagnostics":[],"id":"x-798f41d8dd06","value":{"json":[1,2],"repr":"(1, 2)","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"expected array, bytes, or version, found integer","severity":"error","span":[6,7]}],"id":"x-7928a8e6ad9e","value":null}
+{"diagnostics":[{"at":"expr","message":"expected array, bytes, or version, found string","severity":"error","span":[6,9]}],"id":"x-df8f36da047c","value":null}
+{"diagnostics":[{"at":"expr","message":"type array has no method `foo`","severity":"error","span":[0,10]}],"id":"x-99e453fb0d59","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot access fields on type array","severity":"error","span":[7,10]}],"id":"x-ff80952f18c4","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot access fields on type array","severity":"error","span":[7,10]}],"id":"x-db27ceb34de5","value":null}
+{"diagnostics":[],"id":"x-82567ddcfbb1","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-a351744bee40","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-ae55dffc8aae","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"dictionary does not contain key \"b\" and no default value was specified","severity":"error","span":[0,14]}],"id":"x-7d6a0ff8afff","value":null}
+{"diagnostics":[],"id":"x-ffb6d1f352a3","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"expected string, found integer","severity":"error","span":[10,11]}],"id":"x-a7ddbe00b6c8","value":null}
+{"diagnostics":[],"id":"x-7eb1bc0b2e50","value":{"json":["a"],"repr":"(\"a\",)","type":"array"}}
+{"diagnostics":[],"id":"x-e9eb1c8979e6","value":{"json":[1,2],"repr":"(1, 2)","type":"array"}}
+{"diagnostics":[],"id":"x-b9f84cf7d44f","value":{"json":[["a",1],["b",2]],"repr":"((\"a\", 1), (\"b\", 2))","type":"array"}}
+{"diagnostics":[],"id":"x-614421477d6e","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"dictionary does not contain key \"b\"","severity":"error","span":[7,8]}],"id":"x-f23e48484b9d","value":null}
+{"diagnostics":[],"id":"x-136201f9ba54","value":{"json":{"a":1,"b":2},"repr":"(a: 1, b: 2)","type":"dictionary"}}
+{"diagnostics":[],"id":"x-58cd9927492c","value":{"json":{"a":2},"repr":"(a: 2)","type":"dictionary"}}
+{"diagnostics":[],"id":"x-0557d2db0ff4","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[{"at":"expr","message":"cannot apply 'in' to integer and dictionary","severity":"error","span":[0,11]}],"id":"x-48447c16ccac","value":null}
+{"diagnostics":[],"id":"x-0e0b0d75ce79","value":{"json":{"a":2,"b":3},"repr":"(a: 2, b: 3)","type":"dictionary"}}
+{"diagnostics":[],"id":"x-b25c19a82b58","value":{"json":{"b":2},"repr":"(b: 2)","type":"dictionary"}}
+{"diagnostics":[{"at":"expr","message":"missing argument: v","severity":"error","span":[14,20]}],"id":"x-742f0047c494","value":null}
+{"diagnostics":[{"at":"expr","message":"type dictionary has no method `foo`","severity":"error","span":[0,10]}],"id":"x-c33d67c2fbaf","value":null}
+{"diagnostics":[{"at":"expr","message":"dictionary does not contain key \"len\"","severity":"error","span":[7,10]}],"id":"x-d96886e4bb20","value":null}
+{"diagnostics":[],"id":"x-dac53221e2c7","value":{"json":45,"repr":"45","type":"int"}}
+{"diagnostics":[],"id":"x-93239ef4e161","value":{"json":299,"repr":"299","type":"int"}}
+{"diagnostics":[],"id":"x-16435dce4ede","value":{"json":395,"repr":"395","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"expected module, found integer","severity":"error","span":[11,12]}],"id":"x-4d1a5a2a6507","value":null}
+{"diagnostics":[],"id":"x-e3ec045bcad0","value":{"json":6,"repr":"6","type":"int"}}
+{"diagnostics":[],"id":"x-3a3d5f4792b1","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-b0047a82e45d","value":{"json":"a","repr":"\"a\"","type":"str"}}
+{"diagnostics":[],"id":"x-8a847f196fca","value":{"json":"c","repr":"\"c\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"string is empty","severity":"error","span":[0,10]}],"id":"x-d74c380d118d","value":null}
+{"diagnostics":[],"id":"x-1ab3df5ce07c","value":{"json":"é","repr":"\"é\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"string index 2 is not a character boundary","severity":"error","span":[0,13]}],"id":"x-44dd846f0f72","value":null}
+{"diagnostics":[],"id":"x-9b38efa4a605","value":{"json":"c","repr":"\"c\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"no default value was specified and string index out of bounds (index: 5, len: 3)","severity":"error","span":[0,11]}],"id":"x-013c7810ded3","value":null}
+{"diagnostics":[],"id":"x-7e968187e14a","value":{"json":"z","repr":"\"z\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"string index 2 is not a character boundary","severity":"error","span":[0,19]}],"id":"x-f5f2d963192e","value":null}
+{"diagnostics":[],"id":"x-efde35563f92","value":{"json":"é","repr":"\"é\"","type":"str"}}
+{"diagnostics":[],"id":"x-87ca44dcbf3e","value":{"json":"bc","repr":"\"bc\"","type":"str"}}
+{"diagnostics":[],"id":"x-46b6b4c35d86","value":{"json":"bc","repr":"\"bc\"","type":"str"}}
+{"diagnostics":[],"id":"x-b9ca0a096d79","value":{"json":"","repr":"\"\"","type":"str"}}
+{"diagnostics":[],"id":"x-efe5ce3bdfc3","value":{"json":"b","repr":"\"b\"","type":"str"}}
+{"diagnostics":[],"id":"x-b87c51ec9e9d","value":{"json":["a","b","c"],"repr":"(\"a\", \"b\", \"c\")","type":"array"}}
+{"diagnostics":[],"id":"x-0ffc27f03d49","value":{"json":["é","a"],"repr":"(\"e\\u{301}\", \"a\")","type":"array"}}
+{"diagnostics":[],"id":"x-519879764d16","value":{"json":["e","́","a"],"repr":"(\"e\", \"\\u{301}\", \"a\")","type":"array"}}
+{"diagnostics":[],"id":"x-538a3b519ec7","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-053475e1a0d1","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[{"at":"expr","message":"expected string or regex, found integer","severity":"error","span":[15,16]}],"id":"x-ad3a4c3d6d49","value":null}
+{"diagnostics":[],"id":"x-8db86a3bb356","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-e0fa9afeee37","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-ae88666c8e0c","value":{"json":"b","repr":"\"b\"","type":"str"}}
+{"diagnostics":[],"id":"x-b8c6256c19c2","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[],"id":"x-2e3e79c32e87","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-2bbfb83a166a","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-6b9f0d962587","value":{"json":{"captures":[],"end":2,"start":1,"text":"b"},"repr":"(start: 1, end: 2, text: \"b\", captures: ())","type":"dictionary"}}
+{"diagnostics":[],"id":"x-3d47c5603d3e","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[],"id":"x-47e6f3402950","value":{"json":[{"captures":[],"end":2,"start":1,"text":"b"},{"captures":[],"end":4,"start":3,"text":"b"}],"repr":"(\n  (start: 1, end: 2, text: \"b\", captures: ()),\n  (start: 3, end: 4, text: \"b\", captures: ()),\n)","type":"array"}}
+{"diagnostics":[],"id":"x-7ec358854a82","value":{"json":[{"captures":[],"end":0,"start":0,"text":""},{"captures":[],"end":1,"start":1,"text":""},{"captures":[],"end":2,"start":2,"text":""},{"captures":[],"end":3,"start":3,"text":""}],"repr":"(\n  (start: 0, end: 0, text: \"\", captures: ()),\n  (start: 1, end: 1, text: \"\", captures: ()),\n  (start: 2, end: 2, text: \"\", captures: ()),\n  (start: 3, end: 3, text: \"\", captures: ()),\n)","type":"array"}}
+{"diagnostics":[],"id":"x-9c8f756ebb9b","value":{"json":"axc","repr":"\"axc\"","type":"str"}}
+{"diagnostics":[],"id":"x-8dd202ee47e6","value":{"json":"axab","repr":"\"axab\"","type":"str"}}
+{"diagnostics":[],"id":"x-f8ec96aaa2c4","value":{"json":"ab1ab3","repr":"\"ab1ab3\"","type":"str"}}
+{"diagnostics":[],"id":"x-e6267670d66a","value":{"json":"-a-b-c-","repr":"\"-a-b-c-\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"expected string or function, found integer","severity":"error","span":[19,20]}],"id":"x-2b4c72b9c4ab","value":null}
+{"diagnostics":[{"at":null,"message":"expected integer, float, decimal, version, bytes, label, type, or string, found dictionary","severity":"error"}],"id":"x-219302c3b1fe","value":null}
+{"diagnostics":[],"id":"x-cdb6adfd73ce","value":{"json":"a b","repr":"\"a b\"","type":"str"}}
+{"diagnostics":[],"id":"x-e5009599c2a4","value":{"json":"a","repr":"\"a\"","type":"str"}}
+{"diagnostics":[],"id":"x-668927de0fad","value":{"json":"axx","repr":"\"axx\"","type":"str"}}
+{"diagnostics":[],"id":"x-4010fa37d18c","value":{"json":"xxa","repr":"\"xxa\"","type":"str"}}
+{"diagnostics":[],"id":"x-e0d48fc49475","value":{"json":"xax","repr":"\"xax\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"expected either `start` or `end`","severity":"error","span":[22,28]}],"id":"x-672d1657a967","value":null}
+{"diagnostics":[],"id":"x-8edf1e2db5c1","value":{"json":"a ","repr":"\"a \"","type":"str"}}
+{"diagnostics":[],"id":"x-cb6d3ed6e9fa","value":{"json":["a","b","c"],"repr":"(\"a\", \"b\", \"c\")","type":"array"}}
+{"diagnostics":[],"id":"x-49a7d9bda0ef","value":{"json":["a","b","","c"],"repr":"(\"a\", \"b\", \"\", \"c\")","type":"array"}}
+{"diagnostics":[],"id":"x-af2a3d72d85f","value":{"json":["","a","b","c",""],"repr":"(\"\", \"a\", \"b\", \"c\", \"\")","type":"array"}}
+{"diagnostics":[],"id":"x-54986d0637c4","value":{"json":[""],"repr":"(\"\",)","type":"array"}}
+{"diagnostics":[],"id":"x-f511c5d6894e","value":{"json":"cba","repr":"\"cba\"","type":"str"}}
+{"diagnostics":[],"id":"x-af396397fdf8","value":{"json":"aé","repr":"\"ae\\u{301}\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"type string has no method `upper`","severity":"error","span":[0,11]}],"id":"x-2d3c17fd7be6","value":null}
+{"diagnostics":[],"id":"x-d89cafa545c8","value":{"json":"aaa","repr":"\"aaa\"","type":"str"}}
+{"diagnostics":[],"id":"x-7d730a32f517","value":{"json":"ababab","repr":"\"ababab\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"number must be at least zero","severity":"error","span":[0,8]}],"id":"x-b2b73a621807","value":null}
+{"diagnostics":[],"id":"x-b7b01dff6e4f","value":{"json":"","repr":"\"\"","type":"str"}}
+{"diagnostics":[],"id":"x-4fa5b12fd7ce","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-cd5eab86d715","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[],"id":"x-13479f51fcb5","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-be49ad5401b7","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-5ad16cade8aa","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-7257b6731c3e","value":{"json":"1","repr":"\"1\"","type":"str"}}
+{"diagnostics":[],"id":"x-df2fe5d0465f","value":{"json":"1.5","repr":"\"1.5\"","type":"str"}}
+{"diagnostics":[],"id":"x-9ce4e5ec8077","value":{"json":"100000000000000000000","repr":"\"100000000000000000000\"","type":"str"}}
+{"diagnostics":[],"id":"x-b4dce4c00fc4","value":{"json":"1","repr":"\"1\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"expected integer, float, decimal, version, bytes, label, type, or string, found boolean","severity":"error","span":[4,8]}],"id":"x-a9a022014b56","value":null}
+{"diagnostics":[],"id":"x-8bb2fd46e705","value":{"json":"a","repr":"\"a\"","type":"str"}}
+{"diagnostics":[],"id":"x-61e8e13f9eff","value":{"json":"lbl","repr":"\"lbl\"","type":"str"}}
+{"diagnostics":[],"id":"x-312c709783c6","value":{"json":"integer","repr":"\"integer\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"expected integer, float, decimal, version, bytes, label, type, or string, found none","severity":"error","span":[4,8]}],"id":"x-7ab8fbabd8dc","value":null}
+{"diagnostics":[{"at":"expr","message":"expected integer, float, decimal, version, bytes, label, type, or string, found length","severity":"error","span":[4,7]}],"id":"x-3694681bcbe5","value":null}
+{"diagnostics":[{"at":"expr","message":"expected integer, float, decimal, version, bytes, label, type, or string, found content","severity":"error","span":[4,7]}],"id":"x-a864bd1f58a7","value":null}
+{"diagnostics":[{"at":"expr","message":"unexpected argument","severity":"error","span":[7,8]}],"id":"x-f7e6e5270ddc","value":null}
+{"diagnostics":[],"id":"x-fce8fe393925","value":{"json":"1","repr":"\"1\"","type":"str"}}
+{"diagnostics":[],"id":"x-00ba46c7f5f0","value":{"json":"ff","repr":"\"ff\"","type":"str"}}
+{"diagnostics":[],"id":"x-d069db175961","value":{"json":"−ff","repr":"\"−ff\"","type":"str"}}
+{"diagnostics":[],"id":"x-e616ef1ec128","value":{"json":"z","repr":"\"z\"","type":"str"}}
+{"diagnostics":[{"at":"expr","hints":["generate a unary representation with `\"1\" * 1`"],"message":"base must be between 2 and 36","severity":"error","span":[13,14]}],"id":"x-f16d6f654e14","value":null}
+{"diagnostics":[{"at":"expr","message":"base must be between 2 and 36","severity":"error","span":[13,15]}],"id":"x-18caa944da9f","value":null}
+{"diagnostics":[{"at":"expr","message":"base is only supported for integers","severity":"error","span":[15,16]}],"id":"x-0e18990a3ce2","value":null}
+{"diagnostics":[],"id":"x-73295add2399","value":{"json":"a","repr":"\"a\"","type":"str"}}
+{"diagnostics":[],"id":"x-195b3ae7e99d","value":{"json":"😀","repr":"\"😀\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"number must be at least zero","severity":"error","span":[17,19]}],"id":"x-d8c634b8d3ec","value":null}
+{"diagnostics":[{"at":"expr","message":"0xd800 is not a valid codepoint","severity":"error","span":[0,23]}],"id":"x-1198e62130f0","value":null}
+{"diagnostics":[{"at":"expr","message":"0x110000 is not a valid codepoint","severity":"error","span":[0,25]}],"id":"x-2731797dcf47","value":null}
+{"diagnostics":[],"id":"x-a41e2b3bf34f","value":{"json":97,"repr":"97","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"expected exactly one character","severity":"error","span":[15,19]}],"id":"x-1a2334245766","value":null}
+{"diagnostics":[{"at":"expr","message":"expected exactly one character","severity":"error","span":[15,17]}],"id":"x-36f4667b6d88","value":null}
+{"diagnostics":[],"id":"x-5a9a41974d7b","value":{"json":233,"repr":"233","type":"int"}}
+{"diagnostics":[],"id":"x-964ae2a7be95","value":{"json":"\"a\"","repr":"\"\\\"a\\\"\"","type":"str"}}
+{"diagnostics":[],"id":"x-b03c6d37bfee","value":{"json":"\"a\\\"b\"","repr":"\"\\\"a\\\\\\\"b\\\"\"","type":"str"}}
+{"diagnostics":[],"id":"x-4a25fc883605","value":{"json":"\"a\\\\b\"","repr":"\"\\\"a\\\\\\\\b\\\"\"","type":"str"}}
+{"diagnostics":[],"id":"x-c70d634aca94","value":{"json":"\"\\n\"","repr":"\"\\\"\\\\n\\\"\"","type":"str"}}
+{"diagnostics":[],"id":"x-0bf1b9e25e1f","value":{"json":"\"é\"","repr":"\"\\\"é\\\"\"","type":"str"}}
+{"diagnostics":[],"id":"x-c3ed0e054228","value":{"json":"ABC","repr":"\"ABC\"","type":"str"}}
+{"diagnostics":[],"id":"x-71cafa635bfa","value":{"json":"abc","repr":"\"abc\"","type":"str"}}
+{"diagnostics":[],"id":"x-b544b2b57dbe","value":{"json":"HÉLLO","repr":"\"HÉLLO\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"expected string or content, found integer","severity":"error","span":[6,7]}],"id":"x-f3dae9d6f631","value":null}
+{"diagnostics":[],"id":"x-61ef7cf63da3","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-f042c7cb0f2a","value":{"json":-1,"repr":"-1","type":"int"}}
+{"diagnostics":[],"id":"x-de9a635d0a89","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-8a5292669533","value":{"exact":{"float":1},"json":1,"repr":"1.0","type":"float"}}
+{"diagnostics":[],"id":"x-5408477c1497","value":{"exact":{"float":-1},"json":-1,"repr":"-1.0","type":"float"}}
+{"diagnostics":[],"id":"x-1e73708b96a1","value":{"exact":{"float":1},"json":1,"repr":"1.0","type":"float"}}
+{"diagnostics":[],"id":"x-82178bfcf753","value":{"exact":{"float":null},"json":null,"repr":"float.inf","type":"float"}}
+{"diagnostics":[],"id":"x-e09ef079e05d","value":{"exact":{"float":null},"json":null,"repr":"-float.inf","type":"float"}}
+{"diagnostics":[],"id":"x-5615f635171d","value":{"exact":{"float":null},"json":null,"repr":"float.nan","type":"float"}}
+{"diagnostics":[],"id":"x-45a6132cfd58","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[],"id":"x-222191284f64","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-d9a5560becea","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-ae7d2337df64","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[],"id":"x-d49b7964faeb","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-2651b48a1f7d","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[{"at":"expr","message":"type integer has no method `is-nan`","severity":"error","span":[0,10]}],"id":"x-7603990a5886","value":null}
+{"diagnostics":[],"id":"x-2ea9a7e03f54","value":{"json":-6,"repr":"-6","type":"int"}}
+{"diagnostics":[],"id":"x-0fd5cf839a71","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-e6701af31663","value":{"json":7,"repr":"7","type":"int"}}
+{"diagnostics":[],"id":"x-8620d787525e","value":{"json":6,"repr":"6","type":"int"}}
+{"diagnostics":[],"id":"x-7c127a3bef54","value":{"json":8,"repr":"8","type":"int"}}
+{"diagnostics":[],"id":"x-1fe08a35b8b6","value":{"json":-9223372036854776000,"repr":"-9223372036854775808","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"the result is too large","severity":"error","span":[0,18]}],"id":"x-f05e226ce395","value":null}
+{"diagnostics":[],"id":"x-578314af5119","value":{"json":-4,"repr":"-4","type":"int"}}
+{"diagnostics":[],"id":"x-630db9eece08","value":{"json":9223372036854776000,"repr":"9223372036854775804","type":"int"}}
+{"diagnostics":[],"id":"x-2a85dd0173b1","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"number must be at least zero","severity":"error","span":[15,17]}],"id":"x-25a539d8df6b","value":null}
+{"diagnostics":[],"id":"x-60c18464d64f","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-f20caa68184a","value":{"json":-1,"repr":"-1","type":"int"}}
+{"diagnostics":[],"id":"x-bb6a52183cde","value":{"json":42,"repr":"42","type":"int"}}
+{"diagnostics":[],"id":"x-288e1f917de5","value":{"json":-42,"repr":"-42","type":"int"}}
+{"diagnostics":[],"id":"x-7a983f71fd11","value":{"json":42,"repr":"42","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"string contains invalid digits","severity":"error","span":[4,9]}],"id":"x-4fc1471d68c9","value":null}
+{"diagnostics":[{"at":"expr","message":"string contains invalid digits","severity":"error","span":[4,9]}],"id":"x-8d4d7c86cbde","value":null}
+{"diagnostics":[{"at":"expr","message":"string contains invalid digits","severity":"error","span":[4,9]}],"id":"x-61c9e095d1f2","value":null}
+{"diagnostics":[],"id":"x-7b4893146737","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-3e2e76beabd1","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"number too large","severity":"error","span":[4,8]}],"id":"x-842f5f69916e","value":null}
+{"diagnostics":[{"at":"expr","message":"number too large","severity":"error","span":[4,9]}],"id":"x-5becb8274003","value":null}
+{"diagnostics":[],"id":"x-307350fde7e2","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"number too large","severity":"error","span":[4,13]}],"id":"x-b29b04cd25a1","value":null}
+{"diagnostics":[{"at":"expr","hints":["value does not fit into a signed 64-bit integer","try using a floating point number"],"message":"integer value is too large","severity":"error","span":[4,25]}],"id":"x-14cfe9944c82","value":null}
+{"diagnostics":[],"id":"x-9e3db8fab6bb","value":{"json":-9223372036854776000,"repr":"-9223372036854775808","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"string must not be empty","severity":"error","span":[4,6]}],"id":"x-f33673aa3dc6","value":null}
+{"diagnostics":[{"at":"expr","message":"string contains invalid digits","severity":"error","span":[4,10]}],"id":"x-174c42131809","value":null}
+{"diagnostics":[{"at":"expr","message":"expected integer, boolean, float, decimal, or string, found none","severity":"error","span":[4,8]}],"id":"x-20b716766f13","value":null}
+{"diagnostics":[{"at":"expr","message":"expected integer, boolean, float, decimal, or string, found length","severity":"error","span":[4,7]}],"id":"x-fdcc285b3350","value":null}
+{"diagnostics":[],"id":"x-8c01540e0939","value":{"exact":{"float":1},"json":1,"repr":"1.0","type":"float"}}
+{"diagnostics":[],"id":"x-e960c18b8f2d","value":{"exact":{"float":1.5},"json":1.5,"repr":"1.5","type":"float"}}
+{"diagnostics":[],"id":"x-3332f6ade88f","value":{"exact":{"float":1000},"json":1000,"repr":"1000.0","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"invalid float:  1.5","severity":"error","span":[6,12]}],"id":"x-ad21a8a965f4","value":null}
+{"diagnostics":[],"id":"x-eba570243371","value":{"exact":{"float":null},"json":null,"repr":"float.inf","type":"float"}}
+{"diagnostics":[],"id":"x-1c11f7c9497d","value":{"exact":{"float":null},"json":null,"repr":"-float.inf","type":"float"}}
+{"diagnostics":[],"id":"x-a3b815f31f4a","value":{"exact":{"float":null},"json":null,"repr":"float.nan","type":"float"}}
+{"diagnostics":[],"id":"x-68651e822854","value":{"exact":{"float":null},"json":null,"repr":"float.nan","type":"float"}}
+{"diagnostics":[],"id":"x-ed555380f1cc","value":{"exact":{"float":null},"json":null,"repr":"float.inf","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"invalid float: 1.5.5","severity":"error","span":[6,13]}],"id":"x-b1bc4c2413a4","value":null}
+{"diagnostics":[{"at":"expr","message":"invalid float: ","severity":"error","span":[6,8]}],"id":"x-70a09b9f4ac8","value":null}
+{"diagnostics":[],"id":"x-e6cf3936f36d","value":{"exact":{"float":1},"json":1,"repr":"1.0","type":"float"}}
+{"diagnostics":[],"id":"x-78496b8484a6","value":{"exact":{"float":0.5},"json":0.5,"repr":"0.5","type":"float"}}
+{"diagnostics":[],"id":"x-8a5c009939b0","value":{"exact":{"float":9223372036854776000},"json":9223372036854776000,"repr":"9.223372036854776e18","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"invalid float: 0x10","severity":"error","span":[6,12]}],"id":"x-872754cc847a","value":null}
+{"diagnostics":[],"id":"x-6952932d6edd","value":{"exact":{"float":0.5},"json":0.5,"repr":"0.5","type":"float"}}
+{"diagnostics":[],"id":"x-5bd9e052bce1","value":{"exact":{"float":5},"json":5,"repr":"5.0","type":"float"}}
+{"diagnostics":[],"id":"x-a91763287fe0","value":{"exact":{"float":1.5},"json":1.5,"repr":"1.5","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"invalid float: 1_000","severity":"error","span":[6,13]}],"id":"x-6292a5318fb0","value":null}
+{"diagnostics":[],"id":"x-9f263b53a1cf","value":{"json":"int","repr":"int","type":"type"}}
+{"diagnostics":[],"id":"x-09e882a1ce58","value":{"json":"float","repr":"float","type":"type"}}
+{"diagnostics":[],"id":"x-a76660f1824a","value":{"json":"str","repr":"str","type":"type"}}
+{"diagnostics":[],"id":"x-e7221dee9ead","value":{"json":"type(none)","repr":"type(none)","type":"type"}}
+{"diagnostics":[],"id":"x-07576eb509e4","value":{"json":"type(auto)","repr":"type(auto)","type":"type"}}
+{"diagnostics":[],"id":"x-589099de3a31","value":{"json":"bool","repr":"bool","type":"type"}}
+{"diagnostics":[],"id":"x-b18c0b8d648e","value":{"json":"array","repr":"array","type":"type"}}
+{"diagnostics":[],"id":"x-f7e8a377f21d","value":{"json":"dictionary","repr":"dictionary","type":"type"}}
+{"diagnostics":[],"id":"x-8446370d9687","value":{"json":"content","repr":"content","type":"type"}}
+{"diagnostics":[],"id":"x-6ca53301d636","value":{"json":"module","repr":"module","type":"type"}}
+{"diagnostics":[],"id":"x-86c111e395c9","value":{"json":"type","repr":"type","type":"type"}}
+{"diagnostics":[],"id":"x-22aed013044d","value":{"json":"function","repr":"function","type":"type"}}
+{"diagnostics":[],"id":"x-f222a87e8664","value":{"json":"length","repr":"length","type":"type"}}
+{"diagnostics":[],"id":"x-ccdddbf77523","value":{"json":"length","repr":"length","type":"type"}}
+{"diagnostics":[],"id":"x-c0ff28d57859","value":{"json":"length","repr":"length","type":"type"}}
+{"diagnostics":[],"id":"x-dea8ce733b4f","value":{"json":"ratio","repr":"ratio","type":"type"}}
+{"diagnostics":[],"id":"x-3295cd8ef9c5","value":{"json":"relative","repr":"relative","type":"type"}}
+{"diagnostics":[],"id":"x-0c1e6824623e","value":{"json":"angle","repr":"angle","type":"type"}}
+{"diagnostics":[],"id":"x-b5445c0b4868","value":{"json":"fraction","repr":"fraction","type":"type"}}
+{"diagnostics":[],"id":"x-0d08a34ee34d","value":{"json":"color","repr":"color","type":"type"}}
+{"diagnostics":[],"id":"x-a792cf9096fa","value":{"json":"alignment","repr":"alignment","type":"type"}}
+{"diagnostics":[],"id":"x-5cb29d8870c7","value":{"json":"symbol","repr":"symbol","type":"type"}}
+{"diagnostics":[],"id":"x-4d72e0ef887a","value":{"json":"label","repr":"label","type":"type"}}
+{"diagnostics":[],"id":"x-5f6ea534a982","value":{"json":"arguments","repr":"arguments","type":"type"}}
+{"diagnostics":[],"id":"x-fc9c9f7bc207","value":{"json":"stroke","repr":"stroke","type":"type"}}
+{"diagnostics":[],"id":"x-318c7ed40586","value":{"json":"type","repr":"type","type":"type"}}
+{"diagnostics":[],"id":"x-18cbb5787cea","value":{"json":"int","repr":"\"int\"","type":"str"}}
+{"diagnostics":[],"id":"x-b1ef4f0de2c1","value":{"json":"integer","repr":"\"integer\"","type":"str"}}
+{"diagnostics":[],"id":"x-27705a67fdd2","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-8e126fd23b61","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[],"id":"x-fcec0e79d55b","value":{"json":"int","repr":"\"int\"","type":"str"}}
+{"diagnostics":[],"id":"x-469dec6ab906","value":{"json":"none","repr":"\"none\"","type":"str"}}
+{"diagnostics":[],"id":"x-8982401515cc","value":{"json":"type(none)","repr":"\"type(none)\"","type":"str"}}
+{"diagnostics":[],"id":"x-b4acc2e60b96","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[{"at":"expr","message":"type integer does not contain field `foo`","severity":"error","span":[4,7]}],"id":"x-fd0a3286d266","value":null}
+{"diagnostics":[],"id":"x-ab0b4c334902","value":{"json":"len","repr":"len","type":"function"}}
+{"diagnostics":[],"id":"x-be2c616334a0","value":{"json":9223372036854776000,"repr":"9223372036854775807","type":"int"}}
+{"diagnostics":[],"id":"x-caafbef9579e","value":{"json":-9223372036854776000,"repr":"-9223372036854775808","type":"int"}}
+{"diagnostics":[],"id":"x-537485e57aa3","value":{"json":"1","repr":"\"1\"","type":"str"}}
+{"diagnostics":[],"id":"x-0b4d859e45f5","value":{"json":"1.0","repr":"\"1.0\"","type":"str"}}
+{"diagnostics":[],"id":"x-70c4ae46beed","value":{"json":"1.5","repr":"\"1.5\"","type":"str"}}
+{"diagnostics":[],"id":"x-f2a5a34e13bf","value":{"json":"1e20","repr":"\"1e20\"","type":"str"}}
+{"diagnostics":[],"id":"x-99feb120a28c","value":{"json":"1e21","repr":"\"1e21\"","type":"str"}}
+{"diagnostics":[],"id":"x-3a31c3dba768","value":{"json":"0.30000000000000004","repr":"\"0.30000000000000004\"","type":"str"}}
+{"diagnostics":[],"id":"x-e2bf872382b2","value":{"json":"1e-7","repr":"\"1e-7\"","type":"str"}}
+{"diagnostics":[],"id":"x-d73084be3c82","value":{"json":"-0.0","repr":"\"-0.0\"","type":"str"}}
+{"diagnostics":[],"id":"x-7690f765716d","value":{"json":"1pt","repr":"\"1pt\"","type":"str"}}
+{"diagnostics":[],"id":"x-83dfe8051c42","value":{"json":"1.5em","repr":"\"1.5em\"","type":"str"}}
+{"diagnostics":[],"id":"x-53d450397f5f","value":{"json":"1pt + 1em","repr":"\"1pt + 1em\"","type":"str"}}
+{"diagnostics":[],"id":"x-d5d226a6ba56","value":{"json":"50%","repr":"\"50%\"","type":"str"}}
+{"diagnostics":[],"id":"x-69491012a095","value":{"json":"1deg","repr":"\"1deg\"","type":"str"}}
+{"diagnostics":[],"id":"x-23fa0399002b","value":{"json":"90deg","repr":"\"90deg\"","type":"str"}}
+{"diagnostics":[],"id":"x-90f5c315be9c","value":{"json":"57.3deg","repr":"\"57.3deg\"","type":"str"}}
+{"diagnostics":[],"id":"x-561d056bb790","value":{"json":"1fr","repr":"\"1fr\"","type":"str"}}
+{"diagnostics":[],"id":"x-4a1c14cc3b41","value":{"json":"rgb(\"#ff4136\")","repr":"\"rgb(\\\"#ff4136\\\")\"","type":"str"}}
+{"diagnostics":[],"id":"x-3f7ef85ae19b","value":{"json":"rgb(\"#010203\")","repr":"\"rgb(\\\"#010203\\\")\"","type":"str"}}
+{"diagnostics":[],"id":"x-7e070cec81bd","value":{"json":"left","repr":"\"left\"","type":"str"}}
+{"diagnostics":[],"id":"x-566bf3aec6da","value":{"json":"symbol(\"α\")","repr":"\"symbol(\\\"α\\\")\"","type":"str"}}
+{"diagnostics":[],"id":"x-0a0e433a0159","value":{"json":"[a]","repr":"\"[a]\"","type":"str"}}
+{"diagnostics":[],"id":"x-57f19b463af5","value":{"json":"sequence([a], [ ], strong(body: [b]))","repr":"\"sequence([a], [ ], strong(body: [b]))\"","type":"str"}}
+{"diagnostics":[],"id":"x-212f2d7d5dc8","value":{"json":"(..) => ..","repr":"\"(..) => ..\"","type":"str"}}
+{"diagnostics":[],"id":"x-73923a31a744","value":{"json":"<module calc>","repr":"\"<module calc>\"","type":"str"}}
+{"diagnostics":[],"id":"x-c4a00ee928a6","value":{"json":"abs","repr":"\"abs\"","type":"str"}}
+{"diagnostics":[],"id":"x-d09dc7783250","value":{"json":"<lbl>","repr":"\"<lbl>\"","type":"str"}}
+{"diagnostics":[],"id":"x-9ec69d19ea1a","value":{"json":"()","repr":"\"()\"","type":"str"}}
+{"diagnostics":[],"id":"x-09c595c86e58","value":{"json":"(1,)","repr":"\"(1,)\"","type":"str"}}
+{"diagnostics":[],"id":"x-791512a49817","value":{"json":"(a: 1)","repr":"\"(a: 1)\"","type":"str"}}
+{"diagnostics":[],"id":"x-1415f09510c4","value":{"json":"arguments(1, a: 2)","repr":"\"arguments(1, a: 2)\"","type":"str"}}
+{"diagnostics":[],"id":"x-1af2ac30fd0f","value":{"json":"0.5pt + rgb(\"#ff4136\")","repr":"\"0.5pt + rgb(\\\"#ff4136\\\")\"","type":"str"}}
+{"diagnostics":[],"id":"x-c8f027b4059d","value":{"json":"true","repr":"\"true\"","type":"str"}}
+{"diagnostics":[],"id":"x-4fee5c99f39f","value":{"json":"auto","repr":"\"auto\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"panicked","severity":"error","span":[0,7]}],"id":"x-da2acbfa3a65","value":null}
+{"diagnostics":[{"at":"expr","message":"panicked with: 1","severity":"error","span":[0,8]}],"id":"x-9655b4b957a7","value":null}
+{"diagnostics":[{"at":"expr","message":"panicked with: a, 1, [b]","severity":"error","span":[0,18]}],"id":"x-305d1611b33f","value":null}
+{"diagnostics":[],"id":"x-474a168fd78a","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[{"at":"expr","message":"assertion failed","severity":"error","span":[0,13]}],"id":"x-62d57d5f33d0","value":null}
+{"diagnostics":[{"at":"expr","message":"assertion failed: nope","severity":"error","span":[0,30]}],"id":"x-dbe9e9e0d148","value":null}
+{"diagnostics":[{"at":"expr","message":"expected boolean, found integer","severity":"error","span":[7,8]}],"id":"x-5131c997f011","value":null}
+{"diagnostics":[],"id":"x-b90e8c463ad8","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[{"at":"expr","message":"equality assertion failed: value 1 was not equal to 2","severity":"error","span":[0,15]}],"id":"x-93a7f62d6f10","value":null}
+{"diagnostics":[{"at":"expr","message":"equality assertion failed: m","severity":"error","span":[0,29]}],"id":"x-b2762110da4c","value":null}
+{"diagnostics":[],"id":"x-ad2130a8b034","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[{"at":"expr","message":"inequality assertion failed: value 1 was equal to 1","severity":"error","span":[0,15]}],"id":"x-8fc9ab2cc12a","value":null}
+{"diagnostics":[],"id":"x-293dc39ba099","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[],"id":"x-3c4515c54b0c","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[],"id":"x-2853eaa8f0a3","value":{"exact":{"float":0.30000000000000004},"json":0.30000000000000004,"repr":"0.30000000000000004","type":"float"}}
+{"diagnostics":[],"id":"x-b47df6774d03","value":{"exact":{"float":0.3333333333333333},"json":0.3333333333333333,"repr":"0.3333333333333333","type":"float"}}
+{"diagnostics":[],"id":"x-ce76f8aa70a3","value":{"exact":{"float":null},"json":null,"repr":"float.inf","type":"float"}}
+{"diagnostics":[],"id":"x-6ce36ab36216","value":{"exact":{"float":null},"json":null,"repr":"-float.inf","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"value is too large","severity":"error","span":[0,23]}],"id":"x-6967f94dc406","value":null}
+{"diagnostics":[{"at":"expr","message":"value is too large","severity":"error","span":[0,23]}],"id":"x-dc91891b66ce","value":null}
+{"diagnostics":[{"at":"expr","message":"value is too large","severity":"error","span":[0,24]}],"id":"x-6e30d3017bfb","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot divide by zero","severity":"error","span":[0,5]}],"id":"x-95baf036f1aa","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot divide by zero","severity":"error","span":[0,7]}],"id":"x-a70c2871eebe","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot divide by zero","severity":"error","span":[0,5]}],"id":"x-61c85f3d19dd","value":null}
+{"diagnostics":[],"id":"x-8949e0f5f22e","value":{"exact":{"float":3.5},"json":3.5,"repr":"3.5","type":"float"}}
+{"diagnostics":[],"id":"x-f97bbff1f4cf","value":{"exact":{"float":-3.5},"json":-3.5,"repr":"-3.5","type":"float"}}
+{"diagnostics":[],"id":"x-f2bba4568fec","value":{"exact":{"float":null},"json":null,"repr":"float.inf","type":"float"}}
+{"diagnostics":[],"id":"x-c5c29af0c2b1","value":{"exact":{"float":9223372036854776000},"json":9223372036854776000,"repr":"9.223372036854776e18","type":"float"}}
+{"diagnostics":[],"id":"x-85386477f3af","value":{"exact":{"float":-9223372036854776000},"json":-9223372036854776000,"repr":"-9.223372036854776e18","type":"float"}}
+{"diagnostics":[],"id":"x-922783559b2a","value":{"json":31,"repr":"31","type":"int"}}
+{"diagnostics":[],"id":"x-412cb8fe88ce","value":{"json":5,"repr":"5","type":"int"}}
+{"diagnostics":[],"id":"x-9e63dedde5e8","value":{"json":15,"repr":"15","type":"int"}}
+{"diagnostics":[],"id":"x-a4644f7cae90","value":{"exact":{"float":1},"json":1,"repr":"1.0","type":"float"}}
+{"diagnostics":[],"id":"x-a1b31cda6614","value":{"exact":{"float":28.346456692913385},"json":28.346456692913385,"repr":"28.346456692913385","type":"float"}}
+{"diagnostics":[],"id":"x-7464877a649e","value":{"exact":{"float":72},"json":72,"repr":"72.0","type":"float"}}
+{"diagnostics":[],"id":"x-25498bd4b303","value":{"exact":{"float":2.8346456692913384},"json":2.8346456692913384,"repr":"2.8346456692913384","type":"float"}}
+{"diagnostics":[],"id":"x-50420d4adee8","value":{"exact":{"float":1},"json":1,"repr":"1.0","type":"float"}}
+{"diagnostics":[],"id":"x-a4c3230fc290","value":{"exact":{"float":10},"json":10,"repr":"10.0","type":"float"}}
+{"diagnostics":[],"id":"x-259ff11e257f","value":{"exact":{"float":1},"json":1,"repr":"1.0","type":"float"}}
+{"diagnostics":[{"at":"expr","hints":["use `length.to-absolute()` to resolve its em component (requires context)","or use `length.abs.pt()` instead to ignore its em component"],"message":"cannot convert a length with non-zero em units (`1em`) to pt","severity":"error","span":[0,8]}],"id":"x-728565b9b2ac","value":null}
+{"diagnostics":[{"at":"expr","hints":["use `length.to-absolute()` to resolve its em component (requires context)","or use `length.abs.pt()` instead to ignore its em component"],"message":"cannot convert a length with non-zero em units (`1pt + 1em`) to pt","severity":"error","span":[0,16]}],"id":"x-0b69c2c90661","value":null}
+{"diagnostics":[],"id":"x-3762cb89efef","value":{"exact":{"abs":1,"em":0},"json":"1pt","repr":"1pt","type":"length"}}
+{"diagnostics":[],"id":"x-b1911b206c9f","value":{"exact":{"float":0},"json":0,"repr":"0.0","type":"float"}}
+{"diagnostics":[],"id":"x-fbcc6cb57b50","value":{"exact":{"float":2},"json":2,"repr":"2.0","type":"float"}}
+{"diagnostics":[],"id":"x-31b3bb87a116","value":{"exact":{"abs":1,"em":0},"json":"1pt","repr":"1pt","type":"length"}}
+{"diagnostics":[],"id":"x-58c701c01763","value":{"exact":{"abs":1,"em":0},"json":"1pt","repr":"1pt","type":"length"}}
+{"diagnostics":[],"id":"x-a35d1cc40c70","value":{"exact":{"ratio":0.5},"json":"50%","repr":"50%","type":"ratio"}}
+{"diagnostics":[],"id":"x-cf7eabe6dc52","value":{"exact":{"float":1.5707963267948966},"json":1.5707963267948966,"repr":"1.5707963267948966","type":"float"}}
+{"diagnostics":[],"id":"x-0ba3ee745198","value":{"exact":{"float":57.29577951308232},"json":57.29577951308232,"repr":"57.29577951308232","type":"float"}}
+{"diagnostics":[],"id":"x-0d5ac197244e","value":{"exact":{"float":3.141592653589793},"json":3.141592653589793,"repr":"3.141592653589793","type":"float"}}
+{"diagnostics":[],"id":"x-e18692729514","value":{"exact":{"float":90},"json":90,"repr":"90.0","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"type length has no method `foo`","severity":"error","span":[0,7]}],"id":"x-dc7534317a5d","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot access fields on type angle","severity":"error","span":[5,8]}],"id":"x-cf662f5a149e","value":null}
+{"diagnostics":[],"id":"x-a2cf8acf9f73","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-1fa298f4e0c6","value":{"exact":{"float":3.5},"json":3.5,"repr":"3.5","type":"float"}}
+{"diagnostics":[],"id":"x-fd647325ff65","value":{"exact":{"abs":1,"em":0},"json":"1pt","repr":"1pt","type":"length"}}
+{"diagnostics":[],"id":"x-de9cd32af846","value":{"exact":{"ratio":0.5},"json":"50%","repr":"50%","type":"ratio"}}
+{"diagnostics":[],"id":"x-2e75c828bb37","value":{"exact":{"deg":1},"json":"1deg","repr":"1deg","type":"angle"}}
+{"diagnostics":[],"id":"x-63220f5f2daf","value":{"exact":{"fr":1},"json":"1fr","repr":"1fr","type":"fraction"}}
+{"diagnostics":[{"at":"expr","message":"cannot take absolute value of this length","severity":"error","span":[9,21]}],"id":"x-6c3f7d1ca9c6","value":null}
+{"diagnostics":[{"at":"expr","message":"expected integer, float, length, angle, ratio, fraction, or decimal, found string","severity":"error","span":[9,12]}],"id":"x-6217386e73a6","value":null}
+{"diagnostics":[{"at":"expr","message":"the result is too large","severity":"error","span":[9,33]}],"id":"x-1e23c08924fe","value":null}
+{"diagnostics":[],"id":"x-f56354715b69","value":{"json":1024,"repr":"1024","type":"int"}}
+{"diagnostics":[],"id":"x-b85910fcbf36","value":{"exact":{"float":0.5},"json":0.5,"repr":"0.5","type":"float"}}
+{"diagnostics":[],"id":"x-f76bc238033d","value":{"exact":{"float":6.25},"json":6.25,"repr":"6.25","type":"float"}}
+{"diagnostics":[],"id":"x-2ef2788ca198","value":{"exact":{"float":1.4142135623730951},"json":1.4142135623730951,"repr":"1.4142135623730951","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"zero to the power of zero is undefined","severity":"error","span":[0,14]}],"id":"x-5e97c4bf7f76","value":null}
+{"diagnostics":[],"id":"x-a7f01083d4bc","value":{"exact":{"float":null},"json":null,"repr":"float.inf","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"the result is too large","severity":"error","span":[0,15]}],"id":"x-8bcd132ed501","value":null}
+{"diagnostics":[],"id":"x-0a1c74a6a966","value":{"json":4611686018427388000,"repr":"4611686018427387904","type":"int"}}
+{"diagnostics":[],"id":"x-ad41636ac5ae","value":{"json":-9223372036854776000,"repr":"-9223372036854775808","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"exponent may not be infinite, subnormal, or NaN","severity":"error","span":[12,21]}],"id":"x-6692732592d6","value":null}
+{"diagnostics":[{"at":"expr","message":"exponent is too large","severity":"error","span":[12,22]}],"id":"x-adfd706bbfda","value":null}
+{"diagnostics":[{"at":"expr","message":"the result is not a real number","severity":"error","span":[0,17]}],"id":"x-adbd67e00ba7","value":null}
+{"diagnostics":[],"id":"x-e8173f95aa3d","value":{"json":100,"repr":"100","type":"int"}}
+{"diagnostics":[],"id":"x-b9387cac91c5","value":{"exact":{"float":7.38905609893065},"json":7.38905609893065,"repr":"7.38905609893065","type":"float"}}
+{"diagnostics":[],"id":"x-fb9d79177cff","value":{"exact":{"float":11.313708498984761},"json":11.313708498984761,"repr":"11.313708498984761","type":"float"}}
+{"diagnostics":[],"id":"x-11b66ee629f8","value":{"exact":{"float":2.593742460100002},"json":2.593742460100002,"repr":"2.593742460100002","type":"float"}}
+{"diagnostics":[],"id":"x-7386f70c05dc","value":{"exact":{"float":3.087837121861055e+28},"json":3.087837121861055e+28,"repr":"3.087837121861055e28","type":"float"}}
+{"diagnostics":[],"id":"x-b8e5d529c1a6","value":{"exact":{"float":1.7933117773745795},"json":1.7933117773745795,"repr":"1.7933117773745795","type":"float"}}
+{"diagnostics":[],"id":"x-2bae66c09510","value":{"exact":{"float":2.7182818284590455},"json":2.7182818284590455,"repr":"2.7182818284590455","type":"float"}}
+{"diagnostics":[],"id":"x-bccf16f4d7e4","value":{"exact":{"float":1},"json":1,"repr":"1.0","type":"float"}}
+{"diagnostics":[],"id":"x-fcd64cba0ac5","value":{"exact":{"float":0.22313016014842982},"json":0.22313016014842982,"repr":"0.22313016014842982","type":"float"}}
+{"diagnostics":[],"id":"x-bc37156dbb4d","value":{"exact":{"float":null},"json":null,"repr":"float.inf","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"exponent may not be infinite, subnormal, or NaN","severity":"error","span":[9,18]}],"id":"x-63eb0e825a1c","value":null}
+{"diagnostics":[{"at":"expr","message":"exponent may not be infinite, subnormal, or NaN","severity":"error","span":[9,18]}],"id":"x-cb667d2e8e98","value":null}
+{"diagnostics":[],"id":"x-840b9be6c9a7","value":{"exact":{"float":2},"json":2,"repr":"2.0","type":"float"}}
+{"diagnostics":[],"id":"x-c30e212e4b51","value":{"exact":{"float":1.4142135623730951},"json":1.4142135623730951,"repr":"1.4142135623730951","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"cannot take square root of negative number","severity":"error","span":[10,12]}],"id":"x-1e55efdd9100","value":null}
+{"diagnostics":[],"id":"x-d001289e2b41","value":{"exact":{"float":0},"json":0,"repr":"0.0","type":"float"}}
+{"diagnostics":[],"id":"x-54ce1bbd0583","value":{"exact":{"float":3},"json":3,"repr":"3.0","type":"float"}}
+{"diagnostics":[],"id":"x-76c59b7b3e1f","value":{"exact":{"float":-3},"json":-3,"repr":"-3.0","type":"float"}}
+{"diagnostics":[],"id":"x-2f6f83ba3568","value":{"exact":{"float":2},"json":2,"repr":"2.0","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"negative numbers do not have a real nth root when n is even","severity":"error","span":[15,16]}],"id":"x-6ea72823d89c","value":null}
+{"diagnostics":[{"at":"expr","message":"cannot take the 0th root of a number","severity":"error","span":[13,14]}],"id":"x-a04fa76142f9","value":null}
+{"diagnostics":[],"id":"x-cef2775cc9d6","value":{"exact":{"float":0.5},"json":0.5,"repr":"0.5","type":"float"}}
+{"diagnostics":[],"id":"x-3ca23a48577c","value":{"exact":{"float":0},"json":0,"repr":"0.0","type":"float"}}
+{"diagnostics":[],"id":"x-44066374c255","value":{"exact":{"float":1},"json":1,"repr":"1.0","type":"float"}}
+{"diagnostics":[],"id":"x-2c86afe622d4","value":{"exact":{"float":0.8414709848078965},"json":0.8414709848078965,"repr":"0.8414709848078965","type":"float"}}
+{"diagnostics":[],"id":"x-495106706940","value":{"exact":{"float":1.2246467991473532e-16},"json":1.2246467991473532e-16,"repr":"1.2246467991473532e-16","type":"float"}}
+{"diagnostics":[],"id":"x-5ca56b4742d2","value":{"exact":{"float":-0.5063656411097588},"json":-0.5063656411097588,"repr":"-0.5063656411097588","type":"float"}}
+{"diagnostics":[],"id":"x-de44dd528365","value":{"exact":{"float":1},"json":1,"repr":"1.0","type":"float"}}
+{"diagnostics":[],"id":"x-9928dea5bcf8","value":{"exact":{"float":-1},"json":-1,"repr":"-1.0","type":"float"}}
+{"diagnostics":[],"id":"x-ee0057ebf125","value":{"exact":{"float":0.5403023058681398},"json":0.5403023058681398,"repr":"0.5403023058681398","type":"float"}}
+{"diagnostics":[],"id":"x-628cbb767df6","value":{"exact":{"float":0.9999999999999999},"json":0.9999999999999999,"repr":"0.9999999999999999","type":"float"}}
+{"diagnostics":[],"id":"x-79a8d1927075","value":{"exact":{"float":1.5574077246549023},"json":1.5574077246549023,"repr":"1.5574077246549023","type":"float"}}
+{"diagnostics":[],"id":"x-48a53e47465d","value":{"exact":{"deg":90},"json":"90deg","repr":"90deg","type":"angle"}}
+{"diagnostics":[{"at":"expr","message":"value must be between -1 and 1","severity":"error","span":[10,11]}],"id":"x-34ef02cb678c","value":null}
+{"diagnostics":[],"id":"x-8a292404a77f","value":{"exact":{"deg":90},"json":"90deg","repr":"90deg","type":"angle"}}
+{"diagnostics":[],"id":"x-465660a23e7d","value":{"exact":{"deg":45},"json":"45deg","repr":"45deg","type":"angle"}}
+{"diagnostics":[],"id":"x-fff7c29d0812","value":{"exact":{"deg":45},"json":"45deg","repr":"45deg","type":"angle"}}
+{"diagnostics":[],"id":"x-497d7d8ddb9e","value":{"exact":{"deg":-90},"json":"-90deg","repr":"-90deg","type":"angle"}}
+{"diagnostics":[],"id":"x-51d6f48b4b3f","value":{"exact":{"deg":0},"json":"0deg","repr":"0deg","type":"angle"}}
+{"diagnostics":[],"id":"x-255f855d388c","value":{"exact":{"float":1.1752011936438014},"json":1.1752011936438014,"repr":"1.1752011936438014","type":"float"}}
+{"diagnostics":[],"id":"x-b0d971c8ca96","value":{"exact":{"float":1.543080634815244},"json":1.543080634815244,"repr":"1.543080634815244","type":"float"}}
+{"diagnostics":[],"id":"x-ead9eb031eec","value":{"exact":{"float":0.7615941559557649},"json":0.7615941559557649,"repr":"0.7615941559557649","type":"float"}}
+{"diagnostics":[],"id":"x-7d13f9d765ec","value":{"exact":{"float":0.881373587019543},"json":0.881373587019543,"repr":"0.881373587019543","type":"float"}}
+{"diagnostics":[],"id":"x-131da004e105","value":{"exact":{"float":1.3169578969248166},"json":1.3169578969248166,"repr":"1.3169578969248166","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"value must be greater than or equal to 1","severity":"error","span":[11,14]}],"id":"x-a8245602026d","value":null}
+{"diagnostics":[],"id":"x-25c52a888548","value":{"exact":{"float":0.5493061443340548},"json":0.5493061443340548,"repr":"0.5493061443340548","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"value must be between -1 and 1 (exclusive)","severity":"error","span":[11,12]}],"id":"x-0dc48d99352c","value":null}
+{"diagnostics":[{"at":"expr","message":"value must be between -1 and 1 (exclusive)","severity":"error","span":[11,12]}],"id":"x-6116b3fd92d7","value":null}
+{"diagnostics":[{"at":"expr","message":"expected integer, float, or angle, found string","severity":"error","span":[9,12]}],"id":"x-cd71e4eaa8c7","value":null}
+{"diagnostics":[{"at":"expr","message":"expected integer, float, or angle, found length","severity":"error","span":[9,12]}],"id":"x-04602aca0b67","value":null}
+{"diagnostics":[],"id":"x-420f0992081e","value":{"exact":{"float":2},"json":2,"repr":"2.0","type":"float"}}
+{"diagnostics":[],"id":"x-8335e89b2e3d","value":{"exact":{"float":3},"json":3,"repr":"3.0","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"value must be strictly positive","severity":"error","span":[9,10]}],"id":"x-696323909573","value":null}
+{"diagnostics":[{"at":"expr","message":"value must be strictly positive","severity":"error","span":[9,11]}],"id":"x-f34659213dd6","value":null}
+{"diagnostics":[{"at":"expr","message":"the result is not a real number","severity":"error","span":[0,20]}],"id":"x-e02280592529","value":null}
+{"diagnostics":[{"at":"expr","message":"base may not be zero, NaN, infinite, or subnormal","severity":"error","span":[18,19]}],"id":"x-682575009ad3","value":null}
+{"diagnostics":[{"at":"expr","message":"the result is not a real number","severity":"error","span":[0,19]}],"id":"x-b09d6b9fd678","value":null}
+{"diagnostics":[],"id":"x-abfdfcc521ed","value":{"exact":{"float":1},"json":1,"repr":"1.0","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"value must be strictly positive","severity":"error","span":[8,9]}],"id":"x-e16e0313876a","value":null}
+{"diagnostics":[{"at":"expr","message":"value must be strictly positive","severity":"error","span":[8,10]}],"id":"x-71db7df157e2","value":null}
+{"diagnostics":[],"id":"x-b55325eeb08b","value":{"exact":{"float":0.4547567414076121},"json":0.4547567414076121,"repr":"0.4547567414076121","type":"float"}}
+{"diagnostics":[],"id":"x-f0f3eaeb8918","value":{"exact":{"float":3},"json":3,"repr":"3.0","type":"float"}}
+{"diagnostics":[],"id":"x-0ca37df19bcd","value":{"exact":{"float":-3},"json":-3,"repr":"-3.0","type":"float"}}
+{"diagnostics":[],"id":"x-f2e7c66f1a64","value":{"exact":{"float":0},"json":0,"repr":"0.0","type":"float"}}
+{"diagnostics":[],"id":"x-2bf61d2aac06","value":{"exact":{"float":0.8427007929497149},"json":0.8427007929497149,"repr":"0.8427007929497149","type":"float"}}
+{"diagnostics":[],"id":"x-94fe487e93ee","value":{"exact":{"float":-0.8427007929497149},"json":-0.8427007929497149,"repr":"-0.8427007929497149","type":"float"}}
+{"diagnostics":[],"id":"x-5e5bdebe564a","value":{"exact":{"float":0.5204998778130465},"json":0.5204998778130465,"repr":"0.5204998778130465","type":"float"}}
+{"diagnostics":[],"id":"x-daae7e854d7c","value":{"exact":{"float":0.9999779095030014},"json":0.9999779095030014,"repr":"0.9999779095030014","type":"float"}}
+{"diagnostics":[],"id":"x-868c9fb551fe","value":{"exact":{"float":1},"json":1,"repr":"1.0","type":"float"}}
+{"diagnostics":[],"id":"x-820581788474","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-65a3c1281a75","value":{"json":120,"repr":"120","type":"int"}}
+{"diagnostics":[],"id":"x-eb590fdd8ec0","value":{"json":2432902008176640000,"repr":"2432902008176640000","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"the result is too large","severity":"error","span":[0,13]}],"id":"x-c4acca525b03","value":null}
+{"diagnostics":[{"at":"expr","message":"number must be at least zero","severity":"error","span":[10,12]}],"id":"x-d646f37c2204","value":null}
+{"diagnostics":[],"id":"x-56149ae1526c","value":{"json":20,"repr":"20","type":"int"}}
+{"diagnostics":[],"id":"x-d222272e876f","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-9fd7e787e54b","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"the result is too large","severity":"error","span":[0,17]}],"id":"x-dedd594e5c00","value":null}
+{"diagnostics":[],"id":"x-c28f53ebec92","value":{"json":9900,"repr":"9900","type":"int"}}
+{"diagnostics":[],"id":"x-019abc1cfda9","value":{"json":10,"repr":"10","type":"int"}}
+{"diagnostics":[],"id":"x-ce3bf5fa70c2","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-c26428e21acb","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"the result is too large","severity":"error","span":[0,18]}],"id":"x-1fc810432d35","value":null}
+{"diagnostics":[{"at":"expr","message":"the result is too large","severity":"error","span":[0,18]}],"id":"x-675b6269f884","value":null}
+{"diagnostics":[{"at":"expr","message":"number must be at least zero","severity":"error","span":[11,13]}],"id":"x-a24d324ac08e","value":null}
+{"diagnostics":[],"id":"x-ec131e3d31f6","value":{"json":6,"repr":"6","type":"int"}}
+{"diagnostics":[],"id":"x-c14a5044844d","value":{"json":5,"repr":"5","type":"int"}}
+{"diagnostics":[],"id":"x-566fd69b5221","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-bdd6ec45cb30","value":{"json":6,"repr":"6","type":"int"}}
+{"diagnostics":[],"id":"x-8934cbd9bc50","value":{"json":12,"repr":"12","type":"int"}}
+{"diagnostics":[],"id":"x-dd158d92ae0d","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-7421a3d5ef35","value":{"json":12,"repr":"12","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"the result is too large","severity":"error","span":[0,32]}],"id":"x-2c6af0701091","value":null}
+{"diagnostics":[],"id":"x-991b0ce0cc05","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-ab46aa17ab3a","value":{"json":-2,"repr":"-2","type":"int"}}
+{"diagnostics":[],"id":"x-db76dae71d41","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"the result is too large","severity":"error","span":[0,17]}],"id":"x-3e2002a42a90","value":null}
+{"diagnostics":[],"id":"x-65e6eafe7ee7","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-da121700a196","value":{"json":-1,"repr":"-1","type":"int"}}
+{"diagnostics":[],"id":"x-a5bb14499872","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-d9a1cd45e1e4","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-dc0645f1b625","value":{"json":-1,"repr":"-1","type":"int"}}
+{"diagnostics":[],"id":"x-613153c2abea","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-94028e292a79","value":{"exact":{"float":0.75},"json":0.75,"repr":"0.75","type":"float"}}
+{"diagnostics":[],"id":"x-36647c11179d","value":{"exact":{"float":-0.75},"json":-0.75,"repr":"-0.75","type":"float"}}
+{"diagnostics":[],"id":"x-bf634f4d7c03","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-6c6868c83371","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"the result is too large","severity":"error","span":[0,21]}],"id":"x-e9649e0ea2e8","value":null}
+{"diagnostics":[{"at":"expr","message":"the result is too large","severity":"error","span":[0,21]}],"id":"x-df3e4584c870","value":null}
+{"diagnostics":[],"id":"x-1ad9ea005308","value":{"json":-1,"repr":"-1","type":"int"}}
+{"diagnostics":[],"id":"x-1cab665f6d2c","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-3b1965f05ffd","value":{"exact":{"float":2},"json":2,"repr":"2.0","type":"float"}}
+{"diagnostics":[],"id":"x-cc08c6a7e7cf","value":{"exact":{"float":3},"json":3,"repr":"3.0","type":"float"}}
+{"diagnostics":[],"id":"x-cb94a3b66ef0","value":{"exact":{"float":-2},"json":-2,"repr":"-2.0","type":"float"}}
+{"diagnostics":[],"id":"x-6fdb9e311091","value":{"exact":{"float":-3},"json":-3,"repr":"-3.0","type":"float"}}
+{"diagnostics":[],"id":"x-00844292a7d5","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-353eb090f922","value":{"exact":{"float":3.14},"json":3.14,"repr":"3.14","type":"float"}}
+{"diagnostics":[],"id":"x-656a4099c439","value":{"exact":{"float":3},"json":3,"repr":"3.0","type":"float"}}
+{"diagnostics":[],"id":"x-2baabe246efe","value":{"json":1200,"repr":"1200","type":"int"}}
+{"diagnostics":[],"id":"x-b1faa62f60ec","value":{"json":1300,"repr":"1300","type":"int"}}
+{"diagnostics":[],"id":"x-4a28860c96c7","value":{"json":-1300,"repr":"-1300","type":"int"}}
+{"diagnostics":[],"id":"x-4cc3f545551b","value":{"exact":{"float":0},"json":0,"repr":"0.0","type":"float"}}
+{"diagnostics":[],"id":"x-5a35c932f3db","value":{"exact":{"float":2.68},"json":2.68,"repr":"2.68","type":"float"}}
+{"diagnostics":[],"id":"x-02eed5c48c36","value":{"exact":{"float":1e+300},"json":1e+300,"repr":"1e300","type":"float"}}
+{"diagnostics":[],"id":"x-b98a913b117b","value":{"exact":{"float":null},"json":null,"repr":"float.nan","type":"float"}}
+{"diagnostics":[],"id":"x-df3150d087b9","value":{"exact":{"float":null},"json":null,"repr":"float.inf","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"the result is too large","severity":"error","span":[0,43]}],"id":"x-7dbf1ab35126","value":null}
+{"diagnostics":[],"id":"x-290846b81f81","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-fb20dc22cc34","value":{"exact":{"float":1.5},"json":1.5,"repr":"1.5","type":"float"}}
+{"diagnostics":[],"id":"x-6adefc85934d","value":{"exact":{"float":120},"json":120,"repr":"120.0","type":"float"}}
+{"diagnostics":[],"id":"x-21cdcfabb9ab","value":{"exact":{"float":1},"json":1,"repr":"1.0","type":"float"}}
+{"diagnostics":[],"id":"x-aa2df7316c33","value":{"exact":{"float":-1},"json":-1,"repr":"-1.0","type":"float"}}
+{"diagnostics":[],"id":"x-2c342bfb818a","value":{"exact":{"float":0},"json":0,"repr":"0.0","type":"float"}}
+{"diagnostics":[],"id":"x-76da760e8176","value":{"exact":{"float":4503599627370497},"json":4503599627370497,"repr":"4503599627370497.0","type":"float"}}
+{"diagnostics":[],"id":"x-a0749c403a6c","value":{"exact":{"float":1},"json":1,"repr":"1.0","type":"float"}}
+{"diagnostics":[],"id":"x-d660a221f79e","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-562814ed0360","value":{"exact":{"float":1e-20},"json":1e-20,"repr":"1e-20","type":"float"}}
+{"diagnostics":[],"id":"x-e54a3f0bd392","value":{"exact":{"float":0.0000123},"json":0.0000123,"repr":"1.23e-5","type":"float"}}
+{"diagnostics":[],"id":"x-3da2084bba2d","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-ffa81c120107","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-83f915cc4af3","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"max must be greater than or equal to min","severity":"error","span":[17,18]}],"id":"x-f2ffa98d99dc","value":null}
+{"diagnostics":[],"id":"x-8bd3dd84e605","value":{"exact":{"float":2.5},"json":2.5,"repr":"2.5","type":"float"}}
+{"diagnostics":[],"id":"x-b3917239328f","value":{"exact":{"float":2},"json":2,"repr":"2.0","type":"float"}}
+{"diagnostics":[],"id":"x-a0f83de60c7f","value":{"exact":{"float":2},"json":2,"repr":"2.0","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"expected integer, float, or decimal, found length","severity":"error","span":[11,14]}],"id":"x-450da94e6f28","value":null}
+{"diagnostics":[],"id":"x-1e05563fa3c4","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-bdb198226966","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"expected at least one value","severity":"error","span":[0,10]}],"id":"x-5f47e3efbcc1","value":null}
+{"diagnostics":[],"id":"x-12ed9fcd5ea7","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-c42278e3af3d","value":{"exact":{"abs":1,"em":0},"json":"1pt","repr":"1pt","type":"length"}}
+{"diagnostics":[{"at":"expr","message":"cannot compare 1em with 1pt","severity":"error","span":[14,17]}],"id":"x-8744df94f7f8","value":null}
+{"diagnostics":[],"id":"x-cf9a2851c817","value":{"json":"a","repr":"\"a\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"cannot compare string and integer","severity":"error","span":[12,15]}],"id":"x-1d0126a11df7","value":null}
+{"diagnostics":[],"id":"x-3d8379dc6ba7","value":{"json":[1,2],"repr":"(1, 2)","type":"array"}}
+{"diagnostics":[],"id":"x-5b71d5cc0fe8","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-4d894a0c89a7","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-902dc1251d77","value":{"json":-1,"repr":"-1","type":"int"}}
+{"diagnostics":[],"id":"x-eaad7d937780","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-cde7843cf1ed","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-c4ceff431bbc","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-6023df118383","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[],"id":"x-9b56bc0a10e6","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-cd994cda5632","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[{"at":"expr","message":"expected integer, found float","severity":"error","span":[10,13]}],"id":"x-ef42e9eaec4f","value":null}
+{"diagnostics":[],"id":"x-15dd3b50083b","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-f5b4665c6558","value":{"json":-1,"repr":"-1","type":"int"}}
+{"diagnostics":[],"id":"x-740b348d2637","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-5b5430e70728","value":{"exact":{"float":1.5},"json":1.5,"repr":"1.5","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"divisor must not be zero","severity":"error","span":[12,13]}],"id":"x-ba26537673ed","value":null}
+{"diagnostics":[{"at":"expr","message":"divisor must not be zero","severity":"error","span":[12,15]}],"id":"x-948dbd2f39e4","value":null}
+{"diagnostics":[{"at":"expr","message":"expected integer, float, or decimal, found length","severity":"error","span":[12,15]}],"id":"x-85b56f3209b0","value":null}
+{"diagnostics":[],"id":"x-c17b9238d1a0","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-68cdc99d9cce","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-ec63b49cbc2c","value":{"json":-3,"repr":"-3","type":"int"}}
+{"diagnostics":[],"id":"x-a800bb252f64","value":{"json":-2,"repr":"-2","type":"int"}}
+{"diagnostics":[],"id":"x-6c06541f1e63","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-62be13c8e7cc","value":{"exact":{"float":3},"json":3,"repr":"3.0","type":"float"}}
+{"diagnostics":[],"id":"x-33ad94cc7b41","value":{"exact":{"float":-4},"json":-4,"repr":"-4.0","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"divisor must not be zero","severity":"error","span":[19,20]}],"id":"x-8f81ec21b08e","value":null}
+{"diagnostics":[{"at":"expr","message":"the result is too large","severity":"error","span":[0,45]}],"id":"x-1f9a3824e600","value":null}
+{"diagnostics":[],"id":"x-7cd0901dbce1","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-cc51a0f2afca","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-0b55bd3c4f09","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-4e097aac2ca0","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-f4ab6905cc3a","value":{"exact":{"float":0.5},"json":0.5,"repr":"0.5","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"divisor must not be zero","severity":"error","span":[19,20]}],"id":"x-1ab099af3cf7","value":null}
+{"diagnostics":[],"id":"x-c1e23bb97883","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-9dd0da1f8003","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-a60a2062406b","value":{"json":-4,"repr":"-4","type":"int"}}
+{"diagnostics":[],"id":"x-af882cf37941","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"divisor must not be zero","severity":"error","span":[12,13]}],"id":"x-30495089b3fd","value":null}
+{"diagnostics":[{"at":"expr","message":"the result is too large","severity":"error","span":[0,38]}],"id":"x-f6b8f109693f","value":null}
+{"diagnostics":[{"at":"expr","message":"divisor must not be zero","severity":"error","span":[12,15]}],"id":"x-b8603076a889","value":null}
+{"diagnostics":[],"id":"x-f7be021294c7","value":{"exact":{"float":5},"json":5,"repr":"5.0","type":"float"}}
+{"diagnostics":[],"id":"x-6bd036ad230d","value":{"exact":{"float":0},"json":0,"repr":"0.0","type":"float"}}
+{"diagnostics":[],"id":"x-3e26413c6f72","value":{"exact":{"float":7},"json":7,"repr":"7.0","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"p must be greater than zero","severity":"error","span":[13,14]}],"id":"x-464ff3b321d2","value":null}
+{"diagnostics":[],"id":"x-31ff9036345c","value":{"exact":{"float":3.3019272488946267},"json":3.3019272488946267,"repr":"3.3019272488946267","type":"float"}}
+{"diagnostics":[],"id":"x-da73177157ea","value":{"exact":{"float":2.3440704211717938},"json":2.3440704211717938,"repr":"2.3440704211717938","type":"float"}}
+{"diagnostics":[],"id":"x-274a5cb75fec","value":{"exact":{"float":3},"json":3,"repr":"3.0","type":"float"}}
+{"diagnostics":[],"id":"x-fa47342506df","value":{"exact":{"float":3.141592653589793},"json":3.141592653589793,"repr":"3.141592653589793","type":"float"}}
+{"diagnostics":[],"id":"x-7f7fd9d4fb09","value":{"exact":{"float":6.283185307179586},"json":6.283185307179586,"repr":"6.283185307179586","type":"float"}}
+{"diagnostics":[],"id":"x-2bc6d685f09a","value":{"exact":{"float":2.718281828459045},"json":2.718281828459045,"repr":"2.718281828459045","type":"float"}}
+{"diagnostics":[],"id":"x-d3092cf75d65","value":{"exact":{"float":null},"json":null,"repr":"float.inf","type":"float"}}
+{"diagnostics":[{"at":"expr","message":"module `calc` does not contain `nan`","severity":"error","span":[5,8]}],"id":"x-e9dc0e0be1a5","value":null}
+{"diagnostics":[{"at":"expr","message":"module `calc` does not contain `foo`","severity":"error","span":[5,8]}],"id":"x-c399db0dca2a","value":null}
+{"diagnostics":[{"at":"expr","message":"expected function, found float","severity":"error","span":[0,7]}],"id":"x-8b6a2d546eea","value":null}
+{"diagnostics":[{"at":"expr","message":"missing argument: value","severity":"error","span":[0,10]}],"id":"x-7f2382e1d1d8","value":null}
+{"diagnostics":[{"at":"expr","message":"unexpected argument","severity":"error","span":[12,13]}],"id":"x-71e175152ec3","value":null}
+{"diagnostics":[{"at":"expr","message":"missing argument: exponent","severity":"error","span":[0,11]}],"id":"x-0103ec1d2156","value":null}
+{"diagnostics":[{"at":"expr","message":"unexpected argument","severity":"error","span":[15,16]}],"id":"x-d5588be9243f","value":null}
+{"diagnostics":[{"at":"expr","hints":["try removing `base:`"],"message":"the argument `base` is positional","severity":"error","span":[9,16]}],"id":"x-a86dd32a8e7f","value":null}
+{"diagnostics":[{"at":"expr","message":"unexpected argument","severity":"error","span":[16,17]}],"id":"x-5b13273c55d9","value":null}
+{"diagnostics":[],"id":"x-a1eea43c05ed","value":{"exact":{"float":1.6},"json":1.6,"repr":"1.6","type":"float"}}
+{"diagnostics":[],"id":"x-1a8a6956f312","value":{"exact":{"float":2.0000000000000004},"json":2.0000000000000004,"repr":"2.0000000000000004","type":"float"}}
+{"diagnostics":[],"id":"x-65dc22cfaf8d","value":{"exact":{"float":0.3},"json":0.3,"repr":"0.3","type":"float"}}
+{"diagnostics":[],"id":"x-cd49195f5e44","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-52f01402338d","value":{"json":4,"repr":"4","type":"int"}}
+{"diagnostics":[],"id":"x-6cbbcfde54a4","value":{"json":1024,"repr":"1024","type":"int"}}
+{"diagnostics":[],"id":"x-d245c7a9c2a1","value":{"json":{"denom":{"func":"text","text":"2"},"func":"frac","num":{"func":"text","text":"1"}},"repr":"frac(num: [1], denom: [2])","type":"content"}}
+{"diagnostics":[],"id":"x-29c6f181ac87","value":{"json":"(..) => ..","repr":"(..) => ..","type":"function"}}
+{"diagnostics":[{"at":"expr","message":"unexpected argument","severity":"error","span":[26,27]}],"id":"x-bbe9111f2a40","value":null}
+{"diagnostics":[],"id":"x-f22e9ad232fc","value":{"json":"A","repr":"\"A\"","type":"str"}}
+{"diagnostics":[],"id":"x-fb37541d1d46","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-052817435a51","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-1c09e15d33ee","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[],"id":"x-c4860ab3b419","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[],"id":"x-f527ee8b9c83","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-5c338beb6e80","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-8883d5f50ace","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[],"id":"x-56edd03df3d1","value":{"json":"text","repr":"text","type":"function"}}
+{"diagnostics":[],"id":"x-9ef0bae905cb","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-f2e04d8d5ab0","value":{"json":"strong","repr":"strong","type":"function"}}
+{"diagnostics":[],"id":"x-596fa3eb88df","value":{"json":"equation","repr":"equation","type":"function"}}
+{"diagnostics":[],"id":"x-da2feb117606","value":{"json":{"func":"symbol","text":"x"},"repr":"[x]","type":"content"}}
+{"diagnostics":[],"id":"x-5be166d3958b","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[],"id":"x-01d68ddf5ca0","value":{"json":"symbol","repr":"symbol","type":"function"}}
+{"diagnostics":[],"id":"x-6f2c378f9139","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-28f20c052832","value":{"json":false,"repr":"false","type":"bool"}}
+{"diagnostics":[],"id":"x-d62eb7bfc5b1","value":{"json":"a","repr":"\"a\"","type":"str"}}
+{"diagnostics":[],"id":"x-17a690f9dfca","value":{"json":"a","repr":"\"a\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"text does not have field \"foo\" and no default was specified","severity":"error","span":[0,13]}],"id":"x-f5d4381620fa","value":null}
+{"diagnostics":[],"id":"x-5d20b11f2050","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-2b7f65be4b03","value":{"json":{"text":"a"},"repr":"(text: \"a\")","type":"dictionary"}}
+{"diagnostics":[],"id":"x-65bea909966f","value":{"json":{"body":{"func":"text","text":"a"}},"repr":"(body: [a])","type":"dictionary"}}
+{"diagnostics":[],"id":"x-df971d304348","value":{"json":{"func":"text","text":"a"},"repr":"[a]","type":"content"}}
+{"diagnostics":[],"id":"x-219ee705f50a","value":{"json":"attach","repr":"attach","type":"function"}}
+{"diagnostics":[],"id":"x-24478c5e4695","value":{"json":{"base":{"func":"symbol","text":"x"},"t":{"func":"text","text":"2"}},"repr":"(base: [x], t: [2])","type":"dictionary"}}
+{"diagnostics":[],"id":"x-5b359bcc71b1","value":{"json":{"func":"symbol","text":"x"},"repr":"[x]","type":"content"}}
+{"diagnostics":[],"id":"x-03934f085b0f","value":{"json":{"func":"text","text":"2"},"repr":"[2]","type":"content"}}
+{"diagnostics":[{"at":"expr","message":"field \"tl\" in attach is not known at this point","severity":"error","span":[11,13]}],"id":"x-eccd74a1fdd4","value":null}
+{"diagnostics":[{"at":"expr","message":"field \"tl\" in attach is not known at this point and no default was specified","severity":"error","span":[0,19]}],"id":"x-53535cff6e8c","value":null}
+{"diagnostics":[],"id":"x-880f701d76d3","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[{"at":"expr","message":"styled does not have field \"fill\"","severity":"error","span":[19,23]}],"id":"x-7955e6b91d35","value":null}
+{"diagnostics":[],"id":"x-6eb781f42a26","value":{"json":{"child":{"func":"text","text":"a"},"styles":"styles(..)"},"repr":"(child: [a], styles: styles(..))","type":"dictionary"}}
+{"diagnostics":[{"at":"expr","message":"field \"delta\" in strong is not known at this point","severity":"error","span":[10,15]}],"id":"x-46136139dc2f","value":null}
+{"diagnostics":[],"id":"x-9e6a2f7753d9","value":{"json":100,"repr":"100","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"field \"width\" in box is not known at this point","severity":"error","span":[7,12]}],"id":"x-e6d15cbd7d3d","value":null}
+{"diagnostics":[],"id":"x-485b6b6b0bf6","value":{"exact":{"abs":0,"em":1,"ratio":0},"json":"0% + 1em","repr":"0% + 1em","type":"relative"}}
+{"diagnostics":[],"id":"x-c8a9b3144609","value":{"json":{"func":"text","text":"a"},"repr":"[a]","type":"content"}}
+{"diagnostics":[{"at":"expr","message":"text does not have field \"foo\"","severity":"error","span":[4,7]}],"id":"x-93d1b1ea1eb2","value":null}
+{"diagnostics":[{"at":"expr","message":"element text has no method `foo`","severity":"error","span":[0,7]}],"id":"x-ba13e46c408d","value":null}
+{"diagnostics":[],"id":"x-67fd08b2a2ef","value":{"json":"sequence","repr":"sequence","type":"function"}}
+{"diagnostics":[],"id":"x-f9b23c0d4c29","value":{"json":[{"func":"text","text":"a"},{"func":"text","text":"b"}],"repr":"([a], [b])","type":"array"}}
+{"diagnostics":[],"id":"x-8e7d468ce018","value":{"json":{"children":[{"func":"text","text":"a"},{"func":"text","text":"b"}]},"repr":"(children: ([a], [b]))","type":"dictionary"}}
+{"diagnostics":[],"id":"x-fc993a899d8b","value":{"json":"sequence","repr":"sequence","type":"function"}}
+{"diagnostics":[],"id":"x-9c55f2e4b763","value":{"json":{"children":[]},"repr":"(children: ())","type":"dictionary"}}
+{"diagnostics":[{"at":"expr","message":"expected content, found integer","severity":"error","span":[10,11]}],"id":"x-276a8c9511b3","value":null}
+{"diagnostics":[{"at":"expr","message":"expected content, found integer","severity":"error","span":[10,11]}],"id":"x-e04d77aa2061","value":null}
+{"diagnostics":[],"id":"x-a5c4b4f01042","value":{"json":{"func":"text","text":"2"},"repr":"[2]","type":"content"}}
+{"diagnostics":[],"id":"x-8c84102394ed","value":{"json":[[{"func":"text","text":"1"},{"func":"text","text":"2"}]],"repr":"(([1], [2]),)","type":"array"}}
+{"diagnostics":[{"at":"expr","message":"field \"delim\" in mat is not known at this point","severity":"error","span":[17,22]}],"id":"x-c96a72cd9857","value":null}
+{"diagnostics":[{"at":"expr","message":"expected content, found integer","severity":"error","span":[9,10]},{"at":"expr","message":"expected content, found integer","severity":"error","span":[12,13]}],"id":"x-c2346ae30f34","value":null}
+{"diagnostics":[{"at":"expr","message":"expected content, found integer","severity":"error","span":[11,12]},{"at":"expr","message":"expected content, found integer","severity":"error","span":[14,15]}],"id":"x-cb9517484c14","value":null}
+{"diagnostics":[],"id":"x-2c63d156d3b2","value":{"json":{"func":"text","text":"x"},"repr":"[x]","type":"content"}}
+{"diagnostics":[],"id":"x-c16896a2e1db","value":{"json":{"func":"text","text":"a"},"repr":"[a]","type":"content"}}
+{"diagnostics":[{"at":"expr","message":"field \"limits\" in op is not known at this point","severity":"error","span":[13,19]}],"id":"x-6486c26a4134","value":null}
+{"diagnostics":[],"id":"x-d93dfe361208","value":{"json":"relation","repr":"\"relation\"","type":"str"}}
+{"diagnostics":[{"at":"expr","message":"expected content, found integer","severity":"error","span":[10,11]}],"id":"x-ab9d0ce8b216","value":null}
+{"diagnostics":[{"at":"expr","message":"field \"angle\" in cancel is not known at this point","severity":"error","span":[17,22]}],"id":"x-3c6d3c83152c","value":null}
+{"diagnostics":[],"id":"x-91e10c130e05","value":{"json":"̂","repr":"\"\\u{302}\"","type":"str"}}
+{"diagnostics":[],"id":"x-305f0cd72d8e","value":{"exact":{"abs":0,"em":1},"json":"1em","repr":"1em","type":"length"}}
+{"diagnostics":[],"id":"x-26eebecea9c1","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-71bcb90ccb33","value":{"json":"https://typst.app","repr":"\"https://typst.app\"","type":"str"}}
+{"diagnostics":[],"id":"x-d2d7c51ff78e","value":{"json":{"func":"text","text":"a"},"repr":"[a]","type":"content"}}
+{"diagnostics":[],"id":"x-c8f007c1740d","value":{"json":{"children":[{"func":"text","text":"a"},{"func":"text","text":"b"}],"func":"sequence"},"repr":"sequence([a], [b])","type":"content"}}
+{"diagnostics":[],"id":"x-8c8787031ccd","value":{"json":{"children":[{"func":"text","text":"a"},{"func":"text","text":"b"}],"func":"sequence"},"repr":"sequence([a], [b])","type":"content"}}
+{"diagnostics":[],"id":"x-8344d1fb2bcd","value":{"json":{"children":[{"func":"text","text":"a"},{"func":"text","text":"b"}],"func":"sequence"},"repr":"sequence([a], [b])","type":"content"}}
+{"diagnostics":[],"id":"x-8fa4c9fb0245","value":{"json":{"children":[{"func":"text","text":"a"},{"func":"text","text":"a"}],"func":"sequence"},"repr":"sequence([a], [a])","type":"content"}}
+{"diagnostics":[],"id":"x-684bb8a6f7d9","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-50c7518849b3","value":{"json":[1,2],"repr":"(1, 2)","type":"array"}}
+{"diagnostics":[],"id":"x-dd023c5b4b08","value":{"json":{"a":3},"repr":"(a: 3)","type":"dictionary"}}
+{"diagnostics":[],"id":"x-f87841795399","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"no positional argument at index 1 and no default value was specified","severity":"error","span":[18,28]}],"id":"x-dd88f8c4a278","value":null}
+{"diagnostics":[],"id":"x-a15bf07dd6b7","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-5f73f83ca6e8","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-7ea52a59be5d","value":{"json":2,"repr":"2","type":"int"}}
+{"diagnostics":[],"id":"x-d6e70f77d465","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-32c6aabfa37c","value":{"json":"arguments(1, 2, a: 3)","repr":"arguments(1, 2, a: 3)","type":"arguments"}}
+{"diagnostics":[],"id":"x-90ce5e4aa306","value":{"json":[1],"repr":"(1,)","type":"array"}}
+{"diagnostics":[],"id":"x-38ce98cd4d98","value":{"json":{"a":1},"repr":"(a: 1)","type":"dictionary"}}
+{"diagnostics":[],"id":"x-c18af024c631","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-712e9598c1ef","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"expected integer or string, found float","severity":"error","span":[16,19]}],"id":"x-aa640de2255d","value":null}
+{"diagnostics":[{"at":"expr","message":"no named argument \"foo\"","severity":"error","span":[13,16]}],"id":"x-2c79c00fa08e","value":null}
+{"diagnostics":[],"id":"x-a6500ec6b0fb","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-0d5e5f3e7f2d","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-60e94efd42f6","value":{"json":1275,"repr":"1275","type":"int"}}
+{"diagnostics":[],"id":"x-493ef721229f","value":{"json":3160,"repr":"3160","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"maximum function call depth exceeded","severity":"error","span":[40,48]}],"id":"x-11dac82e1a4f","value":null}
+{"diagnostics":[{"at":"expr","message":"maximum function call depth exceeded","severity":"error","span":[40,48]}],"id":"x-7ca7b98ebb3f","value":null}
+{"diagnostics":[],"id":"x-6efcff368473","value":{"json":3,"repr":"3","type":"int"}}
+{"diagnostics":[],"id":"x-7d4b9e732398","value":{"json":[2,4],"repr":"(2, 4)","type":"array"}}
+{"diagnostics":[],"id":"x-b5d7b61ab859","value":{"json":null,"repr":"none","type":"none"}}
+{"diagnostics":[],"id":"x-01ab03455caa","value":{"json":9007199254740992,"repr":"9007199254740993","type":"int"}}
+{"diagnostics":[],"id":"x-ef82ac3210e0","value":{"json":9007199254740992,"repr":"9007199254740993","type":"int"}}
+{"diagnostics":[],"id":"x-e320af28595d","value":{"json":9223372036854776000,"repr":"9223372036854775807","type":"int"}}
+{"diagnostics":[],"id":"x-9dd5d7138599","value":{"json":9223372036854776000,"repr":"9223372036854775807","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"max must be greater than or equal to min","severity":"error","span":[32,48]}],"id":"x-47f672ef8e1b","value":null}
+{"diagnostics":[{"at":"expr","message":"max must be greater than or equal to min","severity":"error","span":[34,50]}],"id":"x-52175656c77d","value":null}
+{"diagnostics":[],"id":"x-34846945ddb7","value":{"json":9007199254740992,"repr":"9007199254740993","type":"int"}}
+{"diagnostics":[],"id":"x-2825babf2c7d","value":{"exact":{"float":null},"json":null,"repr":"float.nan","type":"float"}}
+{"diagnostics":[],"id":"x-b1fcc77133a8","value":{"exact":{"float":null},"json":null,"repr":"float.nan","type":"float"}}
+{"diagnostics":[],"id":"x-0845d72b671b","value":{"exact":{"float":null},"json":null,"repr":"float.nan","type":"float"}}
+{"diagnostics":[],"id":"x-105cc9184db0","value":{"json":9223372036854776000,"repr":"9223372036854775807","type":"int"}}
+{"diagnostics":[],"id":"x-5f90aa57306c","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[],"id":"x-c98a314c6ab1","value":{"json":-1,"repr":"-1","type":"int"}}
+{"diagnostics":[],"id":"x-a89ec7a190a5","value":{"json":0,"repr":"0","type":"int"}}
+{"diagnostics":[],"id":"x-e6f568df2677","value":{"json":"a","repr":"\"a\"","type":"str"}}
+{"diagnostics":[],"id":"x-11a842f73a24","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-8bd8428668a1","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-ffbd0fa49500","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-07156346ee67","value":{"json":{"children":[{"func":"text","text":"a"},{"func":"text","text":"b"}],"func":"sequence"},"repr":"sequence([a], [b])","type":"content"}}
+{"diagnostics":[],"id":"x-469ee56d8ee6","value":{"json":{"children":[{"children":[],"func":"sequence"},{"func":"symbol","text":"α"},{"func":"text","text":"a"}],"func":"sequence"},"repr":"sequence([], [α], [a])","type":"content"}}
+{"diagnostics":[],"id":"x-5e836e8d7487","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-353fab88f0e2","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-5f9a0233a792","value":{"json":true,"repr":"true","type":"bool"}}
+{"diagnostics":[],"id":"x-7cbc5359fa3f","value":{"json":1,"repr":"1","type":"int"}}
+{"diagnostics":[{"at":"expr","message":"number must be at least zero","severity":"error","span":[29,31]}],"id":"x-436917108ea4","value":null}
+{"diagnostics":[],"id":"x-fce8026e8c4e","value":{"json":"a","repr":"\"a\"","type":"str"}}
+{"diagnostics":[],"id":"x-783c617c4c26","value":{"json":[{"captures":[],"end":6,"start":4,"text":"é"},{"captures":[],"end":12,"start":10,"text":"é"}],"repr":"(\n  (start: 4, end: 6, text: \"é\", captures: ()),\n  (start: 10, end: 12, text: \"é\", captures: ()),\n)","type":"array"}}
+{"diagnostics":[],"id":"x-3631e2fc4054","value":{"json":[{"captures":[],"end":0,"start":0,"text":""},{"captures":[],"end":4,"start":4,"text":""},{"captures":[],"end":6,"start":6,"text":""}],"repr":"(\n  (start: 0, end: 0, text: \"\", captures: ()),\n  (start: 4, end: 4, text: \"\", captures: ()),\n  (start: 6, end: 6, text: \"\", captures: ()),\n)","type":"array"}}
+{"diagnostics":[],"id":"x-f3476a4fbdf8","value":{"json":{"captures":[],"end":6,"start":4,"text":"é"},"repr":"(start: 4, end: 6, text: \"é\", captures: ())","type":"dictionary"}}
+{"diagnostics":[],"id":"x-51ce2d6de526","value":{"json":"0😀4é6","repr":"\"0😀4é6\"","type":"str"}}
+{"diagnostics":[],"id":"x-83b65a2354c7","value":{"json":["","😀","é",""],"repr":"(\"\", \"😀\", \"é\", \"\")","type":"array"}}

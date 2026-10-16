@@ -39,6 +39,7 @@ export function layoutScripts(item: ScriptsKind, ctx: MathContext, styles: Style
 
 /** Lays out primes, as glyphs half a prime's width apart, like `layout_primes`. */
 export function layoutPrimes(count: number, ctx: MathContext, styles: StyleChain, props: MathProperties): void {
+  ctx.expansion.consume(count, props.span);
   const prime = GlyphFragment.synthetic(styles, PRIME_CHAR, props.span).intoFrame();
   const width = (prime.width * (count + 1)) / 2;
   const frame = Frame.soft({ x: width, y: prime.height });

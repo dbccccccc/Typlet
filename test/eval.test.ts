@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { evalExpression } from './eval-helpers.js';
 import { fixtureDir, readJsonl } from './helpers.js';
 import { corpusDir } from './helpers.js';
+import refused from './expression-scope.json';
 
 /** Sorts object keys so that JSON comparisons ignore key order. */
 function canon(value: unknown): unknown {
@@ -24,12 +25,12 @@ describe('expressions', () => {
 
   it('evaluate to the values and errors Typst gives', () => {
     const failures: string[] = [];
-    const unsupported: string[] = [];
+    const unsupported: { id: string; reason: string }[] = [];
     for (const fixture of fixtures) {
       const expr = corpus.get(fixture.id)!;
       const got = evalExpression(expr);
       if (got.diagnostics.some((d) => d.unsupported)) {
-        unsupported.push(expr);
+        unsupported.push({ id: fixture.id, reason: got.diagnostics.find((d) => d.unsupported)!.message });
         continue;
       }
       const want = {
@@ -45,7 +46,7 @@ describe('expressions', () => {
       }
     }
     expect(failures).toEqual([]);
-    // Every expression evaluates: Levels 1 to 3 (docs/DESIGN.md §6.3).
-    expect(unsupported).toEqual([]);
+    // Explicit reviewed IDs and reasons; every other expression still matches the oracle.
+    expect(unsupported).toEqual(refused);
   });
 });

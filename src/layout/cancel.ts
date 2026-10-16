@@ -7,7 +7,7 @@ import type { Stroke } from '../eval/content.js';
 import { Args } from '../eval/args.js';
 import { angleCast } from '../eval/cast.js';
 import { at } from '../eval/diag.js';
-import { callFunc, newEngine } from '../eval/func.js';
+import { callFunc } from '../eval/func.js';
 import type { Span } from '../eval/diag.js';
 import { type Abs, type Rel, absPt, lengthAt, relRelativeTo } from '../eval/layout.js';
 import type { StyleChain } from '../eval/styles.js';
@@ -15,6 +15,7 @@ import type { MathKind, MathProperties } from '../ir/item.js';
 import { fontSize, textFill } from '../ir/resolve.js';
 import { FrameFragment } from './fragment.js';
 import { type FixedStroke, Frame, type Size, point, rotate } from './frame.js';
+import { withLayoutEngine } from './engine.js';
 import type { MathContext } from './math.js';
 
 type CancelKind = Extract<MathKind, { tag: 'cancel' }>;
@@ -33,8 +34,8 @@ export function layoutCancel(item: CancelKind, ctx: MathContext, styles: StyleCh
 
   // The lines' origin is the middle of the body.
   const center = point(size.x / 2, size.y / 2);
-  frame.pushFrame(center, drawCancelLine(item.length, stroke, item.invertFirstLine, item.angle, size, props.span));
-  if (item.cross) frame.pushFrame(center, drawCancelLine(item.length, stroke, true, item.angle, size, props.span));
+  frame.pushFrame(center, drawCancelLine(item.length, stroke, item.invertFirstLine, item.angle, size, props.span, ctx));
+  if (item.cross) frame.pushFrame(center, drawCancelLine(item.length, stroke, true, item.angle, size, props.span, ctx));
 
   ctx.push(new FrameFragment(props, styles, frame).withItalicsCorrection(italics).withTextLike(textLike).withAccentAttach(attach));
 }
@@ -60,6 +61,7 @@ function drawCancelLine(
   angleSpec: CancelKind['angle'],
   body: Size,
   span: Span,
+  ctx: MathContext,
 ): Frame {
   // By default, the line is the body's diagonal: its angle from the y-axis,
   // clockwise, in [0, π/2].
@@ -70,7 +72,7 @@ function drawCancelLine(
     if ('func' in angleSpec) {
       // A function gets the default angle and returns the angle.
       const args = new Args(span, [{ span, name: null, value: { type: 'angle', v: defaultAngle }, valueSpan: span }]);
-      const value = callFunc(angleSpec.func, newEngine(), args);
+      const value = withLayoutEngine(ctx.engine, ctx.warnings, () => callFunc(angleSpec.func, ctx.engine, args));
       angle = at(span, () => angleCast.cast(value));
     } else {
       angle = angleSpec.angle;

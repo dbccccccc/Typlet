@@ -3,6 +3,7 @@
 // Modified for Typlet. See THIRD_PARTY_NOTICES.md.
 
 import { Args } from './args.js';
+import { type ValueBudget, withValueContext } from './value-budget.js';
 import { type Content, join as joinContent, repeat as repeatContent, symbolElem, textElem } from './content.js';
 import { bail, bailLimit } from './diag.js';
 import {
@@ -120,9 +121,17 @@ function joinLike(lhs: Value, rhs: Value): Value | null {
     checkItems(1, lhs.v.length + rhs.v.length);
     return arrayValue([...lhs.v, ...rhs.v]);
   }
-  if (lhs.type === 'dictionary' && rhs.type === 'dictionary') return dictValue(new Map([...lhs.v, ...rhs.v]));
+  if (lhs.type === 'dictionary' && rhs.type === 'dictionary') {
+    const map = new Map<string, Value>();
+    for (const source of [lhs.v, rhs.v]) for (const [key, value] of source) insertDict(map, key, value);
+    return dictValue(map);
+  }
   if (lhs.type === 'arguments' && rhs.type === 'arguments') {
+    checkCollectionSize(rhs.v.items.length);
     const names = new Set(rhs.v.items.flatMap((item) => (item.name === null ? [] : [item.name])));
+    let size = rhs.v.items.length;
+    for (const item of lhs.v.items) if (item.name === null || !names.has(item.name)) size++;
+    checkCollectionSize(size);
     return {
       type: 'arguments',
       v: new Args(null, [...lhs.v.items.filter((item) => item.name === null || !names.has(item.name)), ...rhs.v.items]),
@@ -279,6 +288,15 @@ export function setCollectionLimits(items: number, chars: number): void {
   maxChars = chars;
 }
 
+/** Restores collection limits after a synchronous nested evaluation or callback. */
+export function withCollectionLimits<T>(items: number, chars: number, body: () => T): T {
+  const previousItems = maxItems;
+  const previousChars = maxChars;
+  setCollectionLimits(items, chars);
+  try { return body(); }
+  finally { setCollectionLimits(previousItems, previousChars); }
+}
+
 function repeatStr(text: string, n: number): string {
   if (text.length * n > maxChars) bailLimit(`Typlet stopped at a string longer than ${maxChars} characters`);
   return text.repeat(n);
@@ -291,6 +309,38 @@ function checkedCount(n: number): number {
 
 function checkItems(len: number, n: number): void {
   if (len * n > maxItems) bailLimit(`Typlet stopped at a collection of more than ${maxItems} items`);
+}
+
+/** Fails if a collection of `n` items would exceed the budget. */
+export function checkCollectionSize(n: number): void {
+  checkItems(n, 1);
+}
+
+/** Appends without varargs, checking known lengths before consuming the input. */
+export function appendCollection<T>(target: T[], source: Iterable<T>): void {
+  if (Array.isArray(source)) checkCollectionSize(target.length + source.length);
+  for (const item of source) {
+    checkCollectionSize(target.length + 1);
+    target.push(item);
+  }
+}
+
+/** Replacing an existing key does not grow a dictionary. */
+export function insertDict<T>(target: Map<string, T>, key: string, value: T): void {
+  if (!target.has(key)) checkCollectionSize(target.size + 1);
+  target.set(key, value);
+}
+
+/** Fails if a string of `n` characters would exceed the budget. */
+export function checkStringLength(n: number): void {
+  if (n > maxChars) bailLimit(`Typlet stopped at a string longer than ${maxChars} characters`);
+}
+
+/** Checks the size of a method's result, including conversions that expand it. */
+export function checkValueSize(value: Value): void {
+  if (value.type === 'str') checkStringLength(value.v.length);
+  else if (value.type === 'array') checkCollectionSize(value.v.length);
+  else if (value.type === 'dictionary') checkCollectionSize(value.v.size);
 }
 
 /** Binary `*`. */
@@ -357,6 +407,7 @@ export function mul(lhs: Value, rhs: Value): Value {
 
 function repeatArray(items: Value[], n: number): Value[] {
   checkItems(items.length, n);
+  if (items.length === 0 || n === 0) return [];
   const out: Value[] = [];
   for (let i = 0; i < n; i++) out.push(...items);
   return out;
@@ -477,6 +528,11 @@ export const geq = (lhs: Value, rhs: Value): Value => boolValue(compare(lhs, rhs
 
 /** Compares two values: negative, zero or positive. */
 export function compare(lhs: Value, rhs: Value): number {
+  return withValueContext((budget) => compareAt(lhs, rhs, budget, 0));
+}
+
+function compareAt(lhs: Value, rhs: Value, budget: ValueBudget, depth: number): number {
+  budget.visit(depth);
   const cmp = (a: number | bigint | string | boolean, b: typeof a) => (a < b ? -1 : a > b ? 1 : 0);
   const tryCmp = (a: number, b: number, ra: () => string, rb: () => string) => {
     if (Number.isNaN(a) || Number.isNaN(b)) bail(`cannot compare ${ra()} with ${rb()}`);
@@ -510,13 +566,13 @@ export function compare(lhs: Value, rhs: Value): number {
       return result;
     }
     case 'length<relative':
-      if ((v(rhs) as RelLength).rel === 0) return compare(lhs, { type: 'length', v: (v(rhs) as RelLength).abs });
+      if ((v(rhs) as RelLength).rel === 0) return compareAt(lhs, { type: 'length', v: (v(rhs) as RelLength).abs }, budget, depth);
       break;
     case 'ratio<relative':
       if (lengthIsZero((v(rhs) as RelLength).abs)) return cmp(v(lhs) as number, (v(rhs) as RelLength).rel);
       break;
     case 'relative<length':
-      if ((v(lhs) as RelLength).rel === 0) return compare({ type: 'length', v: (v(lhs) as RelLength).abs }, rhs);
+      if ((v(lhs) as RelLength).rel === 0) return compareAt({ type: 'length', v: (v(lhs) as RelLength).abs }, rhs, budget, depth);
       break;
     case 'relative<ratio':
       if (lengthIsZero((v(lhs) as RelLength).abs)) return cmp((v(lhs) as RelLength).rel, v(rhs) as number);
@@ -524,7 +580,7 @@ export function compare(lhs: Value, rhs: Value): number {
     case 'array<array': {
       const [a, b] = [v(lhs) as Value[], v(rhs) as Value[]];
       for (let i = 0; i < Math.min(a.length, b.length); i++) {
-        const result = compare(a[i]!, b[i]!);
+        const result = compareAt(a[i]!, b[i]!, budget, depth + 1);
         if (result !== 0) return result;
       }
       return cmp(a.length, b.length);

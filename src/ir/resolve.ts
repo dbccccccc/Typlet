@@ -69,7 +69,9 @@ import type {
   VecElem,
 } from '../eval/content.js';
 import { join, sequence, symbolElem } from '../eval/content.js';
-import { ElementBudget, type SourceDiagnostic, type Span, bailAt, limit, unsupported, warning } from '../eval/diag.js';
+import { DepthBudget } from '../eval/content-budget.js';
+import { ExpansionBudget, getExpansionBudget } from '../eval/expansion-budget.js';
+import { type SourceDiagnostic, type Span, bailAt, limit, unsupported, warn, warning } from '../eval/diag.js';
 import {
   type Abs,
   type FixedAlignment,
@@ -301,12 +303,16 @@ export class MathResolver {
   items: RawMathItem[] = [];
   /** Whether the content has an element the other target realizes differently. */
   targetDependent = false;
-  readonly budget = new ElementBudget();
+  readonly budget: ExpansionBudget;
+  readonly depth = new DepthBudget();
 
   constructor(
     readonly warnings: SourceDiagnostic[],
     readonly target: Target = 'paged',
-  ) {}
+    readonly maxOutputSize = getExpansionBudget().maxOutputSize,
+  ) {
+    this.budget = new ExpansionBudget(undefined, maxOutputSize);
+  }
 
   push(item: RawMathItem): void {
     this.items.push(item);
@@ -334,6 +340,10 @@ export class MathResolver {
   }
 
   private resolveIntoSelf(content: Content, styles: StyleChain): void {
+    this.depth.withDepth(content.span, () => this.resolveInner(content, styles));
+  }
+
+  private resolveInner(content: Content, styles: StyleChain): void {
     // A single element realizes to itself, except a space, which collapses,
     // elements whose show rules realize them, and elements with tags.
     if (!REALIZED.has(content.func) && !isTagged(content)) {
@@ -373,6 +383,10 @@ function realize(content: Content, styles: StyleChain, ctx: MathResolver): Pair[
 }
 
 function visit(sink: Pair[], content: Content, styles: StyleChain, ctx: MathResolver): void {
+  ctx.depth.withDepth(content.span, () => visitInner(sink, content, styles, ctx));
+}
+
+function visitInner(sink: Pair[], content: Content, styles: StyleChain, ctx: MathResolver): void {
   ctx.budget.visit(content.span);
   switch (content.func) {
     case 'equation':
@@ -591,12 +605,21 @@ export function setMaxSize(ems: number): void {
   maxSize = ems;
 }
 
+/** Restores the outer formula's size checks after a nested render or error. */
+export function withMaxSize<T>(ems: number, body: () => T): T {
+  const previous = maxSize;
+  maxSize = ems;
+  try { return body(); }
+  finally { maxSize = previous; }
+}
+
 /** Fails for a size beyond the budget, at a font size. */
 export function checkSize(size: Abs, fontSize: Abs, span: Span): void {
   if (Math.abs(size) > maxSize * fontSize) limit(span, `Typlet stopped at a size of more than ${maxSize}em`);
 }
 
 function resolveText(elem: TextElem, ctx: MathResolver, styles: StyleChain): void {
+  ctx.budget.consume(elem.text.length, elem.span);
   const variant = equationVariant(styles);
   const bold = equationBold(styles);
   // Disable auto-italic.
@@ -629,6 +652,7 @@ function isIgnorableCluster(cluster: string): boolean {
 }
 
 function resolveSymbol(elem: SymbolElem, ctx: MathResolver, styles: StyleChain): void {
+  ctx.budget.consume(elem.text.length, elem.span);
   const variant = equationVariant(styles);
   const bold = equationBold(styles);
   const italic = equationItalic(styles);
@@ -728,7 +752,7 @@ function resolveInnerAttach(
   // Resolve the base and recursively merge outer attachments inwards.
   const base =
     baseElem.func === 'attach'
-      ? resolveInnerAttach(baseElem, attachments, tInsideTr, ctx, styles)
+      ? ctx.depth.withDepth(baseElem.span, () => resolveInnerAttach(baseElem, attachments, tInsideTr, ctx, styles))
       : ctx.resolveIntoItem(baseElem, styles);
 
   // Take the inner attachments back out of the lists.
@@ -777,10 +801,12 @@ function resolveInnerAttach(
 const PRIME_CHARS = ['′', '″', '‴', '⁗'];
 
 function resolvePrimes(elem: PrimesElem, ctx: MathResolver, styles: StyleChain): void {
-  if (elem.count >= 1 && elem.count <= 4) {
+  if (Number.isInteger(elem.count) && elem.count >= 1 && elem.count <= 4) {
     ctx.push(ctx.resolveIntoItem(symbolElem(PRIME_CHARS[elem.count - 1]!, elem.span), styles));
   } else {
     // A custom number of primes.
+    ctx.budget.consume(elem.count, elem.span);
+    if (elem.count > ctx.maxOutputSize) limit(elem.span, `the output is longer than ${ctx.maxOutputSize} characters`);
     ctx.push(primesItem(elem.count, styles));
   }
 }
@@ -1088,7 +1114,8 @@ function resolveCells(
       // Linebreaks in cells are stripped: alignment points for the whole
       // body can't be told apart from ones for one cell.
       if (processed.hadLinebreaks) {
-        ctx.warnings.push(
+        warn(
+          ctx.warnings,
           warning(cell.span, `linebreaks are ignored in ${children}`, 'use commas instead to separate each line'),
         );
       }
@@ -1204,8 +1231,9 @@ export function resolveEquation(
   styles: StyleChain,
   warnings: SourceDiagnostic[],
   target: Target = 'paged',
+  maxOutputSize?: number,
 ): MathItem {
-  return new MathResolver(warnings, target).resolveIntoItem(body, styles);
+  return new MathResolver(warnings, target, maxOutputSize).resolveIntoItem(body, styles);
 }
 
 export type { ComponentItem };

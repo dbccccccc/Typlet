@@ -18,7 +18,8 @@ import { accessField, evalDisplay, evalExpr } from './code.js';
 import { type Content, join, spaceElem, spanned, symbolElem } from './content.js';
 import { HintedError, type SourceDiagnostic, type Span, SourceError, at, bailAt, error, trace, unsupported } from './diag.js';
 import { type Func, callFunc, countCall } from './func.js';
-import { funcCast } from './library.js';
+import { funcCast } from './cast.js';
+import { checkCollectionSize } from './ops.js';
 import { hintIfShadowedStd } from './rules.js';
 import { type Value, arrayValue, contentValue, display, typeOf } from './value.js';
 import type { Vm } from './vm.js';
@@ -90,13 +91,6 @@ export function evalMathCall(vm: Vm, node: LinkedNode): Value {
     const targetExpr = firstExpr(callee);
     const field = lastExpr(callee);
     const target = evalExpr(vm, targetExpr);
-    if (MUTATING_METHODS.includes(field.text) && (target.type === 'array' || target.type === 'dictionary')) {
-      bailAt(
-        span,
-        'cannot call mutating methods in math',
-        `try using code mode to call the method: \`#${node.fullText()}\``,
-      );
-    }
     result = evalFieldCallee(vm, callee, field.text, field.span, target, true);
   }
 
@@ -108,12 +102,10 @@ export function evalMathCall(vm: Vm, node: LinkedNode): Value {
   return contentValue(join(spanned(display(result.value), callee.span), parens));
 }
 
-const MUTATING_METHODS = ['push', 'pop', 'insert', 'remove'];
-
 /** Calls a function, recording the call in the trace of errors from inside it. */
 function callFuncAt(vm: Vm, func: Func, args: Args, span: Span): Value {
   try {
-    return callFunc(func, vm.engine, args);
+    return callFunc(func, vm.engine, args, true);
   } catch (e) {
     // The trace point is only needed for errors.
     const point = func.name === null ? 'while calling function' : `while calling \`${func.name}\``;
@@ -154,7 +146,7 @@ function evalFieldCallee(
     hints.push('dictionary keys cannot be used with method syntax as keys could conflict with built-in method names');
     bailAt(access.span, 'cannot directly call dictionary keys as functions', ...hints);
   }
-  return unsupported(access.span, `methods of ${typeOf(target)} values yet`);
+  return unsupported(access.span, `methods of ${typeOf(target)} values`);
 }
 
 /** The value and span of an argument expression. */
@@ -163,23 +155,30 @@ function argValue(vm: Vm, expr: LinkedNode): { value: Value; span: Span } {
 }
 
 /** Adds a spread argument's items. */
-function spreadInto(vm: Vm, spread: LinkedNode, span: Span, pos: Arg[], named: Arg[] | null): void {
+function spreadInto(vm: Vm, spread: LinkedNode, span: Span, pos: Arg[], named: Arg[] | null, rowStart = 0): boolean {
   const value = evalExpr(vm, firstExpr(spread));
+  const size = value.type === 'array' ? value.v.length : value.type === 'dictionary' ? value.v.size : value.type === 'arguments' ? value.v.items.length : value.type === 'none' ? 0 : null;
+  if (size === null) bailAt(spread.span, `cannot spread ${typeOf(value)}`);
+  if (size === 0) return false;
+  // Math keeps named and positional staging lists separate until rows are grouped.
+  let positional = value.type === 'dictionary' ? 0 : size;
+  if (named && value.type === 'arguments') positional = value.v.items.reduce((count, arg) => count + Number(arg.name === null), 0);
+  at(span, () => {
+    checkCollectionSize(pos.length - rowStart + (named ? positional : size));
+    if (named) checkCollectionSize(named.length + size - positional);
+  });
   switch (value.type) {
-    case 'none':
-      return;
     case 'array':
       for (const v of value.v) pos.push({ span, name: null, value: v, valueSpan: span });
-      return;
+      break;
     case 'dictionary':
       for (const [name, v] of value.v) (named ?? pos).push({ span, name, value: v, valueSpan: span });
-      return;
+      break;
     case 'arguments':
       for (const arg of value.v.items) (arg.name === null || !named ? pos : named).push(arg);
-      return;
-    default:
-      bailAt(spread.span, `cannot spread ${typeOf(value)}`);
+      break;
   }
+  return true;
 }
 
 /** The named argument's name and value expression. */
@@ -191,17 +190,20 @@ function namedParts(node: LinkedNode): [string, LinkedNode] {
 /** Evaluates arguments in code, like `Eval for ast::Args`. */
 export function evalArgs(vm: Vm, args: LinkedNode): Args {
   const items: Arg[] = [];
+  let computed = false;
   for (const arg of argItems(args)) {
     const span = arg.node.span;
     if (arg.kind === 'pos') {
       const { value, span: valueSpan } = argValue(vm, arg.node);
+      if (computed) at(span, () => checkCollectionSize(items.length + 1));
       items.push({ span, name: null, value, valueSpan });
     } else if (arg.kind === 'named') {
       const [name, expr] = namedParts(arg.node);
       const { value, span: valueSpan } = argValue(vm, expr);
+      if (computed) at(span, () => checkCollectionSize(items.length + 1));
       items.push({ span, name, value, valueSpan });
     } else {
-      spreadInto(vm, arg.node, span, items, null);
+      computed = spreadInto(vm, arg.node, span, items, null) || computed;
     }
   }
   // The call site's span is set by the caller.
@@ -216,9 +218,11 @@ export function evalArgs(vm: Vm, args: LinkedNode): Args {
 function evalMathArgs(vm: Vm, args: LinkedNode): Args {
   const named: Arg[] = [];
   let pos: Arg[] = [];
+  let computed = false;
   let twoDimStart: number | null = null;
   const span = args.span;
   const drainIntoArray = (start: number) => {
+    at(span, () => checkCollectionSize(pos.length - start));
     const array = pos.slice(start).map((arg) => arg.value);
     pos = pos.slice(0, start);
     pos.push({ span, name: null, value: arrayValue(array), valueSpan: span });
@@ -228,13 +232,15 @@ function evalMathArgs(vm: Vm, args: LinkedNode): Args {
     const argSpan = arg.node.span;
     if (arg.kind === 'pos') {
       const { value, span: valueSpan } = argValue(vm, arg.node);
+      if (computed) at(argSpan, () => checkCollectionSize(pos.length - (twoDimStart ?? 0) + 1));
       pos.push({ span: argSpan, name: null, value, valueSpan });
     } else if (arg.kind === 'named') {
       const [name, expr] = namedParts(arg.node);
       const { value, span: valueSpan } = argValue(vm, expr);
+      if (computed) at(argSpan, () => checkCollectionSize(named.length + 1));
       named.push({ span: argSpan, name, value, valueSpan });
     } else {
-      spreadInto(vm, arg.node, argSpan, pos, named);
+      computed = spreadInto(vm, arg.node, argSpan, pos, named, twoDimStart ?? 0) || computed;
     }
     if (endsInSemicolon) {
       drainIntoArray(twoDimStart ?? 0);
@@ -242,6 +248,7 @@ function evalMathArgs(vm: Vm, args: LinkedNode): Args {
     }
   }
   if (twoDimStart !== null && twoDimStart !== pos.length) drainIntoArray(twoDimStart);
+  if (computed) at(span, () => checkCollectionSize(named.length + pos.length));
   return new Args(null, [...named, ...pos]);
 }
 

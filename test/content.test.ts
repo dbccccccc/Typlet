@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import EXPECTED_REFUSALS from './formula-scope.json';
 import { SourceError } from '../src/eval/diag.js';
 import { contentToJson } from '../src/eval/value.js';
 import { equationStyles, resolveEquation } from '../src/ir/resolve.js';
@@ -78,26 +79,6 @@ describe.each(['paired', 'typst-docs', 'symbols', 'code', 'features', 'levels'])
     expect(failures).toEqual([]);
     // Refusals are constructs outside Levels 1 to 3 (docs/DESIGN.md §6.3), such as
     // show rules and loops, and fonts other than New Computer Modern Math.
-    expect(refused).toEqual(EXPECTED_REFUSALS[name] ?? []);
+    expect(refused).toEqual(EXPECTED_REFUSALS[name as keyof typeof EXPECTED_REFUSALS] ?? []);
   });
 });
-
-/** The formulas each corpus refuses, with the reason. */
-const EXPECTED_REFUSALS: Record<string, string[]> = {
-  paired: [
-    // Level 4.
-    'loop-matrix: Typlet does not support the `range` function',
-    // Never supported.
-    'show-rule: Typlet does not support `show` rules for text',
-  ],
-  levels: [
-    'content-heading: Typlet does not support headings',
-    'loop-refused: Typlet does not support loops',
-    'show-refused: Typlet does not support `show` rules for text',
-    // Show rules other than show-set rules for equations.
-    'preamble-show-function: Typlet does not support `show` rules with a function',
-    'preamble-show-strong: Typlet does not support `show` rules for `strong`',
-    'preamble-show-where-field: Typlet does not support `where()` with the field `numbering`',
-    'preamble-show-where-unknown: Typlet does not support `where()` with the field `foo`',
-  ],
-};

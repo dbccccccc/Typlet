@@ -35,7 +35,7 @@ import {
 } from '../eval/cast.js';
 import { type Color, luma, rgb } from '../eval/color.js';
 import { type TextEdge, styled } from '../eval/content.js';
-import { type Span, bail, warning } from '../eval/diag.js';
+import { type Span, bail, warn, warning } from '../eval/diag.js';
 import { type Func, param } from '../eval/func.js';
 import { absPt, length, relFromRatio } from '../eval/layout.js';
 import { type Property, property } from '../eval/styles.js';
@@ -204,12 +204,12 @@ export const text: Func = {
     param('text', strCast, 'required'),
   ],
   call(engine, args) {
-    const styles = setText(args, (span, message) => engine.warnings.push(warning(span, message)));
+    const styles = setText(args, (span, message) => warn(engine.warnings, warning(span, message)));
     const body = args.expect('body', contentCast);
     return { type: 'content', v: styled(body, styles) };
   },
   set(engine, args) {
-    return setText(args, (span, message) => engine.warnings.push(warning(span, message)));
+    return setText(args, (span, message) => warn(engine.warnings, warning(span, message)));
   },
 };
 

@@ -2,6 +2,37 @@ import { describe, expect, it } from 'vitest';
 import { kindName, parse, render, renderToResult, renderToString, type RenderOptions, SyntaxKind, TypletError } from '../src/index.js';
 import * as mathmlEntry from '../src/mathml.js';
 
+describe('nested render budget scopes', () => {
+  const source = '#link("https://example.com")[x] #box(width: 20em)[x]';
+
+  it.each([false, true])('restores a smaller outer size limit after inner failure=%s', (fail) => {
+    const trust = () => {
+      try { renderToResult(fail ? 'foo' : 'x', { maxSize: 1000, strict: 'ignore' }); }
+      catch (error) { if (!(error instanceof TypletError)) throw error; }
+      return true;
+    };
+    const result = renderToResult(source, { maxSize: 10, trust, strict: 'ignore', throwOnError: false });
+    expect(result.drawnAs).toBe('error');
+    expect(() => renderToResult(source, { maxSize: 10, trust, strict: 'ignore' })).toThrow(TypletError);
+  });
+
+  it('restores a larger outer size limit', () => {
+    const result = renderToResult(source, { maxSize: 30, strict: 'ignore', trust: () => {
+      renderToResult('x', { maxSize: 1, strict: 'ignore' });
+      return true;
+    } });
+    expect(result.drawnAs).toBe('html');
+  });
+
+  it('restores the outer default element allowance for nested boxes', () => {
+    const result = renderToResult(source, { maxElements: 100, strict: 'ignore', trust: () => {
+      renderToResult('x', { maxElements: 2, strict: 'ignore' });
+      return true;
+    } });
+    expect(result.drawnAs).toBe('html');
+  });
+});
+
 describe('parse', () => {
   it('parses formulas in math mode by default', () => {
     const tree = parse('x^2');
@@ -116,9 +147,9 @@ describe('renderToString', () => {
   });
 
   it('refuses unsupported constructs by name', () => {
-    const error = catchError(() => mathml('#for i in (1, 2) [#i]'));
+    const error = catchError(() => mathml('#context [x]'));
     expect(error.kind).toBe('unsupported');
-    expect(error.message).toBe('Typlet does not support loops');
+    expect(error.message).toBe('Typlet does not support context expressions');
   });
 
   it('stops at its budgets', () => {

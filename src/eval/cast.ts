@@ -21,18 +21,18 @@ import {
 } from './layout.js';
 import { separatedList } from './repr.js';
 import { symbolGet } from './symbol.js';
-import { type TypeName, type Value, longName, repr, strValue, typeOf } from './value.js';
+import { type AnyTypeName, type TypeName, type Value, longName, repr, strValue, typeOf } from './value.js';
 import type { Color } from './color.js';
 
 /** What a parameter accepts, like Typst's `CastInfo`. */
 export type CastInfo =
   | { readonly kind: 'any' }
   | { readonly kind: 'value'; readonly value: Value }
-  | { readonly kind: 'type'; readonly type: TypeName }
+  | { readonly kind: 'type'; readonly type: AnyTypeName }
   | { readonly kind: 'union'; readonly infos: readonly CastInfo[] };
 
 export const anyInfo: CastInfo = { kind: 'any' };
-export const typeInfo = (type: TypeName): CastInfo => ({ kind: 'type', type });
+export const typeInfo = (type: AnyTypeName): CastInfo => ({ kind: 'type', type });
 export const valueInfo = (value: Value): CastInfo => ({ kind: 'value', value });
 
 /** Combines cast infos into a union, flattening nested unions without duplicates. */
@@ -150,12 +150,23 @@ export const contentCast = simple(['content', 'none', 'symbol', 'str'], (v): Con
   }
 });
 
-/** A function. Callable symbols convert to their function. */
-export function funcCast(symbolFunc: (value: Value) => Func): Cast<Func> {
-  return simple(['function', 'symbol'], (v) =>
-    v.type === 'symbol' ? symbolFunc(v) : (v as Extract<Value, { type: 'function' }>).v,
-  );
+/** Callable symbols use the original math library function. */
+let symbolFunc: ((value: Extract<Value, { type: 'symbol' }>) => Func) | null = null;
+
+export function registerFuncCast(symbol: NonNullable<typeof symbolFunc>): void {
+  symbolFunc = symbol;
 }
+
+/** A function, including a callable math symbol. */
+export const funcCast: Cast<Func> = {
+  info: typeInfo('function'),
+  castable: (v) => v.type === 'function' || v.type === 'symbol',
+  cast(v) {
+    if (v.type === 'function') return v.v;
+    if (v.type === 'symbol' && symbolFunc) return symbolFunc(v);
+    throw castError(typeInfo('function'), v);
+  },
+};
 
 /** A single character, from a string. */
 export const charCast: Cast<string> = {
@@ -169,16 +180,19 @@ export const charCast: Cast<string> = {
   },
 };
 
-/** A non-negative integer that fits Rust's `usize`. */
-export const usizeCast: Cast<number> = {
+/** A non-negative integer that fits Rust's `usize`, without losing precision. */
+export const usizeBigIntCast: Cast<bigint> = {
   ...intCast,
   cast(v) {
     const n = intCast.cast(v);
     if (n < 0n) bail('number must be at least zero');
     if (n > 0xffff_ffff_ffff_ffffn) bail('number too large');
-    return Number(n);
+    return n;
   },
 };
+
+/** `usize` as a JavaScript index; exact arithmetic uses `usizeBigIntCast`. */
+export const usizeCast: Cast<number> = { ...usizeBigIntCast, cast: (v) => Number(usizeBigIntCast.cast(v)) };
 
 /** An integer that fits Rust's `isize`. */
 export const isizeCast: Cast<number> = {

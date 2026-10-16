@@ -9,6 +9,8 @@
 // New Computer Modern Math: each character's glyph at its advance, with
 // neither kerning nor ligatures.
 
+import { checkContentDepth } from '../eval/content-budget.js';
+import { getExpansionBudget, withExpansionBudget } from '../eval/expansion-budget.js';
 import type { Color } from '../eval/color.js';
 import type { BoxElem, Content, Corners, Sides, Stroke, TextEdge } from '../eval/content.js';
 import { ElementBudget, type SourceDiagnostic, type Span, unsupported } from '../eval/diag.js';
@@ -69,6 +71,18 @@ export function layoutParagraph(
   width: Abs | null = null,
   region: Abs | null = null,
 ): Frame {
+  const budget = getExpansionBudget();
+  return withExpansionBudget(budget, () => budget.depth.withDepth(content.span, () => layoutParagraphInner(content, styles, warnings, width, region)));
+}
+
+function layoutParagraphInner(
+  content: Content,
+  styles: StyleChain,
+  warnings: SourceDiagnostic[],
+  width: Abs | null = null,
+  region: Abs | null = null,
+): Frame {
+  checkContentDepth(content);
   // Typlet has no bidirectional layout, and a right-to-left paragraph starts at the right.
   if (isRtlLanguage(get(styles, 'text', 'lang', 'en'))) unsupported(content.span, 'right-to-left paragraphs in HTML output yet');
   const available = width ?? region;
@@ -147,6 +161,7 @@ function overhang(c: string): number {
 function collect(content: Content, styles: StyleChain, c: Collector): void {
   c.budget.visit(content.span);
   const text = (s: string, span: Span) => {
+    c.budget.consume(s.length, span);
     // Text in the same styles is one run, as shaping gives it.
     const last = c.items.at(-1);
     if (last?.kind === 'text' && last.styles === styles) c.items[c.items.length - 1] = { ...last, text: last.text + s };
@@ -238,6 +253,7 @@ const LETTERS_AT_EDGES = /^\p{L}(?:.*\p{L})?\p{M}*$/su;
  * advances. Then tracking and spacing apply.
  */
 export function shapeText(text: string, styles: StyleChain, span: Span): { face: FontFace; glyphs: Glyph[] } {
+  getExpansionBudget().consume(text.length, span);
   const face = fontFace(styles, span);
   if (isRtlLanguage(get(styles, 'text', 'lang', 'en')) && !LETTERS_AT_EDGES.test(text)) {
     unsupported(span, 'right-to-left text in HTML output yet');

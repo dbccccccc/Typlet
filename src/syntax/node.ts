@@ -117,9 +117,8 @@ export class SyntaxNode {
 
   /** The full source text of the node. */
   fullText(): string {
-    if (this.children.length === 0) return this.text;
     let out = '';
-    for (const child of this.children) out += child.fullText();
+    for (const { node } of this.walk()) if (node.children.length === 0) out += node.text;
     return out;
   }
 
@@ -164,22 +163,39 @@ export class SyntaxNode {
 
   /** A deep copy of the whole subtree. */
   deepClone(): SyntaxNode {
-    const node = this.clone();
-    node.children = this.children.map((child) => child.deepClone());
-    return node;
+    const root = this.clone();
+    const stack = [{ source: this as SyntaxNode, target: root, next: 0 }];
+    while (stack.length) {
+      const frame = stack.at(-1)!;
+      if (frame.next === frame.source.children.length) { stack.pop(); continue; }
+      const source = frame.source.children[frame.next]!;
+      const target = source.clone();
+      frame.target.children[frame.next++] = target;
+      stack.push({ source, target, next: 0 });
+    }
+    return root;
   }
 
   /** Whether this node or one of its descendants is an error. */
   erroneous(): boolean {
     if (this.kind === SyntaxKind.Error) return true;
-    for (const child of this.children) if (child.erroneous()) return true;
+    // This query needs no source offsets or yielded records. Keep its stack
+    // proportional to depth, and avoid allocating a frame for every leaf.
+    const stack = [{ node: this as SyntaxNode, next: 0 }];
+    while (stack.length) {
+      const frame = stack[stack.length - 1]!;
+      if (frame.next === frame.node.children.length) { stack.pop(); continue; }
+      const node = frame.node.children[frame.next++]!;
+      if (node.kind === SyntaxKind.Error) return true;
+      if (node.children.length) stack.push({ node, next: 0 });
+    }
     return false;
   }
 
   /** All errors and warnings in the subtree, with absolute offsets from `offset`. */
   diagnostics(offset = 0): SyntaxDiagnostic[] {
     const out: SyntaxDiagnostic[] = [];
-    const walk = (node: SyntaxNode, start: number) => {
+    for (const { node, start } of this.walk(offset)) {
       for (const warning of node.warnings ?? []) {
         const [s, e] = warning.range ?? [0, node.len];
         out.push({
@@ -199,13 +215,22 @@ export class SyntaxNode {
           end: start + node.len,
         });
       }
-      let at = start;
-      for (const child of node.children) {
-        walk(child, at);
-        at += child.len;
-      }
-    };
-    walk(this, offset);
+    }
     return out;
+  }
+
+  /** Visits nodes in source order without using the JavaScript call stack. */
+  private *walk(offset = 0): Generator<{ node: SyntaxNode; start: number }> {
+    const stack = [{ node: this as SyntaxNode, next: 0, start: offset }];
+    yield { node: this, start: offset };
+    while (stack.length) {
+      const frame = stack[stack.length - 1]!;
+      if (frame.next === frame.node.children.length) { stack.pop(); continue; }
+      const node = frame.node.children[frame.next++]!;
+      const start = frame.start;
+      frame.start += node.len;
+      yield { node, start };
+      if (node.children.length) stack.push({ node, next: 0, start });
+    }
   }
 }

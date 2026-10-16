@@ -8,11 +8,12 @@ import { LinkedNode, exprs } from '../syntax/ast.js';
 import { SyntaxKind } from '../syntax/kind.js';
 import type { SyntaxNode } from '../syntax/node.js';
 import { evalDisplay, evalExpr } from './code.js';
+import { checkContentDepth } from './content-budget.js';
 import { type Content, type EquationElem, sequence } from './content.js';
 import { type SourceDiagnostic, SourceError } from './diag.js';
-import { DEFAULT_LIMITS, type Limits, callFunc, newEngine } from './func.js';
+import { DEFAULT_LIMITS, type Engine, type Limits, callFunc, newEngine } from './func.js';
 import { LIBRARY } from './library.js';
-import { setCollectionLimits } from './ops.js';
+import { withCollectionLimits } from './ops.js';
 import { evalSetRule, evalShowRule } from './rules.js';
 import type { Scope } from './scope.js';
 import { EMPTY_CHAIN, type Property, type Styles, chain, get } from './styles.js';
@@ -20,10 +21,13 @@ import { type Numbering, applyNumbering } from './numbering.js';
 import { display } from './value.js';
 import { markupExprs } from './markup.js';
 import { Vm, forbidden } from './vm.js';
+import { checkSyntaxDepth } from './syntax-budget.js';
+import { withValueBudget } from './value-budget.js';
 
 const K = SyntaxKind;
 
 export interface Evaluated {
+  readonly engine: Engine;
   readonly equation: EquationElem;
   readonly warnings: SourceDiagnostic[];
   /** The styles of the preamble's set rules, which apply to the equation. */
@@ -48,17 +52,19 @@ export interface Preamble {
  * in the preamble. The tree must be free of syntax errors.
  */
 export function evalPreamble(root: SyntaxNode, limits: Limits = DEFAULT_LIMITS): Preamble {
+  checkSyntaxDepth(root, 'preamble');
   const engine = newEngine(limits);
-  setCollectionLimits(limits.collectionSize, limits.stringLength);
-  const vm = new Vm(engine, LIBRARY);
-  const styles: Property[] = [];
-  for (const expr of markupExprs(new LinkedNode(root, 0, 'preamble'))) {
-    if (expr.kind === K.SetRule) styles.push(...evalSetRule(vm, expr));
-    else if (expr.kind === K.ShowRule) styles.push(...evalShowRule(vm, expr));
-    else evalExpr(vm, expr);
-    if (vm.flow) throw new SourceError([forbidden(vm.flow)]);
-  }
-  return { scope: vm.scopes.top, styles, warnings: engine.warnings };
+  return withCollectionLimits(limits.collectionSize, limits.stringLength, () => withValueBudget(engine.values, () => {
+    const vm = new Vm(engine, LIBRARY);
+    const styles: Property[] = [];
+    for (const expr of markupExprs(new LinkedNode(root, 0, 'preamble'))) {
+      if (expr.kind === K.SetRule) styles.push(...evalSetRule(vm, expr));
+      else if (expr.kind === K.ShowRule) styles.push(...evalShowRule(vm, expr));
+      else evalExpr(vm, expr);
+      if (vm.flow) throw new SourceError([forbidden(vm.flow)]);
+    }
+    return { scope: vm.scopes.top, styles, warnings: engine.warnings };
+  }));
 }
 
 /**
@@ -73,31 +79,51 @@ export function evalFormula(
   preamble: Preamble | null = null,
   counter: { value: number } | null = null,
 ): Evaluated {
+  checkSyntaxDepth(root);
+  return evalCheckedFormula(root, block, limits, preamble, counter);
+}
+
+/**
+ * Evaluates a formula already checked by the renderer before its preamble.
+ * Direct evaluation uses `evalFormula`, which checks the raw tree itself.
+ */
+export function evalCheckedFormula(
+  root: SyntaxNode,
+  block: boolean,
+  limits: Limits = DEFAULT_LIMITS,
+  preamble: Preamble | null = null,
+  counter: { value: number } | null = null,
+): Evaluated {
   const engine = newEngine(limits);
-  setCollectionLimits(limits.collectionSize, limits.stringLength);
-  const vm = new Vm(engine, LIBRARY);
-  // The formula sees the preamble's definitions, and its own `let`s don't
-  // change them for other formulas.
-  if (preamble) vm.scopes.top = preamble.scope.clone();
+  return withCollectionLimits(limits.collectionSize, limits.stringLength, () => withValueBudget(engine.values, () => {
+    const vm = new Vm(engine, LIBRARY);
+    // The formula sees the preamble's definitions, and its own `let`s don't
+    // change them for other formulas.
+    if (preamble) vm.scopes.top = preamble.scope.clone();
 
-  // In `$ x $`, the spaces next to the dollar signs belong to the equation,
-  // not to its body. A formula's source has no dollar signs, so they are
-  // trimmed here to give the body Typst would.
-  const children = exprs(new LinkedNode(root, 0), true);
-  let start = 0;
-  let end = children.length;
-  while (start < end && children[start]!.kind === SyntaxKind.Space) start++;
-  while (end > start && children[end - 1]!.kind === SyntaxKind.Space) end--;
-  const body = sequence(children.slice(start, end).map((child) => evalDisplay(vm, child)));
-  if (vm.flow) throw new SourceError([forbidden(vm.flow)]);
+    // In `$ x $`, the spaces next to the dollar signs belong to the equation,
+    // not to its body. A formula's source has no dollar signs, so they are
+    // trimmed here to give the body Typst would.
+    const children = exprs(new LinkedNode(root, 0), true);
+    let start = 0;
+    let end = children.length;
+    while (start < end && children[start]!.kind === SyntaxKind.Space) start++;
+    while (end > start && children[end - 1]!.kind === SyntaxKind.Space) end--;
+    const body = sequence(children.slice(start, end).map((child) => evalDisplay(vm, child)));
+    if (vm.flow) throw new SourceError([forbidden(vm.flow)]);
 
-  const styles = preamble?.styles ?? [];
-  return {
-    equation: { func: 'equation', block, body, span: null },
-    warnings: engine.warnings,
-    styles,
-    number: block ? equationNumber(vm, styles, counter) : null,
-  };
+    const styles = preamble?.styles ?? [];
+    const number = block ? equationNumber(vm, styles, counter) : null;
+    checkContentDepth(body);
+    if (number) checkContentDepth(number);
+    return {
+      engine,
+      equation: { func: 'equation', block, body, span: null },
+      warnings: engine.warnings,
+      styles,
+      number,
+    };
+  }));
 }
 
 /**

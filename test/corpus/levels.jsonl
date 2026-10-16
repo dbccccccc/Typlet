@@ -155,3 +155,55 @@
 {"display":false,"id":"show-in-code","src":"#{ show math.equation: set text(fill: blue); $x$ }"}
 {"display":false,"id":"show-in-math","src":"#show math.equation: set text(fill: blue) x"}
 {"display":false,"id":"preamble-text","preamble":"Some text before.","src":"x"}
+{"display":false,"id":"loop-for-content","src":"#for i in range(3) [x_#i +] 0"}
+{"display":false,"id":"loop-for-math","src":"#for i in (1, 2, 3) { $x_#i$ }"}
+{"display":false,"id":"loop-for-dict","src":"#for (k, v) in (a: 1, b: 2) [#k = #v, ]"}
+{"display":false,"id":"loop-for-string","src":"#for c in \"abc\" [#c, ]"}
+{"display":false,"id":"loop-for-destructure","src":"#for (a, b) in ((1, 2), (3, 4)) [#a #b;]"}
+{"display":false,"id":"loop-while","src":"#{ let i = 0; let s = (); while i < 3 { i += 1; s.push($x_#i$) }; s.join($+$) }"}
+{"display":false,"id":"loop-join","src":"sum_(i=1)^n #range(1, 4).map(i => $a_#i$).join($+$)"}
+{"display":false,"id":"loop-matrix","src":"mat(..#range(1, 4).map(i => range(i, i + 3)))"}
+{"display":false,"id":"loop-identity","src":"mat(..#range(3).map(i => range(3).map(j => if i == j { 1 } else { 0 })))"}
+{"display":false,"id":"loop-break","src":"#for i in range(10) { if i == 3 { break }; [#i] }"}
+{"display":false,"id":"loop-continue","src":"#for i in range(5) { if calc.odd(i) { continue }; [#i] }"}
+{"display":false,"id":"loop-not-iterable","src":"#for i in 5 [#i]"}
+{"display":false,"id":"loop-join-error","src":"#for i in (1, 2) { i }"}
+{"display":false,"id":"loop-captures","src":"#{ let fs = (); for i in range(3) { fs.push(() => i) }; fs.map(f => f()) }"}
+{"display":false,"id":"while-infinite","src":"#{ let i = 0; while i < 1 { } }"}
+{"display":false,"id":"while-always-true","src":"#{ while true { } }"}
+{"display":false,"id":"preamble-loop","preamble":"#let f(x) = { let s = (); for i in range(2) { s.push($#x^#i$) }; s.join($+$) }","src":"f(x) + f(y)"}
+{"display":false,"id":"assign","src":"#{ let x = 1; x += 2; $x^#x$ }"}
+{"display":false,"id":"assign-field","src":"#{ let d = (a: 1); d.b = 2; d }"}
+{"display":false,"id":"assign-destructure","src":"#{ let a = 1; let b = 2; (a, b) = (b, a); $#a #b$ }"}
+{"display":false,"id":"assign-captured","src":"#let x = 1\n#let f() = { x = 2 }\n#f()"}
+{"display":false,"id":"assign-constant","src":"#{ calc = 1 }"}
+{"display":false,"id":"method-array","src":"#(1, 2, 3).map(x => x * x).sum()"}
+{"display":false,"id":"method-string","src":"#\"hello\".rev().len()"}
+{"display":false,"id":"method-chain","src":"#range(5).filter(x => calc.even(x)).map(str).join(\", \")"}
+{"display":false,"id":"method-mutating","src":"#{ let a = (); a.push(1); a.push(2); a }"}
+{"display":false,"id":"method-temporary","src":"#(1, 2).push(3)"}
+{"display":false,"id":"method-unknown","src":"#(1, 2).foo()"}
+{"display":false,"id":"method-split-math","src":"#\"a,b,c\".split(\",\").map(s => $#s$).join($,$)"}
+{"display":false,"id":"method-dict-pairs","src":"#(a: 1, b: 2).pairs().map(((k, v)) => $#k = #v$).join($;$)"}
+{"display":false,"id":"method-arguments","src":"#let f(..args) = args.pos().len()\n#f(1, 2, 3)"}
+{"display":false,"id":"method-length","src":"#1cm.pt()"}
+{"display":false,"id":"method-length-em","src":"#(1em).pt()"}
+{"display":false,"id":"method-int","src":"#(5).bit-and(3) + #(-5).signum()"}
+{"display":false,"id":"content-func","src":"#repr($x^2$.body.func())"}
+{"display":false,"id":"content-fields","src":"#$x^2$.body.fields().keys().join(\", \")"}
+{"display":false,"id":"function-with","src":"#let f(a, b) = $#a + #b$\n#f.with(1)(2)"}
+{"display":false,"id":"calc-round","src":"#calc.round(calc.sqrt(2), digits: 3)"}
+{"display":false,"id":"calc-trig","src":"#calc.sin(30deg)"}
+{"display":false,"id":"calc-pow","src":"2^#calc.pow(2, 3)"}
+{"display":false,"id":"calc-constants","src":"#calc.pi + #calc.e"}
+{"display":false,"id":"calc-error","src":"#calc.sqrt(-1)"}
+{"display":false,"id":"conversion-str","src":"#str(1.5) + #str(2)"}
+{"display":false,"id":"conversion-int","src":"#int(\"42\") + #int(1.9)"}
+{"display":false,"id":"conversion-float","src":"#float(\"1e3\")"}
+{"display":false,"id":"conversion-error","src":"#int(\"a\")"}
+{"display":false,"id":"type-value","src":"#type(1) #type(\"a\")"}
+{"display":false,"id":"repr-value","src":"#repr((1, \"a\"))"}
+{"display":false,"id":"panic","src":"#panic(\"stop\")"}
+{"display":false,"id":"assert","src":"#assert(1 < 2) x"}
+{"display":false,"id":"assert-fail","src":"#assert.eq(1, 2)"}
+{"display":false,"id":"upper","src":"#upper(\"abc\")"}

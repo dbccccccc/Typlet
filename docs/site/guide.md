@@ -6,7 +6,7 @@
 
 `renderToResult(source, options)` returns the same markup with what drew the formula, the warnings and the equation number: `{ markup, drawnAs, warnings, number }`. `drawnAs` is `'html'` for Typlet's layout, `'mathml'` for the browser's, which the `mathml` output asks for and which the HTML falls back to when it can't draw a formula, `'fallback'` for the `fallback` option's markup, and `'error'` for a formula rendered in the error color.
 
-The `typlet/mathml` entry point renders MathML alone. It leaves out the layout engine and the font metrics, so it is about half the size, and it suits EPUB, tools that consume MathML, and pages where size matters most.
+The `typlet/mathml` entry point renders MathML alone. It leaves out the layout engine and the font metrics, so it is about 40% smaller, and it suits EPUB, tools that consume MathML, and pages where size matters most.
 
 `parse(source)` returns Typst's syntax tree for a formula, with the same node kinds, error recovery and messages as Typst's parser, for editors and linters.
 
@@ -44,7 +44,7 @@ renderToString('x + foo');
 Its `kind` says why it failed:
 - `syntax`: the formula has a syntax error.
 - `eval`: evaluation failed, as it would in Typst.
-- `unsupported`: Typst supports the feature, and Typlet doesn't, such as a loop.
+- `unsupported`: Typst supports the feature, and Typlet doesn't, such as a `context` expression.
 - `limit`: a budget ran out.
 
 Its `diagnostics` list every error, each with a `span` in the source, in UTF-16 code units, and `in`, which says whether the span is in the formula or in the `preamble`.

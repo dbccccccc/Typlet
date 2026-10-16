@@ -187,8 +187,9 @@ export function unknownVariableMath(name: string, inGlobal: boolean): HintedErro
 }
 
 /** Looks up a field of a module. */
-export function moduleField(module: Module, field: string): Binding {
+export function moduleField(module: Module, field: string, span: Span = null): Binding {
   const binding = module.scope.get(field);
   if (binding) return binding;
+  if (module.name === 'global' && typstGlobalType(field) !== undefined) unsupportedGlobal(field, span);
   return bail(`module \`${module.name}\` does not contain \`${field}\``);
 }

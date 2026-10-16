@@ -24,7 +24,8 @@ import {
   boolCast,
   colorCast,
   frCast,
-  funcCast as makeFuncCast,
+  funcCast,
+  registerFuncCast,
   intCast,
   ratioCast,
   relCast,
@@ -47,7 +48,7 @@ export function symbolFunc(symbol: Symbol): Func {
 }
 
 /** Casts functions, including callable symbols. */
-export const funcCast: Cast<Func> = makeFuncCast((v) => symbolFunc((v as Extract<Value, { type: 'symbol' }>).v));
+registerFuncCast((v) => symbolFunc(v.v));
 
 /** Spacing for `h`: a relative length or a fraction. */
 const spacingCast: Cast<Spacing> = unionCast<Spacing>(

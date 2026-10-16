@@ -2,10 +2,31 @@
 
 What each release of Typlet changes. The versions follow [semantic versioning](https://semver.org/): while they start with 0, a minor release may change the API, and each Typlet version reproduces one Typst version. `rehype-typlet` and `markdown-it-typlet` are released with Typlet, under the same version.
 
-## Unreleased
+## 0.2.0
 
-- `renderToResult()` returns the markup with what drew the formula (`drawnAs`: `html`, `mathml`, `fallback` or `error`), the warnings and the equation number. Warnings have a `kind`: `fallback`, `deprecation` or `other`.
-- The `html` output falls back to MathML, with a warning, for a formula the HTML can't draw, as the default output does. It threw an `unsupported` error before.
+A minor release targeting Typst 0.15.1, like 0.1.1. The formula language deliberately remains the v0.1.1 subset: math, macros, basic collections, content, styles and equation numbering. The unpublished general runtime additions have been removed: loops, assignments, `calc`/libm, general collection/string methods, constructors, conversions and inspection functions. These constructs still parse, and rendering reports `unsupported` with a source span so the host can use its external fallback. Equation show-set `.where` rules remain supported.
+
+- **Structured rendering results.** `renderToResult()` returns markup, `drawnAs` (`html`, `mathml`, `fallback` or `error`), classified warnings and an equation number. Warnings are deduplicated per location and message.
+- **Reliable integrations.** HTML-only output can fall back to MathML with a warning. Async fallbacks update only the latest render invocation, including repeated sources, DOM normalization and reentrant calls. Copied HTML preserves literal tags and entities alongside formula source and real formatting.
+- The rehype plugin processes every adjacent inline, display and fenced formula after empty results. It preserves multiple fallback nodes without revisiting their markup, and keeps equation numbering in source order.
+- Numbered HTML output keeps its exact source for copying, including whitespace in custom equation numbers. Plain-text copying preserves paragraph, line, list and table separators.
+- The markdown-it plugin's declaration supports both markdown-it 14 and 15, with strict checks of the packed declaration against both type surfaces. Each document resets the plugin's default equation counter even when its environment is reused; an explicitly supplied counter still accumulates across documents.
+- **Bounded work.** Flat set/show rule chains stop at 256 active rules. Runtime-built content is checked iteratively before recursive realization, layout, MathML and number extraction, with a maximum depth of 256 and 100,000 visits. Inherited content cycles in box bodies, attachments and annotations are also bounded in the actual resolver and output contexts. These cases produce controlled resource errors, including `throwOnError: false`, rather than native stack failures.
+- Recursive macro bodies, expression nesting and rule tails now share a limit of 512 active evaluation steps per engine, including delayed callbacks. Excessive combined execution produces a source-located `limit` error and controlled markup with `throwOnError: false`; ordinary function-call depth errors keep Typst's existing boundary.
+- Valid formula and preamble syntax trees are checked for depth before recursive evaluation. Syntax traversal and cloning preserve parser diagnostics using explicit stacks.
+- Shared collection representations avoid per-array generators, repeated wide-text scans and temporary line arrays. Flat syntax checks allocate traversal frames only for branches, and rendering avoids checking the same formula tree twice. Direct evaluation still validates its input, and rendering still checks formula depth before evaluating the preamble. These changes speed up resource-budget rejection while preserving formatting, diagnostics and all existing limits.
+- Value operations share bounded work and depth; implicit representations check string length while building. Collection literals, repetition, spreads, dictionary merges and generated argument lists check budgets before growth. Empty array repetition finishes immediately for any nonnegative count.
+- Delayed cancel-angle callbacks share formula evaluation budgets and forward warnings across crossed lines, nested boxes and numbered equations. Custom prime counts consume element and output expansion budgets before allocation.
+- Ordinary text, mathematical glyphs, numbers and raw text now consume expansion work before styling, shaping or output conversion. A structural preflight bounds logical content expansion before IR allocation; paragraphs check before concatenation and equation numbers before joining. This prevents repeated content from exhausting the process before the final output-size check. Nested renders restore the outer element and size limits on both success and failure.
+- Error and pending previews obey `maxOutputSize`, shortening escaped source only at code-point and entity boundaries. Full thrown diagnostics and external fallback markup retain their behavior.
+- **Smaller delivery.** Production Brotli quality 11 sizes are 127,639 bytes (124.6 KiB) for the full browser script and 72,745 bytes (71.0 KiB) for `typlet/mathml`. Compared with the unpublished full-runtime candidate, this saves 18,807 and 18,833 bytes; compared with v0.1.1 built with the same production pipeline, the retained API and safety work adds 3,493 and 3,376 bytes. The font module remains 40,615 bytes. Budgets tighten to 128 KiB and 72 KiB.
+- **Release validation.** All 507 visual-contract source records remain; 52 reviewed runtime examples now report `unsupported`. The contract expects 406 HTML, 17 MathML, 83 errors and one existing exclusion. All 4,827 expression fixtures remain, with 816 explicit unsupported IDs and reasons and oracle comparisons for the rest.
+- Visual tests match oracle SVGs by ID and reject missing samples or unexpected output modes. Frame tests and the evaluation fuzzer compare glyph fills and linear transforms as well as geometry.
+- The package and documentation ship complete license materials and verify their bytes and local links. The removed libm implementation and its distribution notices are gone; W3C MathML and font notices remain. The Oracle workflow also checks reproducible font assets with pinned tools.
+
+Of the 1,705 formulas of the test corpus that Typst renders, Typlet now lays out 1,501, draws 159 as MathML with a warning, and refuses 45.
+
+Release readiness requires the cross-platform CI and release rehearsal to pass on the final commit.
 
 ## 0.1.1
 
