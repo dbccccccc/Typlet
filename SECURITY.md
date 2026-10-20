@@ -39,7 +39,7 @@ Formulas can compute: Typst's code has functions, recursion and growing values. 
 | Size of spacing, boxes and text | 1,000 em | `maxSize` |
 | Output | 1,000,000 characters | `maxOutputSize` |
 
-`npm run check:budgets` checks that the built bundle stops each abusive formula in `test/budget-cases.mjs` within 50 ms: recursion bombs, repetition, content that doubles, deep nesting and huge sizes. Typlet has no loops, file access, packages, `eval` or introspection (docs/DESIGN.md §6.3), so no formula reaches outside its own evaluation.
+`npm run check:budgets` checks that the built bundle stops each abusive formula in `test/budget-cases.mjs` within 50 ms: recursion bombs, repetition, content that doubles, deep nesting and huge sizes. It also checks that formulas whose work must stay linear in their size render within 50 ms, such as raw code tagged as Typst, which Typlet parses and highlights again, with a long chain of field accesses. Typlet has no loops, file access, packages, `eval` or introspection (docs/DESIGN.md §6.3), so no formula reaches outside its own evaluation.
 
 ## Differential fuzzing
 

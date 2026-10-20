@@ -61,7 +61,15 @@ export const TM_SCOPES: Record<Tag, string> = {
   [Tag.Error]: 'invalid.typst',
 };
 
-/** A node with its parent, index and offset, like Typst's `LinkedNode`, for navigating siblings and leaves. */
+/**
+ * A node with its parent, index and offset, like Typst's `LinkedNode`, for navigating siblings and leaves.
+ *
+ * Modified for Typlet: raw code in a formula can be as long as the formula,
+ * and a chain of field accesses nests as deep as it is long. So the tree is
+ * navigated without recursion, and what highlighting looks up more than once
+ * is remembered: the children, an identifier's tag and the top of its chain
+ * of field accesses. That keeps highlighting linear in the code's length.
+ */
 export class LinkedTree {
   constructor(
     readonly node: SyntaxNode,
@@ -69,6 +77,12 @@ export class LinkedTree {
     readonly index = 0,
     readonly offset = 0,
   ) {}
+
+  private cached: LinkedTree[] | undefined;
+  /** The tag `highlightIdent` found for this identifier, once it has. */
+  identTag: Tag | null | undefined;
+  /** The first ancestor that isn't a field access, once `chainTop` found it. */
+  chainTop: LinkedTree | undefined;
 
   get kind(): SyntaxKind {
     return this.node.kind;
@@ -79,14 +93,18 @@ export class LinkedTree {
     return this.node.children.length === 0 && this.node.error === null && this.node.text !== '';
   }
 
+  /** The children, made once, so that siblings and leaves found through them are the same objects. */
   children(): LinkedTree[] {
-    const out: LinkedTree[] = [];
-    let offset = this.offset;
-    this.node.children.forEach((child, index) => {
-      out.push(new LinkedTree(child, this, index, offset));
-      offset += child.len;
-    });
-    return out;
+    if (this.cached === undefined) {
+      const out: LinkedTree[] = [];
+      let offset = this.offset;
+      this.node.children.forEach((child, index) => {
+        out.push(new LinkedTree(child, this, index, offset));
+        offset += child.len;
+      });
+      this.cached = out;
+    }
+    return this.cached;
   }
 
   get parentKind(): SyntaxKind | null {
@@ -108,38 +126,52 @@ export class LinkedTree {
   }
 
   leftmostLeaf(): LinkedTree | null {
-    if (this.isLeaf && !isTrivia(this.kind) && !isError(this.kind)) return this;
-    for (const child of this.children()) {
-      const leaf = child.leftmostLeaf();
-      if (leaf) return leaf;
+    // The nodes still to look at, the next on top: a depth-first search
+    // without recursion.
+    const pending: LinkedTree[] = [this];
+    while (pending.length > 0) {
+      const node = pending.pop()!;
+      if (node.isLeaf) {
+        if (!isTrivia(node.kind) && !isError(node.kind)) return node;
+        continue;
+      }
+      const children = node.children();
+      for (let i = children.length - 1; i >= 0; i--) pending.push(children[i]!);
     }
     return null;
   }
 
   rightmostLeaf(): LinkedTree | null {
-    if (this.isLeaf && !isTrivia(this.kind)) return this;
-    const children = this.children();
-    for (let i = children.length - 1; i >= 0; i--) {
-      const leaf = children[i]!.rightmostLeaf();
-      if (leaf) return leaf;
+    const pending: LinkedTree[] = [this];
+    while (pending.length > 0) {
+      const node = pending.pop()!;
+      if (node.isLeaf) {
+        if (!isTrivia(node.kind)) return node;
+        continue;
+      }
+      for (const child of node.children()) pending.push(child);
     }
     return null;
   }
 
   prevLeaf(): LinkedTree | null {
-    for (let node: LinkedTree = this, prev = node.prevSibling(); prev; node = prev, prev = node.prevSibling()) {
-      const leaf = prev.rightmostLeaf();
-      if (leaf) return leaf;
+    for (let node: LinkedTree | null = this; node !== null; node = node.parent) {
+      for (let prev = node.prevSibling(); prev; prev = prev.prevSibling()) {
+        const leaf = prev.rightmostLeaf();
+        if (leaf) return leaf;
+      }
     }
-    return this.parent?.prevLeaf() ?? null;
+    return null;
   }
 
   nextLeaf(): LinkedTree | null {
-    for (let node: LinkedTree = this, next = node.nextSibling(); next; node = next, next = node.nextSibling()) {
-      const leaf = next.leftmostLeaf();
-      if (leaf) return leaf;
+    for (let node: LinkedTree | null = this; node !== null; node = node.parent) {
+      for (let next = node.nextSibling(); next; next = next.nextSibling()) {
+        const leaf = next.leftmostLeaf();
+        if (leaf) return leaf;
+      }
     }
-    return this.parent?.nextLeaf() ?? null;
+    return null;
   }
 }
 
@@ -245,7 +277,33 @@ export function highlight(node: LinkedTree): Tag | null {
   }
 }
 
-function highlightIdent(node: LinkedTree): Tag | null {
+function highlightIdent(start: LinkedTree): Tag | null {
+  // Modified for Typlet: in `a.b.c`, an identifier behind a dot takes the tag
+  // of the identifier before it, which typst-syntax finds by recursion. Here
+  // the chain is followed in a loop, and each identifier on the way remembers
+  // the tag, so that a long chain costs linear time and no stack.
+  const chain: LinkedTree[] = [];
+  let tag: Tag | null = null;
+  for (let node: LinkedTree | null = start; node !== null; ) {
+    if (node.identTag !== undefined) {
+      tag = node.identTag;
+      break;
+    }
+    chain.push(node);
+    const found = identTag(node);
+    if (found instanceof LinkedTree) {
+      node = found;
+      continue;
+    }
+    tag = found;
+    break;
+  }
+  for (const node of chain) node.identTag = tag;
+  return tag;
+}
+
+/** An identifier's tag, or the identifier before a dot whose tag it takes. */
+function identTag(node: LinkedTree): Tag | null | LinkedTree {
   // Directly before an argument list?
   const nextLeaf = node.nextLeaf();
   if (
@@ -262,8 +320,7 @@ function highlightIdent(node: LinkedTree): Tag | null {
   if (node.kind === K.MathIdent || node.kind === K.MathFieldAccess) return Tag.Interpolated;
 
   // Find the first ancestor that isn't a field access.
-  let ancestor: LinkedTree = node;
-  while (ancestor.parentKind === K.FieldAccess) ancestor = ancestor.parent!;
+  const ancestor = chainTop(node);
 
   // Directly before or behind a show rule colon?
   if (
@@ -280,9 +337,28 @@ function highlightIdent(node: LinkedTree): Tag | null {
   const prev = node.prevLeaf();
   if (prev?.kind === K.Dot) {
     const prevPrev = prev.prevLeaf();
-    if (prevPrev && (prevPrev.kind === K.Ident || prevPrev.kind === K.MathIdent)) return highlightIdent(prevPrev);
+    if (prevPrev && (prevPrev.kind === K.Ident || prevPrev.kind === K.MathIdent)) return prevPrev;
   }
   return null;
+}
+
+/**
+ * The first ancestor that isn't a field access. Every node on the way
+ * remembers it, as each identifier of a chain asks: the chain is climbed once.
+ */
+function chainTop(node: LinkedTree): LinkedTree {
+  const chain: LinkedTree[] = [];
+  let top = node;
+  while (top.parentKind === K.FieldAccess) {
+    if (top.chainTop !== undefined) {
+      top = top.chainTop;
+      break;
+    }
+    chain.push(top);
+    top = top.parent!;
+  }
+  for (const n of chain) n.chainTop = top;
+  return top;
 }
 
 function highlightHash(node: LinkedTree): Tag | null {

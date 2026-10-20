@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { type RenderOptions, TypletError, renderToString } from '../src/index.js';
-import { BUDGET_CASES, TYPST_LIMIT_CASES } from './budget-cases.mjs';
+import * as mathmlEntry from '../src/mathml.js';
+import { BOUNDED_CASES, BUDGET_CASES, TYPST_LIMIT_CASES } from './budget-cases.mjs';
 
 /** The error a formula fails with. */
 function failure(source: string, options: RenderOptions = {}): TypletError {
@@ -30,6 +31,12 @@ describe('budgets', () => {
       expect(error.message).toBe(message);
     },
   );
+
+  // The HTML output draws raw as MathML, so both entry points highlight it.
+  it.each(BOUNDED_CASES as [string, string, RenderOptions][])('render %s', (_, source, options) => {
+    expect(renderToString(source, { ...options, strict: 'ignore' })).toContain('<code');
+    expect(mathmlEntry.renderToString(source, { ...options, strict: 'ignore' })).toContain('<code');
+  });
 
   it('stop at the output size', () => {
     const error = failure('x '.repeat(500), { maxOutputSize: 1000 });
