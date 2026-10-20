@@ -5,10 +5,10 @@
 // `render` on it (docs/DESIGN.md §2).
 
 import type { SourceDiagnostic } from './eval/diag.js';
-import { SourceError, setElementLimit, warning } from './eval/diag.js';
+import { HintedError, SourceError, dedupe, error, setElementLimit, warning } from './eval/diag.js';
 import type { Content } from './eval/content.js';
 import type { DrawContext } from './html/html.js';
-import { DEFAULT_LIMITS, type Limits } from './eval/func.js';
+import { DEFAULT_LIMITS, type Limits, setLayoutEngine } from './eval/func.js';
 import { type Preamble, evalFormula, evalPreamble } from './eval/index.js';
 import type { StyleChain } from './eval/styles.js';
 import type { MathItem } from './ir/item.js';
@@ -186,21 +186,31 @@ function warningOf(d: SourceDiagnostic): TypletWarning {
   return { ...diagnostic(d), severity: 'warning', kind };
 }
 
-/** The text of content, such as an equation's number. */
+/** The text of content, such as an equation's number, without recursion: a numbering function can nest it arbitrarily. */
 function plainText(content: Content): string {
-  switch (content.func) {
-    case 'sequence':
-      return content.children.map(plainText).join('');
-    case 'styled':
-      return plainText(content.child);
-    case 'text':
-    case 'symbol':
-      return content.text;
-    case 'space':
-      return ' ';
-    default:
-      return 'body' in content && content.body && typeof content.body === 'object' ? plainText(content.body as Content) : '';
+  let out = '';
+  const stack: Content[] = [content];
+  while (stack.length > 0) {
+    const c = stack.pop()!;
+    switch (c.func) {
+      case 'sequence':
+        for (let i = c.children.length - 1; i >= 0; i--) stack.push(c.children[i]!);
+        break;
+      case 'styled':
+        stack.push(c.child);
+        break;
+      case 'text':
+      case 'symbol':
+        out += c.text;
+        break;
+      case 'space':
+        out += ' ';
+        break;
+      default:
+        if ('body' in c && c.body && typeof c.body === 'object') stack.push(c.body as Content);
+    }
   }
+  return out;
 }
 
 function escape(text: string): string {
@@ -315,6 +325,7 @@ function render(source: string, options: RenderOptions, output: Output, backend:
     const evaluated = evalFormula(root, display, limits, preamble, options.equationCounter ?? null);
     const { equation, styles: outer, number } = evaluated;
     warnings.push(...evaluated.warnings);
+    const evaluatedWarnings = evaluated.warnings.length;
     if (number) numberText = plainText(number);
     const styles = equationStyles(display, outer);
     // Typst realizes some content differently for HTML and for layout, such
@@ -345,6 +356,9 @@ function render(source: string, options: RenderOptions, output: Output, backend:
         },
       };
       try {
+        // Callbacks during layout, such as a cancel line's angle, run under
+        // the formula's engine: its budgets, and its warnings.
+        setLayoutEngine(evaluated.engine);
         html = backend.draw(layoutItem, display, warnings, styles, number, ctx);
       } catch (e) {
         // A formula the HTML can't draw shows as MathML instead, in both HTML outputs.
@@ -352,11 +366,17 @@ function render(source: string, options: RenderOptions, output: Output, backend:
         const reason = e.diagnostics[0]!;
         warnings.push({ ...reason, severity: 'warning', message: `${reason.message}; drawn as MathML`, kind: 'fallback' });
         if (mathml === null) mathml = itemToMathml(item, display, [], source, trust, styles, true);
+      } finally {
+        setLayoutEngine(null);
       }
+      warnings.push(...evaluated.warnings.slice(evaluatedWarnings));
     }
   } catch (e) {
-    if (!(e instanceof SourceError)) throw e;
-    throw sourceError(e, source);
+    // An error of a value operation that no caller placed in the source is
+    // still the formula's: a budget that ran out while showing a value.
+    const placed = e instanceof HintedError ? new SourceError([e.kind ? { ...error(null, e.message, ...e.hints), kind: e.kind } : error(null, e.message, ...e.hints)]) : e;
+    if (!(placed instanceof SourceError)) throw e;
+    throw sourceError(placed, source);
   }
 
   // A number follows the MathML, for screen readers, and stands beside the
@@ -379,7 +399,9 @@ function render(source: string, options: RenderOptions, output: Output, backend:
     throw new TypletError('limit', [{ severity: 'error', message: `the output is longer than ${maxOutput} characters`, hints: [], span: null, in: 'formula' }], source);
   }
 
-  const reported = warnings.map(warningOf);
+  // A warning is reported once per location and message, as Typst reports
+  // it: a function called many times warns once.
+  const reported = dedupe(warnings).map(warningOf);
   for (const warning of reported) {
     const strict = typeof options.strict === 'function' ? options.strict(warning) : (options.strict ?? 'warn');
     if (strict === 'error') throw new TypletError('eval', [{ ...warning, severity: 'error' }], source);

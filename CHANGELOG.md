@@ -7,6 +7,9 @@ What each release of Typlet changes. The versions follow [semantic versioning](h
 - `renderToResult()` returns the markup with what drew the formula (`drawnAs`: `html`, `mathml`, `fallback` or `error`), the warnings and the equation number. Warnings have a `kind`: `fallback`, `deprecation` or `other`.
 - The `html` output falls back to MathML, with a warning, for a formula the HTML can't draw, as the default output does. It threw an `unsupported` error before.
 - Raw code tagged as Typst (`typ`, `typc` or `typm`) in a formula is highlighted in time linear in its length. A chain of a few thousand field accesses overflowed the stack, with an error that escaped `throwOnError: false`, and wide code took seconds.
+- Formulas whose structure would overflow the native stack, or take exponential work, stop with a `limit` error: a chain of thousands of operators, definitions that nest content thousands deep, a style that feeds an element its own body such as `#set box(box())`, values that share parts such as `(x, x)` built thirty times over, and `primes` with a huge count. Three internal limits do this, with no option: 1,024 nested expressions, 256 levels of nesting after evaluation, and 100,000 steps comparing or showing values.
+- A callback during layout, such as a `cancel` line's `angle` function, runs within the formula's budgets, and its warnings are reported. It had budgets of its own, so `maxCalls` didn't apply to it.
+- A warning is reported once per location and message, as Typst reports it: a function called several times warns once.
 
 ## 0.1.1
 

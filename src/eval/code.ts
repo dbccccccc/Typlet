@@ -27,7 +27,7 @@ import { INTERNAL_FIELDS, type Content, spaceElem, spanned, styled } from './con
 import { evalConditional, evalLoopControl, evalReturn } from './flow.js';
 import { evalContentBlock, evalMarkupExpr } from './markup.js';
 import { evalSetRule, evalShowRule } from './rules.js';
-import { type Span, SourceError, at, bail, bailAt, unsupported, rethrowAt } from './diag.js';
+import { type Span, SourceError, at, bail, bailAt, deeper, enterEval, exitEval, unsupported, rethrowAt } from './diag.js';
 import { absCm, absIn, absMm, absPt, angleDeg, length } from './layout.js';
 import {
   evalEquation,
@@ -70,11 +70,18 @@ const K = SyntaxKind;
 
 /** Evaluates an expression, like Typst's `Eval for ast::Expr`. */
 export function evalExpr(vm: Vm, node: LinkedNode): Value {
-  const value = evalExprInner(vm, node);
-  if (value.type !== 'content') return value;
-  // Content built by the expression itself already has the span.
-  const content = spanned(value.v, node.span);
-  return content === value.v ? value : contentValue(content);
+  // The evaluator recurses as deep as a chain of operators is long, which
+  // the parser's nesting limit doesn't bound.
+  enterEval(node.span);
+  try {
+    const value = evalExprInner(vm, node);
+    if (value.type !== 'content') return value;
+    // Content built by the expression itself already has the span.
+    const content = spanned(value.v, node.span);
+    return content === value.v ? value : contentValue(content);
+  } finally {
+    exitEval();
+  }
 }
 
 function evalExprInner(vm: Vm, node: LinkedNode): Value {
@@ -235,7 +242,7 @@ export function evalCode(vm: Vm, list: LinkedNode[], start: number): Value {
     if (expr.kind === K.SetRule || expr.kind === K.ShowRule) {
       const styles = expr.kind === K.SetRule ? evalSetRule(vm, expr) : evalShowRule(vm, expr);
       if (vm.flow) break;
-      const tail = display(evalCode(vm, list, i + 1));
+      const tail = display(deeper(expr.span, () => evalCode(vm, list, i + 1)));
       value = contentValue(styled(tail, styles));
       last = true;
     } else {

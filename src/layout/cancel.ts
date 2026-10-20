@@ -7,7 +7,7 @@ import type { Stroke } from '../eval/content.js';
 import { Args } from '../eval/args.js';
 import { angleCast } from '../eval/cast.js';
 import { at } from '../eval/diag.js';
-import { callFunc, newEngine } from '../eval/func.js';
+import { callFunc, currentLayoutEngine } from '../eval/func.js';
 import type { Span } from '../eval/diag.js';
 import { type Abs, type Rel, absPt, lengthAt, relRelativeTo } from '../eval/layout.js';
 import type { StyleChain } from '../eval/styles.js';
@@ -68,9 +68,10 @@ function drawCancelLine(
   let angle = defaultAngle;
   if (angleSpec !== null) {
     if ('func' in angleSpec) {
-      // A function gets the default angle and returns the angle.
+      // A function gets the default angle and returns the angle. It runs
+      // under the formula's engine, within its budgets.
       const args = new Args(span, [{ span, name: null, value: { type: 'angle', v: defaultAngle }, valueSpan: span }]);
-      const value = callFunc(angleSpec.func, newEngine(), args);
+      const value = callFunc(angleSpec.func, currentLayoutEngine(), args);
       angle = at(span, () => angleCast.cast(value));
     } else {
       angle = angleSpec.angle;

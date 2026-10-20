@@ -4,7 +4,7 @@
 
 import { Args } from './args.js';
 import { type Content, join as joinContent, repeat as repeatContent, symbolElem, textElem } from './content.js';
-import { bail, bailLimit } from './diag.js';
+import { bail, bailLimit, checkContentItems, checkItems, checkStringLength, valueStep } from './diag.js';
 import {
   type Length,
   type RelLength,
@@ -102,7 +102,7 @@ export function join(lhs: Value, rhs: Value): Value {
 function joinLike(lhs: Value, rhs: Value): Value | null {
   const [lt, rt] = [asText(lhs), asText(rhs)];
   if (lt !== null && rt !== null) {
-    if (lt.length + rt.length > maxChars) bailLimit(`Typlet stopped at a string longer than ${maxChars} characters`);
+    checkStringLength(lt.length + rt.length);
     return strValue(lt + rt);
   }
   if (
@@ -111,8 +111,8 @@ function joinLike(lhs: Value, rhs: Value): Value | null {
   ) {
     // Joining content again and again can double it each time.
     const joined = joinContent(asContent(lhs)!, asContent(rhs)!);
-    if (joined.func === 'sequence' && joined.children.length > maxItems) {
-      bailLimit(`Typlet stopped at content of more than ${maxItems} items`);
+    if (joined.func === 'sequence') {
+      checkContentItems(joined.children.length);
     }
     return contentValue(joined);
   }
@@ -268,29 +268,14 @@ function count(n: bigint): number {
   return Number(n);
 }
 
-// The budgets for collections built by repetition (docs/DESIGN.md §6.6). The
-// evaluator sets them for each formula; evaluation is synchronous.
-let maxItems = 10_000;
-let maxChars = 100_000;
-
-/** Sets the collection budgets for the following evaluation. */
-export function setCollectionLimits(items: number, chars: number): void {
-  maxItems = items;
-  maxChars = chars;
-}
-
 function repeatStr(text: string, n: number): string {
-  if (text.length * n > maxChars) bailLimit(`Typlet stopped at a string longer than ${maxChars} characters`);
+  checkStringLength(text.length * n);
   return text.repeat(n);
 }
 
 function checkedCount(n: number): number {
   checkItems(1, n);
   return n;
-}
-
-function checkItems(len: number, n: number): void {
-  if (len * n > maxItems) bailLimit(`Typlet stopped at a collection of more than ${maxItems} items`);
 }
 
 /** Binary `*`. */
@@ -477,6 +462,10 @@ export const geq = (lhs: Value, rhs: Value): Value => boolValue(compare(lhs, rhs
 
 /** Compares two values: negative, zero or positive. */
 export function compare(lhs: Value, rhs: Value): number {
+  return valueStep(() => compareInner(lhs, rhs));
+}
+
+function compareInner(lhs: Value, rhs: Value): number {
   const cmp = (a: number | bigint | string | boolean, b: typeof a) => (a < b ? -1 : a > b ? 1 : 0);
   const tryCmp = (a: number, b: number, ra: () => string, rb: () => string) => {
     if (Number.isNaN(a) || Number.isNaN(b)) bail(`cannot compare ${ra()} with ${rb()}`);

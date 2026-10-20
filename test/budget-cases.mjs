@@ -11,6 +11,13 @@ function doubling(start, join) {
   return lines.join('\n');
 }
 
+/** `#let` lines that nest `$x$` `count` times, in a square root unless `build` says otherwise. */
+export function nestedDefinitions(count, build = (name) => `math.sqrt(${name})`) {
+  const lines = ['#let x0 = $x$'];
+  for (let i = 1; i <= count; i++) lines.push(`#let x${i} = ${build(`x${i - 1}`)}`);
+  return lines.join('\n');
+}
+
 /** `[name, source, options]` */
 export const BUDGET_CASES = [
   ['an exponential recursion', '#f(30)', { preamble: '#let f(n) = if n == 0 { 0 } else { f(n - 1) + f(n - 1) }' }],
@@ -23,6 +30,20 @@ export const BUDGET_CASES = [
   ['a huge space', 'a #h(1e9pt) b', {}],
   ['huge text', '#text(size: 1e6pt)[x]', {}],
   ['a huge box', '#box(width: 1e6pt)', {}],
+  // Recursion that follows the formula's structure, which the parser bounds
+  // only for nesting (docs/DESIGN.md §6.6).
+  ['a flat chain of 3,000 additions', '#(' + Array(3000).fill('1').join('+') + ')', {}],
+  ['a recursive macro with a long body', '#f(79)', { preamble: '#let f(n) = if n == 0 { 0 } else { f(n - 1)' + ' + 1'.repeat(30) + ' }' }],
+  ['1,500 set rules in a block', '#{' + 'set text(fill: blue);'.repeat(1500) + '$x$}', {}],
+  ['1,200 nested definitions', '#x1200', { preamble: nestedDefinitions(1200) }],
+  ['a deep equation number', 'x', { displayMode: true, preamble: nestedDefinitions(1200, (name) => `[a #${name}]`) + '\n#set math.equation(numbering: n => x1200)' }],
+  ['a box whose body is a box', '#box()', { preamble: '#set box(box())' }],
+  ['an attachment whose top is an attachment', 'attach(x)', { preamble: '#set math.attach(t: math.attach([x]))' }],
+  // Values that share parts take exponential work to compare or show.
+  ['shared arrays compared', '#(x30 == x30)', { preamble: doubling('(1,)', (x) => `(${x}, ${x})`) }],
+  ['shared arrays shown', '#x30', { preamble: doubling('(1,)', (x) => `(${x}, ${x})`) }],
+  ['shared content compared', '#(x30 == x30)', { preamble: doubling('[a]', (x) => `strong[#${x} #${x}]`) }],
+  ['a huge number of primes', 'primes(#9223372036854775807)', {}],
 ];
 
 /** Formulas that stop with Typst's own errors: `[name, source, options, kind, message]`. */

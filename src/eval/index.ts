@@ -9,10 +9,9 @@ import { SyntaxKind } from '../syntax/kind.js';
 import type { SyntaxNode } from '../syntax/node.js';
 import { evalDisplay, evalExpr } from './code.js';
 import { type Content, type EquationElem, sequence } from './content.js';
-import { type SourceDiagnostic, SourceError } from './diag.js';
-import { DEFAULT_LIMITS, type Limits, callFunc, newEngine } from './func.js';
+import { type SourceDiagnostic, SourceError, resetValueSteps, setCollectionLimits } from './diag.js';
+import { DEFAULT_LIMITS, type Engine, type Limits, callFunc, newEngine } from './func.js';
 import { LIBRARY } from './library.js';
-import { setCollectionLimits } from './ops.js';
 import { evalSetRule, evalShowRule } from './rules.js';
 import type { Scope } from './scope.js';
 import { EMPTY_CHAIN, type Property, type Styles, chain, get } from './styles.js';
@@ -24,6 +23,8 @@ import { Vm, forbidden } from './vm.js';
 const K = SyntaxKind;
 
 export interface Evaluated {
+  /** The engine, whose budgets and warnings callbacks during layout share. */
+  readonly engine: Engine;
   readonly equation: EquationElem;
   readonly warnings: SourceDiagnostic[];
   /** The styles of the preamble's set rules, which apply to the equation. */
@@ -50,6 +51,7 @@ export interface Preamble {
 export function evalPreamble(root: SyntaxNode, limits: Limits = DEFAULT_LIMITS): Preamble {
   const engine = newEngine(limits);
   setCollectionLimits(limits.collectionSize, limits.stringLength);
+  resetValueSteps();
   const vm = new Vm(engine, LIBRARY);
   const styles: Property[] = [];
   for (const expr of markupExprs(new LinkedNode(root, 0, 'preamble'))) {
@@ -75,6 +77,7 @@ export function evalFormula(
 ): Evaluated {
   const engine = newEngine(limits);
   setCollectionLimits(limits.collectionSize, limits.stringLength);
+  resetValueSteps();
   const vm = new Vm(engine, LIBRARY);
   // The formula sees the preamble's definitions, and its own `let`s don't
   // change them for other formulas.
@@ -93,6 +96,7 @@ export function evalFormula(
 
   const styles = preamble?.styles ?? [];
   return {
+    engine,
     equation: { func: 'equation', block, body, span: null },
     warnings: engine.warnings,
     styles,

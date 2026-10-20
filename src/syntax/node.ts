@@ -117,9 +117,8 @@ export class SyntaxNode {
 
   /** The full source text of the node. */
   fullText(): string {
-    if (this.children.length === 0) return this.text;
     let out = '';
-    for (const child of this.children) out += child.fullText();
+    for (const { node } of this.walk()) if (node.children.length === 0) out += node.text;
     return out;
   }
 
@@ -164,22 +163,31 @@ export class SyntaxNode {
 
   /** A deep copy of the whole subtree. */
   deepClone(): SyntaxNode {
-    const node = this.clone();
-    node.children = this.children.map((child) => child.deepClone());
-    return node;
+    const root = this.clone();
+    // Modified for Typlet: without recursion, as a chain of operators nests
+    // as deep as it is long.
+    const stack: [source: SyntaxNode, target: SyntaxNode][] = [[this, root]];
+    while (stack.length > 0) {
+      const [source, target] = stack.pop()!;
+      source.children.forEach((child, i) => {
+        const copy = child.clone();
+        target.children[i] = copy;
+        if (child.children.length > 0) stack.push([child, copy]);
+      });
+    }
+    return root;
   }
 
   /** Whether this node or one of its descendants is an error. */
   erroneous(): boolean {
-    if (this.kind === SyntaxKind.Error) return true;
-    for (const child of this.children) if (child.erroneous()) return true;
+    for (const { node } of this.walk()) if (node.kind === SyntaxKind.Error) return true;
     return false;
   }
 
   /** All errors and warnings in the subtree, with absolute offsets from `offset`. */
   diagnostics(offset = 0): SyntaxDiagnostic[] {
     const out: SyntaxDiagnostic[] = [];
-    const walk = (node: SyntaxNode, start: number) => {
+    for (const { node, start } of this.walk(offset)) {
       for (const warning of node.warnings ?? []) {
         const [s, e] = warning.range ?? [0, node.len];
         out.push({
@@ -199,13 +207,29 @@ export class SyntaxNode {
           end: start + node.len,
         });
       }
-      let at = start;
-      for (const child of node.children) {
-        walk(child, at);
-        at += child.len;
-      }
-    };
-    walk(this, offset);
+    }
     return out;
+  }
+
+  /**
+   * The node and its descendants in source order, each with its offset from
+   * `offset`, without recursion: a chain of operators nests as deep as it is
+   * long.
+   */
+  *walk(offset = 0): Generator<{ node: SyntaxNode; start: number }> {
+    yield { node: this, start: offset };
+    const stack: { node: SyntaxNode; next: number; start: number }[] = [{ node: this, next: 0, start: offset }];
+    while (stack.length > 0) {
+      const frame = stack[stack.length - 1]!;
+      const child = frame.node.children[frame.next++];
+      if (child === undefined) {
+        stack.pop();
+        continue;
+      }
+      const start = frame.start;
+      frame.start += child.len;
+      yield { node: child, start };
+      if (child.children.length > 0) stack.push({ node: child, next: 0, start });
+    }
   }
 }

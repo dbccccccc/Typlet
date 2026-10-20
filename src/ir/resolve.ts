@@ -69,7 +69,7 @@ import type {
   VecElem,
 } from '../eval/content.js';
 import { join, sequence, symbolElem } from '../eval/content.js';
-import { ElementBudget, type SourceDiagnostic, type Span, bailAt, limit, unsupported, warning } from '../eval/diag.js';
+import { ElementBudget, type SourceDiagnostic, type Span, bailAt, enterNesting, exitNesting, limit, unsupported, warning } from '../eval/diag.js';
 import {
   type Abs,
   type FixedAlignment,
@@ -334,6 +334,17 @@ export class MathResolver {
   }
 
   private resolveIntoSelf(content: Content, styles: StyleChain): void {
+    // Styles can feed an element's content back into itself, as in
+    // `#set box(box())`, and definitions can nest content arbitrarily.
+    enterNesting(content.span);
+    try {
+      this.resolveInner(content, styles);
+    } finally {
+      exitNesting();
+    }
+  }
+
+  private resolveInner(content: Content, styles: StyleChain): void {
     // A single element realizes to itself, except a space, which collapses,
     // elements whose show rules realize them, and elements with tags.
     if (!REALIZED.has(content.func) && !isTagged(content)) {
@@ -373,6 +384,15 @@ function realize(content: Content, styles: StyleChain, ctx: MathResolver): Pair[
 }
 
 function visit(sink: Pair[], content: Content, styles: StyleChain, ctx: MathResolver): void {
+  enterNesting(content.span);
+  try {
+    visitInner(sink, content, styles, ctx);
+  } finally {
+    exitNesting();
+  }
+}
+
+function visitInner(sink: Pair[], content: Content, styles: StyleChain, ctx: MathResolver): void {
   ctx.budget.visit(content.span);
   switch (content.func) {
     case 'equation':
@@ -780,7 +800,8 @@ function resolvePrimes(elem: PrimesElem, ctx: MathResolver, styles: StyleChain):
   if (elem.count >= 1 && elem.count <= 4) {
     ctx.push(ctx.resolveIntoItem(symbolElem(PRIME_CHARS[elem.count - 1]!, elem.span), styles));
   } else {
-    // A custom number of primes.
+    // A custom number of primes, each a glyph in the outputs.
+    ctx.budget.consume(elem.count, elem.span);
     ctx.push(primesItem(elem.count, styles));
   }
 }

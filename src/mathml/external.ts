@@ -7,7 +7,7 @@
 
 import { toHex } from '../eval/color.js';
 import type { BoxElem, Content, EquationElem, Stroke } from '../eval/content.js';
-import { type ElementBudget, type SourceDiagnostic, warning } from '../eval/diag.js';
+import { type ElementBudget, type SourceDiagnostic, nested, warning } from '../eval/diag.js';
 import { type Length, type RelLength, absPt } from '../eval/layout.js';
 import { type StyleChain, chain, get } from '../eval/styles.js';
 import { type Pair, collapseSpaces } from '../ir/resolve.js';
@@ -201,12 +201,15 @@ export function fragment(children: HtmlNode[]): HtmlElement {
  * fragment, then converted with Typst's HTML show rules.
  */
 export function contentToHtml(content: Content, styles: StyleChain, ctx: ExternalContext): HtmlNode[] {
-  const out: HtmlNode[] = [];
-  for (const child of realizeFragment(content, styles, ctx)) {
-    if ('paragraph' in child) out.push(paragraphToHtml(child.paragraph, ctx));
-    else convert(child[0], child[1], ctx, out);
-  }
-  return convertChildren(out);
+  // A box's body can hold a box whose body the same styles supply, and so on.
+  return nested(content.span, () => {
+    const out: HtmlNode[] = [];
+    for (const child of realizeFragment(content, styles, ctx)) {
+      if ('paragraph' in child) out.push(paragraphToHtml(child.paragraph, ctx));
+      else convert(child[0], child[1], ctx, out);
+    }
+    return convertChildren(out);
+  });
 }
 
 /**
@@ -214,17 +217,21 @@ export function contentToHtml(content: Content, styles: StyleChain, ctx: Externa
  * formula: no paragraphs form there, and spaces collapse over the whole.
  */
 export function mathContentToHtml(content: Content, styles: StyleChain, ctx: ExternalContext): HtmlNode[] {
-  const pairs = flatten(content, styles, ctx);
-  collapseSpaces(pairs);
-  const out: HtmlNode[] = [];
-  for (const [elem, elemStyles] of pairs) convert(elem, elemStyles, ctx, out);
-  return convertChildren(out);
+  return nested(content.span, () => {
+    const pairs = flatten(content, styles, ctx);
+    collapseSpaces(pairs);
+    const out: HtmlNode[] = [];
+    for (const [elem, elemStyles] of pairs) convert(elem, elemStyles, ctx, out);
+    return convertChildren(out);
+  });
 }
 
 /** Flattens content into elements with their styles. */
 function flatten(content: Content, styles: StyleChain, ctx: ExternalContext): Pair[] {
   const pairs: Pair[] = [];
-  const visit = (c: Content, s: StyleChain): void => {
+  // Definitions can nest content arbitrarily deep.
+  const visit = (c: Content, s: StyleChain): void => nested(c.span, () => visitInner(c, s));
+  const visitInner = (c: Content, s: StyleChain): void => {
     if (c.func === 'sequence') {
       ctx.budget.visit(c.span);
       for (const child of c.children) visit(child, s);
@@ -333,6 +340,10 @@ function paragraphToHtml(pairs: Pair[], ctx: ExternalContext): HtmlElement {
 }
 
 function convert(content: Content, styles: StyleChain, ctx: ExternalContext, out: HtmlNode[]): void {
+  nested(content.span, () => convertInner(content, styles, ctx, out));
+}
+
+function convertInner(content: Content, styles: StyleChain, ctx: ExternalContext, out: HtmlNode[]): void {
   ctx.budget.visit(content.span);
   const html = (tag: string, body: Content, attrs: [string, string][] = []): HtmlElement => {
     const node = elem(tag, contentToHtml(body, styles, fragmentContext(ctx)), attrs);
