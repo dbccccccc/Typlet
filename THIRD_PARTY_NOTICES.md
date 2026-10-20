@@ -26,11 +26,12 @@ Typlet is licensed under the MIT License (see `LICENSE`). This repository and th
   - **Generated data.** The symbol tables in `src/generated/symbols.ts`.
   - **Ported source code.** The alphanumeric styling in `src/utils/styling.ts`, the symbol modifier matching in `src/eval/symbol.ts` and the numeral systems of numbering patterns in `src/eval/numeral.ts`, whose headers say "Ported from codex".
 
-## typst-assets
+## typst-assets and W3C MathML Core
 
-- Source: https://github.com/typst/typst-assets, version 0.15.1
-- License: Apache License 2.0, in `LICENSES/Apache-2.0.txt`
-- Used in Typlet: the MathML operator dictionary data, under `src/generated/`.
+- Source: https://github.com/typst/typst-assets, version 0.15.1, `files/mathml/data.rs`
+- License of the crate's code: Apache License 2.0, in `LICENSES/Apache-2.0.txt`
+- License of the MathML data in it, which the crate derives from MathML Core (https://www.w3.org/TR/mathml-core/), © 2025 World Wide Web Consortium: the W3C Software and Document License (2023), with the notice, in `LICENSES/W3C-2023.txt`
+- Used in Typlet: the MathML operator dictionary and inline-axis data, in `src/generated/mathml.ts`, which `tools/codegen/mathml.mjs` generates from the crate's tables as TypeScript tables with a compact range encoding. The data is unchanged.
 
 ## syntect
 
@@ -71,7 +72,7 @@ SOFTWARE.
 ## New Computer Modern
 
 - Author: Antonis Tsolomitis
-- Source: New Computer Modern Math Book and Bold, version 4.0, as bundled with Typst 0.15.1 in typst-assets
+- Source: New Computer Modern Math Book, version 4.0, and Bold, version 5.3.0, as bundled with Typst 0.15.1 in typst-assets
 - License: GUST Font License, version 1.0 (based on the LaTeX Project Public License 1.3c), in `fonts/GUST-FONT-LICENSE.txt`
 - Used in Typlet:
   - **Derived fonts.** The fonts under `fonts/` are subset, split and converted from New Computer Modern Math Book and Bold. As the license requests, they are renamed "Typlet NewCM Math", and `fonts/MANIFEST-typlet-newcm-math.txt` lists the files and the changes.

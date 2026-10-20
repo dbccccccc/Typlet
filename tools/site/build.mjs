@@ -74,7 +74,7 @@ function page(name, title, body, scripts = '', typletStyles = true) {
 <main>
 ${body}
 </main>
-<footer>Typlet is an independent project, not affiliated with Typst GmbH. Rendered with Typlet ${escape(typlet.version)} for Typst ${escape(typlet.typstVersion)}.</footer>
+<footer>Typlet is an independent project, not affiliated with Typst GmbH. Rendered with Typlet ${escape(typlet.version)} for Typst ${escape(typlet.typstVersion)}. <a href="LICENSE.txt">License</a> · <a href="THIRD_PARTY_NOTICES.md">Third-party notices</a></footer>
 ${scripts}
 </body>
 </html>
@@ -282,6 +282,13 @@ for (const file of readdirSync(join(root, 'fonts'))) {
 copyFileSync(join(root, 'dist/typlet.min.js'), join(out, 'js/typlet.min.js'));
 for (const name of ['auto-render', 'copy-typst', 'element']) copyFileSync(join(root, `dist/contrib/${name}.min.js`), join(out, `js/${name}.min.js`));
 writeFileSync(join(out, 'site.css'), SITE_CSS);
+// The license and the notices every page's footer links to, and the licenses
+// the notices point to. The license gets an extension, so that the server
+// sends it as text.
+copyFileSync(join(root, 'LICENSE'), join(out, 'LICENSE.txt'));
+copyFileSync(join(root, 'THIRD_PARTY_NOTICES.md'), join(out, 'THIRD_PARTY_NOTICES.md'));
+mkdirSync(join(out, 'LICENSES'), { recursive: true });
+for (const file of readdirSync(join(root, 'LICENSES'))) copyFileSync(join(root, 'LICENSES', file), join(out, 'LICENSES', file));
 
 // The comparison page: its script and formulas, and KaTeX as its package
 // ships it, with the fonts in the format browsers choose and its license.

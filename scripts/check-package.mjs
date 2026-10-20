@@ -26,6 +26,7 @@ const ALLOWED = /^(dist\/|fonts\/|LICENSES\/|LICENSE$|README\.md$|THIRD_PARTY_NO
 const REQUIRED = [
   'LICENSE',
   'LICENSES/Apache-2.0.txt',
+  'LICENSES/W3C-2023.txt',
   'README.md',
   'THIRD_PARTY_NOTICES.md',
   'dist/index.js',
@@ -38,6 +39,7 @@ const REQUIRED = [
   'dist/cli.js',
   'fonts/typlet.css',
   'fonts/GUST-FONT-LICENSE.txt',
+  'fonts/MANIFEST-typlet-newcm-math.txt',
 ];
 
 const project = mkdtempSync(join(tmpdir(), 'typlet-package-'));
