@@ -220,3 +220,7 @@ export default function markdownItTyplet(md, options = {}) {
   md.renderer.rules.typlet_inline = inline;
   md.renderer.rules.typlet_block = block;
 }
+
+// `require('markdown-it-typlet')` from CommonJS, as Hexo loads the plugins
+// its configuration names, gets the plugin itself (Node 22.12 and later).
+export { markdownItTyplet as 'module.exports' };

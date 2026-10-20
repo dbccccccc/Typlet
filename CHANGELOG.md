@@ -18,6 +18,7 @@ What each release of Typlet changes. The versions follow [semantic versioning](h
 - Chinese, Japanese and Korean text is laid out as HTML, drawn with the browser's fonts at an em per character, with a warning; it fell back to MathML. Typst sets it in a font of the system's, which Typlet can't know, so the positions around it are exact and the characters themselves are the browser's.
 - `typlet --batch` renders JSON Lines in one process: each line in is an object with a `source`, an `id` and render options, and each line out is the result of `renderToResult`, or an error, written as the lines arrive. Build scripts in any language can keep one `typlet` running and send it formulas as they go.
 - `<typlet-math>` takes a `preamble` attribute, which replaces the preamble of `elementOptions` for that formula.
+- `require('markdown-it-typlet')` from CommonJS, as Hexo loads the plugins its configuration names, gets the plugin itself on Node 22.12 and later.
 - [contrib/typlet.typ](contrib/typlet.typ) is a helper for Typst's HTML export: `typlet-math` writes a formula as a `<typlet-math>` element in HTML export and as an equation on pages, and `typlet-assets` loads Typlet once, with a preamble for the document.
 
 ## 0.1.1
