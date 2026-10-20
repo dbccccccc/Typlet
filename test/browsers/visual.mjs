@@ -50,33 +50,64 @@ const LAUNCH = {
 };
 const ALLOWANCE = { chromium: MAX_MISMATCH, firefox: MAX_MISMATCH, webkit: LINUX ? 0.08 : MAX_MISMATCH };
 
-const { renderToString } = await import(pathToFileURL(join(root, 'dist/index.js')).href);
+const { TypletError, renderToResult, renderToString } = await import(pathToFileURL(join(root, 'dist/index.js')).href);
 
 // Formulas whose preambles put text on the page, which the SVG shows too.
 const SKIPPED = new Set(['levels/preamble-text']);
 
+// How the corpora's formulas render in the `html` output: as Typlet's HTML,
+// which is compared below; as MathML, when the HTML can't draw a formula yet,
+// which the comparison can't check; or as an error, for a refused or invalid
+// formula. A change in these numbers is a change in what Typlet draws, and
+// fails the run until it is reviewed and the numbers are updated, so that no
+// formula drops out of the comparison unnoticed.
+const EXPECTED = { html: 408, mathml: 17, error: 32 };
+
 // The formulas: the corpora's, where Typlet draws HTML.
 const formulas = [];
+const counts = { html: 0, mathml: 0, error: 0 };
 for (const name of ['paired', 'features', 'typst-docs', 'levels']) {
   for (const line of readFileSync(join(root, `test/corpus/${name}.jsonl`), 'utf8').split('\n')) {
     if (!line.trim()) continue;
     const f = JSON.parse(line);
-    if (SKIPPED.has(`${name}/${f.id}`)) continue;
+    const id = `${name}/${f.id}`;
+    if (SKIPPED.has(id)) continue;
     const preamble = f.preamble?.trim() ? f.preamble : undefined;
-    let html;
     try {
-      html = renderToString(f.src, { output: 'html', displayMode: !!f.display, strict: 'ignore', trust: true, preamble });
-    } catch {
-      continue;
+      const result = renderToResult(f.src, { output: 'html', displayMode: !!f.display, strict: 'ignore', trust: true, preamble });
+      if (result.drawnAs !== 'html') {
+        counts.mathml++;
+        continue;
+      }
+      counts.html++;
+      formulas.push({ id, src: f.src, display: !!f.display, preamble, html: result.markup });
+    } catch (e) {
+      // Anything but Typlet's own error is a bug, not a formula to leave out.
+      if (!(e instanceof TypletError)) throw e;
+      counts.error++;
     }
-    formulas.push({ id: `${name}/${f.id}`, src: f.src, display: !!f.display, preamble, html });
+  }
+}
+for (const [outcome, expected] of Object.entries(EXPECTED)) {
+  if (counts[outcome] !== expected) {
+    console.error(`${counts[outcome]} formulas render as ${outcome}, not ${expected}: what Typlet draws has changed. Review the change, then update EXPECTED in test/browsers/visual.mjs.`);
+    process.exit(1);
   }
 }
 const svgs = runOracle(
   ['run', '--outputs', 'svg'],
   formulas.map((f) => ({ id: f.id, src: f.src, display: f.display, ...(f.preamble ? { preamble: f.preamble } : {}) })),
 );
-for (const [i, record] of svgs.entries()) formulas[i].svg = record.svg ?? null;
+// Matched by ID. A formula the oracle gives no SVG for fails the run rather than leaving it.
+const svgById = new Map(svgs.map((record) => [record.id, record]));
+for (const f of formulas) {
+  const record = svgById.get(f.id);
+  if (typeof record?.svg !== 'string' || record.svg === '') {
+    console.error(`${f.id}: the oracle gave no SVG${record?.error ? `: ${record.error}` : ''}`);
+    process.exit(1);
+  }
+  f.svg = record.svg;
+}
 
 /** A page of formulas in a grid, drawn by Typst or Typlet. */
 function page(batch, engine) {
@@ -270,7 +301,7 @@ const outDir = join(tmpdir(), 'typlet-visual');
 mkdirSync(outDir, { recursive: true });
 const browsers = { chromium, firefox, webkit };
 const names = process.argv.slice(2).length ? process.argv.slice(2) : Object.keys(browsers);
-const comparable = formulas.filter((f) => f.svg);
+const comparable = formulas;
 let failures = 0;
 for (const name of names) {
   const browser = await browsers[name].launch(LAUNCH[name]);

@@ -131,6 +131,13 @@ export function frameDiff(got: FlatFrame, want: FrameFixture): string | null {
     if (g[1] !== w[1]) return `glyph ${i} (${w[5]}): id ${g[1]} vs ${w[1]}`;
     if (!near(g[2], w[2]) || !near(g[3], w[3])) return `glyph ${i} (${w[5]}): at ${g[2]},${g[3]} vs ${w[2]},${w[3]}`;
     if (!near(g[4], w[4])) return `glyph ${i}: size ${g[4]} vs ${w[4]}`;
+    // The fill and the linear transform, left out when black and identity.
+    if ((g[6] ?? '#000000') !== (w[6] ?? '#000000')) return `glyph ${i} (${w[5]}): fill ${g[6]} vs ${w[6]}`;
+    const transform = (g[7] ?? [1, 0, 0, 1]) as number[];
+    const wantTransform = (w[7] ?? [1, 0, 0, 1]) as number[];
+    if (wantTransform.some((v, j) => !near(transform[j], v))) {
+      return `glyph ${i} (${w[5]}): transform ${JSON.stringify(transform)} vs ${JSON.stringify(wantTransform)}`;
+    }
   }
   if (got.shapes.length !== want.shapes.length) return `${got.shapes.length} shapes vs ${want.shapes.length}`;
   for (let i = 0; i < want.shapes.length; i++) {
