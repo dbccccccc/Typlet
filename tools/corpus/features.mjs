@@ -94,6 +94,11 @@ const inline = [
   ['under-over', 'underbrace(a + b, n) + overbrace(c, m) + underparen(d) + overbracket(e, k)'],
   ['under-shell', 'undershell(x) + overshell(y, 2)'],
   ['lines', 'overline(x) + underline(y)'],
+  // Typst reads a line's constants from its base glyph's face, the Bold face
+  // in `strong`, and from the equation's face for a base of several glyphs.
+  // Bold letters aren't drawn in HTML yet, so these bases are symbols and text.
+  ['lines-bold-glyph', '#strong[$overline(mid(|)) + underline(mid(|))$]'],
+  ['lines-bold-frame', '#strong[$underline(1 + 2) + overline("if")$]'],
   ['cancel', 'cancel(x) + cancel(y, cross: #true)'],
   // Tables.
   ['vec-align', 'vec(1, 22, 333, align: #right)'],

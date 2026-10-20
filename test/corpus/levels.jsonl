@@ -130,6 +130,7 @@
 {"display":false,"id":"preamble-several","preamble":"#let norm(x) = $||#x||$\n#set text(fill: maroon)","src":"f(norm(x))"}
 {"display":false,"id":"preamble-error","preamble":"#let f(x) = x\n#f()","src":"x"}
 {"display":false,"id":"preamble-show","preamble":"#show math.equation: set text(fill: blue)","src":"x"}
+{"display":false,"id":"preamble-show-bold-lines","preamble":"#show math.equation: set text(weight: \"bold\")","src":"underline(1 + 2) + overline(mid(|))"}
 {"display":true,"id":"preamble-show-block","preamble":"#show math.equation.where(block: true): set text(fill: red)","src":"x + y"}
 {"display":false,"id":"preamble-show-block-inline","preamble":"#show math.equation.where(block: true): set text(fill: red)","src":"x + y"}
 {"display":false,"id":"preamble-show-inline","preamble":"#show math.equation.where(block: false): set text(fill: red)","src":"x + y"}

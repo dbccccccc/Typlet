@@ -254,8 +254,16 @@ writeJsonl(join(fixtureDir, 'font-bold.jsonl'), [
   ...boldRecords.filter((r) => r.kind === 'glyph' && boldIds.has(r.id)),
   { kind: 'cmap', chars: boldTexts, sequences: [] },
 ]);
+// The constants of over- and underlines, which Typst reads from the Bold face
+// inside `#strong`.
+const LINE_CONSTANTS = [
+  'overbarExtraAscender', 'overbarRuleThickness', 'overbarVerticalGap',
+  'underbarExtraDescender', 'underbarRuleThickness', 'underbarVerticalGap',
+];
 write('metrics-bold.ts', 'the Bold face, for Latin text', encode(bold, boldGlyphs, boldTexts), [
   `export const BOLD_FONT = ${JSON.stringify({ postScriptName: boldFont.header.postScriptName, glyphCount: boldFont.header.glyphCount })};`,
+  ``,
+  `export const BOLD_LINE_CONSTANTS = ${JSON.stringify(Object.fromEntries(LINE_CONSTANTS.map((name) => [name, boldFont.header.math[name]])), null, 2)};`,
   ``,
 ], boldFont);
 

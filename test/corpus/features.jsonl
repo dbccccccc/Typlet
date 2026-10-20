@@ -79,6 +79,8 @@
 {"display":false,"id":"under-over","src":"underbrace(a + b, n) + overbrace(c, m) + underparen(d) + overbracket(e, k)"}
 {"display":false,"id":"under-shell","src":"undershell(x) + overshell(y, 2)"}
 {"display":false,"id":"lines","src":"overline(x) + underline(y)"}
+{"display":false,"id":"lines-bold-glyph","src":"#strong[$overline(mid(|)) + underline(mid(|))$]"}
+{"display":false,"id":"lines-bold-frame","src":"#strong[$underline(1 + 2) + overline(\"if\")$]"}
 {"display":false,"id":"cancel","src":"cancel(x) + cancel(y, cross: #true)"}
 {"display":false,"id":"vec-align","src":"vec(1, 22, 333, align: #right)"}
 {"display":false,"id":"vec-gap","src":"vec(a, b, gap: #1em)"}
