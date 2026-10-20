@@ -100,6 +100,16 @@ describe('renderToString', () => {
     expect(renderToString('#left', { output: 'html', strict: 'ignore' })).toMatch(/^<span class="typlet"><math>/);
   });
 
+  it('reports a warning once per location and message', () => {
+    const seen: string[] = [];
+    const strict = (w: { message: string }) => {
+      seen.push(w.message);
+      return 'ignore' as const;
+    };
+    renderToString('#f() #f()', { preamble: '#let f() = $gt.tri$', strict });
+    expect(seen).toHaveLength(1);
+  });
+
   it('reports syntax errors with Typst’s message and span', () => {
     const error = catchError(() => mathml('x + #(1 +)'));
     expect(error.kind).toBe('syntax');

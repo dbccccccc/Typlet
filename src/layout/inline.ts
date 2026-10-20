@@ -11,7 +11,7 @@
 
 import type { Color } from '../eval/color.js';
 import type { BoxElem, Content, Corners, Sides, Stroke, TextEdge } from '../eval/content.js';
-import { ElementBudget, type SourceDiagnostic, type Span, unsupported } from '../eval/diag.js';
+import { ElementBudget, type SourceDiagnostic, type Span, nested, unsupported } from '../eval/diag.js';
 import { type Abs, type Length, REL_ONE, type RelLength, ZERO_LENGTH, emAt, lengthAt } from '../eval/layout.js';
 import { type StyleChain, chain, get, property } from '../eval/styles.js';
 import { equationShowSetStyles } from '../elements/mod.js';
@@ -69,6 +69,11 @@ export function layoutParagraph(
   width: Abs | null = null,
   region: Abs | null = null,
 ): Frame {
+  // A box's body can hold a box whose body the same styles supply, and so on.
+  return nested(content.span, () => layoutParagraphInner(content, styles, warnings, width, region));
+}
+
+function layoutParagraphInner(content: Content, styles: StyleChain, warnings: SourceDiagnostic[], width: Abs | null, region: Abs | null): Frame {
   // Typlet has no bidirectional layout, and a right-to-left paragraph starts at the right.
   if (isRtlLanguage(get(styles, 'text', 'lang', 'en'))) unsupported(content.span, 'right-to-left paragraphs in HTML output yet');
   const available = width ?? region;
@@ -93,7 +98,9 @@ export function layoutParagraph(
  */
 function realizeParagraph(content: Content, styles: StyleChain, budget: ElementBudget): Pair[] {
   const pairs: Pair[] = [];
-  const flatten = (c: Content, s: StyleChain): void => {
+  // Definitions can nest content arbitrarily deep.
+  const flatten = (c: Content, s: StyleChain): void => nested(c.span, () => flattenInner(c, s));
+  const flattenInner = (c: Content, s: StyleChain): void => {
     switch (c.func) {
       case 'sequence':
         budget.visit(c.span);

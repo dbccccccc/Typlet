@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { type RenderOptions, TypletError, renderToString } from '../src/index.js';
 import * as mathmlEntry from '../src/mathml.js';
-import { BOUNDED_CASES, BUDGET_CASES, TYPST_LIMIT_CASES } from './budget-cases.mjs';
+import { BOUNDED_CASES, BUDGET_CASES, TYPST_LIMIT_CASES, nestedDefinitions } from './budget-cases.mjs';
 
 /** The error a formula fails with. */
 function failure(source: string, options: RenderOptions = {}): TypletError {
@@ -48,6 +48,17 @@ describe('budgets', () => {
     // The paired corpus computes `fib(20)` with about 22,000 calls.
     const preamble = '#let fib(n) = if n < 2 { n } else { fib(n - 1) + fib(n - 2) }';
     expect(renderToString('F_20 = #fib(20)', { preamble, output: 'mathml' })).toContain('<mn>6765</mn>');
+    // Recursion as deep as Typst allows, a long flat sum, and content nested
+    // a hundred deep by definitions.
+    expect(renderToString('#f(79)', { preamble: '#let f(n) = if n == 0 { 0 } else { f(n - 1) + 1 }', output: 'mathml' })).toContain('<mn>79</mn>');
+    expect(renderToString('#(' + Array(500).fill('1').join('+') + ')', { output: 'mathml' })).toContain('<mn>500</mn>');
+    expect(renderToString('#x100', { preamble: nestedDefinitions(100) })).toContain('<msqrt>');
+  });
+
+  it('apply to callbacks during layout', () => {
+    const source = 'cancel(x, angle: #(a => { let f(n) = if n == 0 { 0 } else { f(n - 1) + f(n - 1) }; let v = f(12); a }))';
+    expect(renderToString(source, { output: 'html' })).toContain('<span class="typlet-html"');
+    expect(failure(source, { maxCalls: 100 }).message).toBe('Typlet stopped after 100 function calls and loop iterations');
   });
 
   it('can be changed', () => {

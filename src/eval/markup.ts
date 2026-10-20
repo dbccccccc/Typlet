@@ -10,7 +10,7 @@ import { type LinkedNode, firstOfKind, isExpr } from '../syntax/ast.js';
 import { SyntaxKind, isStmt } from '../syntax/kind.js';
 import { evalExpr } from './code.js';
 import { type Content, type LinkElem, type RawElem, sequence, styled, textElem } from './content.js';
-import { type Span, bailAt, unsupported } from './diag.js';
+import { type Span, bailAt, deeper, unsupported } from './diag.js';
 import { evalSetRule, evalShowRule } from './rules.js';
 import { singleSymbol } from './symbol.js';
 import { type Value, display } from './value.js';
@@ -46,7 +46,7 @@ function evalMarkupFrom(vm: Vm, list: LinkedNode[], start: number): Content {
     if (expr.kind === K.SetRule || expr.kind === K.ShowRule) {
       const styles = expr.kind === K.SetRule ? evalSetRule(vm, expr) : evalShowRule(vm, expr);
       if (vm.flow) break;
-      seq.push(styled(evalMarkupFrom(vm, list, i + 1), styles));
+      seq.push(styled(deeper(expr.span, () => evalMarkupFrom(vm, list, i + 1)), styles));
       break;
     }
     const value = evalExpr(vm, expr);

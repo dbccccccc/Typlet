@@ -23,7 +23,7 @@ import {
   symbolElem,
   textElem,
 } from './content.js';
-import type { Span } from './diag.js';
+import { type Span, at, checkStringLength, valueStep } from './diag.js';
 import type { Func } from './func.js';
 import {
   type Alignment,
@@ -117,6 +117,16 @@ export const funcValue = (v: Func): Value => ({ type: 'function', v });
 
 /** Typst's `repr` of a value: how it is written in code. */
 export function repr(value: Value): string {
+  return valueStep(() => {
+    const out = reprInner(value);
+    // Checked at every level, so that a value whose parts are shared, whose
+    // representation doubles at each level, stops before it costs much.
+    checkStringLength(out.length);
+    return out;
+  });
+}
+
+function reprInner(value: Value): string {
   switch (value.type) {
     case 'none':
       return 'none';
@@ -528,6 +538,14 @@ export function contentFields(content: Content): [string, Value][] {
 }
 
 function reprContent(content: Content): string {
+  return valueStep(() => {
+    const out = reprContentInner(content);
+    checkStringLength(out.length);
+    return out;
+  });
+}
+
+function reprContentInner(content: Content): string {
   switch (content.func) {
     case 'sequence':
       return content.children.length === 0
@@ -573,7 +591,7 @@ export function display(value: Value, span: Span = null): Content {
     case 'content':
       return spanned(value.v, span);
     default:
-      return { func: 'raw', text: repr(value), lang: 'typc', block: false, span };
+      return at(span, (): Content => ({ func: 'raw', text: repr(value), lang: 'typc', block: false, span }));
   }
 }
 
@@ -581,6 +599,10 @@ export function display(value: Value, span: Span = null): Content {
 
 /** Whether two values are equal, as Typst's `==` decides. */
 export function equal(a: Value, b: Value): boolean {
+  return valueStep(() => equalInner(a, b));
+}
+
+function equalInner(a: Value, b: Value): boolean {
   switch (a.type) {
     case 'none':
     case 'auto':
@@ -645,6 +667,10 @@ export function equal(a: Value, b: Value): boolean {
 
 /** Serializes a value to JSON as Typst's serde implementation does. */
 export function toJson(value: Value): unknown {
+  return valueStep(() => toJsonInner(value));
+}
+
+function toJsonInner(value: Value): unknown {
   switch (value.type) {
     case 'none':
       return null;

@@ -38,6 +38,18 @@ export function newEngine(limits: Limits = DEFAULT_LIMITS): Engine {
   return { warnings: [], limits, calls: 0, depth: 0 };
 }
 
+/** The engine of the formula being laid out, which callbacks during layout, such as a cancel line's angle, run under. */
+let layoutEngine: Engine | null = null;
+
+export function setLayoutEngine(engine: Engine | null): void {
+  layoutEngine = engine;
+}
+
+/** The engine for a callback during layout: the formula's, with its budgets and warnings, or a fresh one outside rendering. */
+export function currentLayoutEngine(): Engine {
+  return layoutEngine ?? newEngine();
+}
+
 /**
  * Checks a call against the budgets, like Typst's `check_call_depth`: Typst
  * allows 80 nested calls of user-defined functions.

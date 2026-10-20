@@ -33,13 +33,18 @@ Formulas can compute: Typst's code has functions, recursion and growing values. 
 | Function calls | 30,000 | `maxCalls` |
 | Call depth | 80, as in Typst | — |
 | Parser nesting | 256, as in Typst | — |
+| Expression depth | 1,024 nested expressions, including the rest of a block after a rule | — |
+| Nesting depth | 256 levels of content being resolved, laid out or converted, and of values being compared or shown | — |
+| Value steps | 100,000 per formula, comparing and showing values | — |
 | Items in an array or dictionary | 10,000 | `maxCollectionSize` |
 | Characters in a string | 100,000 | `maxStringLength` |
 | Content elements | 10,000 | `maxElements` |
 | Size of spacing, boxes and text | 1,000 em | `maxSize` |
 | Output | 1,000,000 characters | `maxOutputSize` |
 
-`npm run check:budgets` checks that the built bundle stops each abusive formula in `test/budget-cases.mjs` within 50 ms: recursion bombs, repetition, content that doubles, deep nesting and huge sizes. It also checks that formulas whose work must stay linear in their size render within 50 ms, such as raw code tagged as Typst, which Typlet parses and highlights again, with a long chain of field accesses. Typlet has no loops, file access, packages, `eval` or introspection (docs/DESIGN.md §6.3), so no formula reaches outside its own evaluation.
+The first three of the limits without an option bound recursion, which follows the formula's structure: a chain of thousands of operators, definitions that nest content thousands deep, a style that feeds an element its own body, such as `#set box(box())`, and values that share parts, such as `(x, x)` built thirty times over, all stop with a `limit` error rather than overflowing the native stack or taking exponential time.
+
+`npm run check:budgets` checks that the built bundle stops each abusive formula in `test/budget-cases.mjs` within 50 ms: recursion bombs, repetition, content that doubles, deep nesting and huge sizes, chains of operators, content nested by definitions, styles that feed content into itself, and values that share parts. It also checks that formulas whose work must stay linear in their size render within 50 ms, such as raw code tagged as Typst, which Typlet parses and highlights again, with a long chain of field accesses. Typlet has no loops, file access, packages, `eval` or introspection (docs/DESIGN.md §6.3), so no formula reaches outside its own evaluation.
 
 ## Differential fuzzing
 
