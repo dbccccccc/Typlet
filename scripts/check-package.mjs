@@ -1,8 +1,9 @@
 // Checks the package as npm would publish it. Packs it, installs the tarball
 // alone in a new project, uses every entry point there
 // (scripts/consumer/use.mjs), and type-checks programs that import and
-// require it under each of TypeScript's module resolutions. Run after
-// `npm run build`.
+// require it under each of TypeScript's module resolutions. Then packs the
+// markdown-it plugin and type-checks a program that uses it against the
+// types of markdown-it 14 and 15. Run after `npm run build`.
 
 import { execFileSync, execSync } from 'node:child_process';
 import { copyFileSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -73,6 +74,32 @@ try {
     const flags = ['--noEmit', '--strict', '--target', 'es2022', '--lib', 'es2022,dom', '--skipLibCheck', 'false'];
     execFileSync(process.execPath, [tsc, ...flags, '--module', module, '--moduleResolution', moduleResolution, ...sources], { cwd: project, stdio: 'inherit' });
     console.log(`ok    types with moduleResolution ${moduleResolution}: ${sources.join(', ')}`);
+  }
+
+  // The markdown-it plugin's declaration, against the types markdown-it 14
+  // gets from DefinitelyTyped and markdown-it 15's own, which export the
+  // class as a type only. The plugin's dependency on typlet is installed.
+  const [plugin] = JSON.parse(npm(['pack', '--json', '--pack-destination', project], join(root, 'packages/markdown-it-typlet')));
+  npm(['install', '--offline', '--no-audit', '--no-fund', '--ignore-scripts', '--legacy-peer-deps', `./${plugin.filename}`], project);
+  copyFileSync(join(consumer, 'markdown-it.mts'), join(project, 'markdown-it.mts'));
+  const markdownIt = JSON.parse(readFileSync(join(root, 'node_modules/markdown-it/package.json'), 'utf8'));
+  const peers = [
+    ['14', join(root, 'node_modules/@types/markdown-it/index.d.ts')],
+    ['15', join(root, 'node_modules/markdown-it', markdownIt.exports['.'].import.types)],
+  ];
+  for (const [version, types] of peers) {
+    for (const moduleResolution of ['nodenext', 'bundler']) {
+      const config = `markdown-it-${version}-${moduleResolution}.json`;
+      const compilerOptions = {
+        noEmit: true, strict: true, target: 'es2022', lib: ['es2022', 'dom'], skipLibCheck: false,
+        module: moduleResolution === 'bundler' ? 'esnext' : 'nodenext', moduleResolution,
+        // markdown-it 14's types use linkify-it 5's from DefinitelyTyped; version 15 brings its own.
+        paths: { 'markdown-it': [types], ...(version === '14' ? { 'linkify-it': [join(root, 'node_modules/@types/linkify-it/index.d.ts')] } : {}) },
+      };
+      writeFileSync(join(project, config), JSON.stringify({ compilerOptions, files: ['markdown-it.mts'] }));
+      execFileSync(process.execPath, [tsc, '-p', config], { cwd: project, stdio: 'inherit' });
+      console.log(`ok    markdown-it-typlet types with markdown-it ${version}, ${moduleResolution}`);
+    }
   }
 } finally {
   rmSync(project, { recursive: true, force: true });

@@ -388,7 +388,11 @@ function render(source: string, options: RenderOptions, output: Output, backend:
     out = `<span class="typlet">${number || mathml}</span>`;
   } else if (output === 'html') {
     const label = numberText === null ? source : `${source} ${numberText}`;
-    out = `<span class="typlet"><span class="typlet-html" role="img" aria-label="${escape(label)}">${html}</span></span>`;
+    // Copying needs the exact source, which the label of a numbered equation
+    // doesn't end with. A carriage return is kept as a reference, which a
+    // parser would otherwise turn into a line feed.
+    const original = numberText === null ? '' : ` data-typst-source="${escape(source).replace(/\r/g, '&#13;')}"`;
+    out = `<span class="typlet"><span class="typlet-html" role="img" aria-label="${escape(label)}"${original}>${html}</span></span>`;
   } else {
     out = `<span class="typlet"><span class="typlet-mathml">${mathml}${tag}</span><span class="typlet-html" aria-hidden="true">${html}</span></span>`;
   }

@@ -14,5 +14,9 @@ export interface Options extends RenderOptions {
   delimiters?: 'markdown' | 'typst';
 }
 
-/** Renders math with Typlet. Each document, one `md.render` call, numbers its equations from 1. */
-export default function markdownItTyplet(md: MarkdownIt, options?: Options): void;
+/**
+ * Renders math with Typlet. Each document, one `md.render` call, numbers its
+ * equations from 1. The parameter's type suits both markdown-it 14, typed by
+ * DefinitelyTyped, and markdown-it 15, whose own types export the class as a type.
+ */
+export default function markdownItTyplet(md: InstanceType<typeof MarkdownIt>, options?: Options): void;

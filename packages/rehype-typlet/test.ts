@@ -1,3 +1,4 @@
+import type { Element, Root } from 'hast';
 import rehypeStringify from 'rehype-stringify';
 import remarkMath from 'remark-math';
 import remarkParse from 'remark-parse';
@@ -56,5 +57,39 @@ describe('rehype-typlet', () => {
     const { html, messages } = await process('$#link("https://typst.app")[T]$', { output: 'mathml' });
     expect(html).not.toContain('href');
     expect(messages.map((m) => m.reason)).toEqual(["Typlet left out a link to https://typst.app, as the `trust` option doesn't allow it"]);
+  });
+});
+
+/** Renders a paragraph of formulas with nothing between them, as a document parsed from HTML can hold. */
+function adjacent(sources: string[], options: Options) {
+  const nodes: Element[] = sources.map((source) => ({
+    type: 'element',
+    tagName: 'code',
+    properties: { className: ['math-inline'] },
+    children: [{ type: 'text', value: source }],
+  }));
+  const tree: Root = { type: 'root', children: [{ type: 'element', tagName: 'p', properties: {}, children: nodes }] };
+  const processor = unified().use(rehypeTyplet, options).use(rehypeStringify);
+  processor.runSync(tree);
+  return processor.stringify(tree);
+}
+
+describe('rehype-typlet with adjacent formulas', () => {
+  it('renders every formula after one whose fallback is empty', () => {
+    const html = adjacent(['#context x', 'y', 'z'], { output: 'mathml', fallback: () => '' });
+    expect(html.match(/<annotation encoding="application\/x-typst">/g)).toHaveLength(2);
+    expect(html).not.toContain('math-inline');
+  });
+
+  it('does not render fallback markup again', () => {
+    let calls = 0;
+    const fallback = () => {
+      calls++;
+      return '<b>a</b><code class="math-inline">raw</code>';
+    };
+    const html = adjacent(['#context x', 'y'], { output: 'mathml', fallback });
+    expect(calls).toBe(1);
+    expect(html).toContain('<code class="math-inline">raw</code>');
+    expect(html).toContain('>y</annotation>');
   });
 });
