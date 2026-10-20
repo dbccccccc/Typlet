@@ -14,6 +14,7 @@ What each release of Typlet changes. The versions follow [semantic versioning](h
 - `rehype-typlet` renders every formula when formulas stand right next to each other and one renders to nothing, and never renders the markup a `fallback` returned as formulas again.
 - `markdown-it-typlet` numbers each document from 1 even when one environment object is reused across documents, and its declaration accepts markdown-it 15's class as well as markdown-it 14's.
 - Copying puts literal text on the clipboard as text: a `<em>` written out on the page stayed a tag in the copied HTML. The plain text keeps the page's lines: one after a block or `<br>`, a blank one between paragraphs, and a tab between table cells. A numbered equation in the `html` output keeps its exact source for copying in a `data-typst-source` attribute.
+- Over- and underlines take their constants from the Bold face when their base is a bold glyph, or when the equation is bold, as Typst does; they sat 0.18 pt off in `#strong[$overline(x)$]`.
 
 ## 0.1.1
 

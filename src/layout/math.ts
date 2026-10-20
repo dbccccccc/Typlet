@@ -45,6 +45,8 @@ export class MathContext {
     readonly align: FixedAlignment,
     /** The width of the region the equation is laid out in, which boxes in it get; `null` for no limit. */
     readonly region: Abs | null = null,
+    /** The equation's styles as it entered layout, which choose the font Typst reads constants from. */
+    readonly entryStyles: StyleChain = equationStyles(false),
   ) {}
 
   push(fragment: MathFragment): void {
@@ -190,7 +192,7 @@ export function layoutEquationInline(equation: EquationElem, warnings: SourceDia
  * `null` for no limit.
  */
 export function layoutInline(item: MathItem, warnings: SourceDiagnostic[], styles = equationStyles(false), region: Abs | null = null): InlineItem[] {
-  const ctx = new MathContext(warnings, 'start', region);
+  const ctx = new MathContext(warnings, 'start', region, styles);
   const items: InlineItem[] = isMultiline(item)
     ? [{ kind: 'frame', frame: ctx.layoutIntoFragment(item, styles).intoFrame() }]
     : runIntoParItems(ctx.layoutIntoFragments(item, styles));
@@ -243,7 +245,7 @@ export function layoutBlock(
 
 /** The rows of a block equation, laid out centered. */
 function blockBuilder(item: MathItem, warnings: SourceDiagnostic[], styles: StyleChain): MathRunFrameBuilder {
-  const ctx = new MathContext(warnings, 'center');
+  const ctx = new MathContext(warnings, 'center', null, styles);
   return item.type === 'component' && item.kind.tag === 'multiline'
     ? layoutMultiline(item.kind.rows, ctx, item.styles)
     : MathRunFrameBuilder.fromFrame(runIntoFrame(ctx.layoutIntoFragments(item, styles)));

@@ -151,6 +151,8 @@ const formulas = [
   ['preamble-several', 'f(norm(x))', '#let norm(x) = $||#x||$\n#set text(fill: maroon)'],
   ['preamble-error', 'x', '#let f(x) = x\n#f()'],
   ['preamble-show', 'x', '#show math.equation: set text(fill: blue)'],
+  // An equation that enters layout bold reads its lines' constants from the Bold face.
+  ['preamble-show-bold-lines', 'underline(1 + 2) + overline(mid(|))', '#show math.equation: set text(weight: "bold")'],
   // Level 3: show-set rules for equations.
   ['preamble-show-block', 'x + y', '#show math.equation.where(block: true): set text(fill: red)', true],
   ['preamble-show-block-inline', 'x + y', '#show math.equation.where(block: true): set text(fill: red)'],

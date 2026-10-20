@@ -4,6 +4,15 @@
 
 export const BOLD_FONT = {"postScriptName":"NewCMMath-Bold","glyphCount":8582};
 
+export const BOLD_LINE_CONSTANTS = {
+  "overbarExtraAscender": 0.04,
+  "overbarRuleThickness": 0.04,
+  "overbarVerticalGap": 0.12,
+  "underbarExtraDescender": 0.04,
+  "underbarRuleThickness": 0.04,
+  "underbarVerticalGap": 0.12
+};
+
 export const DATA = {
   GLYPHS: "1.2n,1.2o",
   ADVANCES: " Y l#5(G$7(G'd L!q!q$7'd L!/ L$7$7$7$7$7$7$7$7$7$7$7 L L'd'`'d#u'd'J&t'#'W&4%r'n'j!f$K'k%Q)r'j'E&S'E'D$y&b'Z'J*w'J'J%] L$7 L$$'J$7$'$y#T$y#e m$7$y L m$X L(G$y$7$y$X#.!x!q$y$X'#$X$X#T$7 L$7$$ Y l#T'J'd'J L%T$7%K#E$y'd!/%K$7!a'd!N!N$7$y%] !#T!R#6$y(a(a(a#u'J'J'J'J'J'J)?'#&4&4&4&4!f!f!f!f'W'j'E'E'E'E'E'd'd'Z'Z'Z'Z'J%r$N$'$'$'$'$'$''##T#e#e#e#e L L L L$7$y$7$7$7$7$7'd$7$y$y$y$y$X$y$X",

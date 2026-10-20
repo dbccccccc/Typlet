@@ -1,5 +1,6 @@
 import { isDeepStrictEqual } from 'node:util';
 import { describe, expect, it } from 'vitest';
+import { BOLD_LINE_CONSTANTS } from '../src/generated/metrics-bold.js';
 import { DATA as EXTENDED } from '../src/generated/metrics-extended.js';
 import {
   FONT_METRICS,
@@ -75,6 +76,15 @@ describe('math font metrics', () => {
     expect(MIN_CONNECTOR_OVERLAP).toBe(font.header.minConnectorOverlap);
     expect(FONT_METRICS).toEqual(font.header.metrics);
     expect(MATH_CONSTANTS).toEqual(font.header.math);
+  });
+
+  it('has the Bold face’s constants for over- and underlines', () => {
+    const bold = readFont(readJsonl(`${fixtureDir}/font-bold.jsonl`));
+    for (const [name, value] of Object.entries(BOLD_LINE_CONSTANTS)) {
+      expect(value, name).toBe(bold.header.math[name as keyof typeof bold.header.math]);
+      expect(MATH_CONSTANTS[name as keyof typeof MATH_CONSTANTS], name).toBe(font.header.math[name as keyof typeof font.header.math]);
+    }
+    expect(Object.keys(BOLD_LINE_CONSTANTS)).toHaveLength(6);
   });
 
   it('has exactly the glyphs Typst can reach from supported text', () => {
