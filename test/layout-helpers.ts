@@ -15,7 +15,7 @@ export interface FlatFrame {
   shapes: Record<string, unknown>[];
 }
 
-const FONT_NAMES = { book: 'NewCMMath-Book', bold: 'NewCMMath-Bold' } as const;
+const FONT_NAMES = { book: 'NewCMMath-Book', bold: 'NewCMMath-Bold', browser: 'browser', 'browser-bold': 'browser-bold' } as const;
 const round = (pt: number) => Math.round(pt * 1000) / 1000;
 
 /** Flattens frames placed at points, relative to the anchor. */

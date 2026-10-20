@@ -164,7 +164,7 @@ function renderAll(formula) {
   return null;
 }
 
-const stats = { formulas: 0, syntaxErrors: 0, unsupported: 0, mathml: 0, typstErrors: 0, frames: 0, failures: 0 };
+const stats = { formulas: 0, syntaxErrors: 0, unsupported: 0, mathml: 0, typstErrors: 0, frames: 0, browser: 0, failures: 0 };
 const failures = [];
 const fail = (formula, kind, detail) => {
   stats.failures++;
@@ -213,6 +213,11 @@ for (let done = 0; done < count; done += BATCH) {
       fail(formula, 'layout', String(e.stack ?? e));
       continue;
     }
+    // Characters the browser draws have no reference: the oracle has no font for them.
+    if (frame.fonts.some((font) => font.startsWith('browser'))) {
+      stats.browser++;
+      continue;
+    }
     stats.frames++;
     const diff = T.frameDiff(frame, want.frame);
     if (diff) fail(formula, 'frame', diff);
@@ -223,7 +228,7 @@ process.stdout.write('\n');
 
 console.log(
   `${stats.formulas} formulas (${replay ? 'replayed' : `seed ${seed}`}): ${stats.syntaxErrors} syntax errors, ${stats.unsupported} unsupported; ` +
-    `${stats.mathml} MathML compared, ${stats.typstErrors} of them errors in Typst; ${stats.frames} frames compared.`,
+    `${stats.mathml} MathML compared, ${stats.typstErrors} of them errors in Typst; ${stats.frames} frames compared, ${stats.browser} drawn by the browser.`,
 );
 if (failures.length > 0) {
   const file = join(tmpdir(), `typlet-fuzz-eval-${replay ? 'replay' : seed}.json`);

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { kindName, parse, render, renderToResult, renderToString, type RenderOptions, SyntaxKind, TypletError } from '../src/index.js';
 import * as mathmlEntry from '../src/mathml.js';
+import { layoutFlat } from './layout-helpers.js';
 
 describe('parse', () => {
   it('parses formulas in math mode by default', () => {
@@ -163,6 +164,43 @@ describe('renderToString', () => {
     const element = { innerHTML: '' };
     render('x', element, { output: 'mathml' });
     expect(element.innerHTML).toContain('<mi>𝑥</mi>');
+  });
+});
+
+describe('text the math font lacks', () => {
+  const seen = (source: string, options: RenderOptions = {}) => {
+    const messages: string[] = [];
+    const result = renderToResult(source, {
+      ...options,
+      strict: (w) => {
+        messages.push(w.message);
+        return 'ignore';
+      },
+    });
+    return { result, messages };
+  };
+
+  it('draws Chinese, Japanese and Korean text with the browser’s fonts, an em per character, with a warning', () => {
+    const { result, messages } = seen('"中文" + x');
+    expect(result.drawnAs).toBe('html');
+    expect(result.markup).toMatch(/<span class="g c" style="[^"]*">中文<\/span>/);
+    expect(messages).toEqual(['Typlet drew "中文" with the browser\'s fonts, an em per character, as New Computer Modern Math has none for it']);
+    const frame = layoutFlat({ id: 'cjk', src: '"中文"', display: false });
+    expect(frame.box).toMatchObject({ width: 22 });
+    expect(frame.fonts).toEqual(['browser']);
+    expect(frame.glyphs.map((g) => [g[1], g[2]])).toEqual([[0x4e2d, 0], [0x6587, 11]]);
+  });
+
+  it('draws a bare ideograph, halfwidth forms and bold text the same way', () => {
+    expect(seen('中').result.drawnAs).toBe('html');
+    expect(layoutFlat({ id: 'halfwidth', src: '"ｶﾅ"', display: false }).box).toMatchObject({ width: 11 });
+    const bold = seen('#strong[中]');
+    expect(bold.result.drawnAs).toBe('html');
+    expect(bold.result.markup).toContain('class="g b c"');
+  });
+
+  it('still draws text of other scripts it has no metrics for as MathML', () => {
+    expect(seen('"Привет"').result.drawnAs).toBe('mathml');
   });
 });
 
