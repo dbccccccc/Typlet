@@ -254,4 +254,16 @@ describe('<typlet-math>', () => {
     await tick();
     expect(document.querySelector('typlet-math math')!.textContent).toContain('ℝ');
   });
+
+  it('takes a preamble of its own, over the shared one', async () => {
+    elementOptions.preamble = '#let RR = $bb(R)$';
+    document.body.innerHTML = '<typlet-math preamble="#let RR = $bb(Q)$">RR</typlet-math>';
+    await tick();
+    const element = document.querySelector('typlet-math') as TypletMathElement;
+    expect(element.querySelector('math')!.textContent).toContain('ℚ');
+    element.setAttribute('preamble', '#let RR = $bb(C)$');
+    expect(element.querySelector('math')!.textContent).toContain('ℂ');
+    element.removeAttribute('preamble');
+    expect(element.querySelector('math')!.textContent).toContain('ℝ');
+  });
 });

@@ -118,7 +118,8 @@ Errors in the preamble have `in: 'preamble'` in their diagnostics, with spans in
 
 - **Auto-render:** `typlet/contrib/auto-render` renders the formulas in a page's text, like KaTeX's auto-render. By default it reads Typst's syntax, where `$x$` is inline and `$ x $`, with spaces inside both dollar signs, is display, and Typst's parser finds where each formula ends. `delimiters: 'markdown'` reads `$$x$$` as display instead, and a list of delimiters works as in KaTeX.
 - **Copy as Typst:** `typlet/contrib/copy-typst` makes copied formulas paste as their Typst source, like KaTeX's copy-tex.
-- **Custom element:** `typlet/contrib/element` defines `<typlet-math>`, which renders its text, or its `source` attribute, with `display` and `output` attributes.
+- **Custom element:** `typlet/contrib/element` defines `<typlet-math>`, which renders its text, or its `source` attribute, with `display`, `output` and `preamble` attributes.
+- **Typst's HTML export:** [contrib/typlet.typ](contrib/typlet.typ) writes formulas as `<typlet-math>` elements when a document is exported to HTML, and as equations on pages.
 - **Command line:** `typlet "sum_(i=1)^n i" --display-mode` prints the HTML. The formula can also come from a file or standard input; `typlet --batch` renders JSON Lines in one process, a formula per line in and a result per line out, for build scripts in any language; and `typlet --help` lists the options.
 - **rehype and markdown-it:** [`rehype-typlet`](packages/rehype-typlet) renders the math remark-math finds, like rehype-katex, and [`markdown-it-typlet`](packages/markdown-it-typlet) adds math to markdown-it, with Markdown's or Typst's syntax. They are packages of their own: `npm install rehype-typlet` or `npm install markdown-it-typlet`.
 

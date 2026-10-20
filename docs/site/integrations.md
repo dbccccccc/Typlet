@@ -95,3 +95,17 @@ md.render('Let $x^2$ be.\n\n$$\nsum_(i=1)^n i\n$$\n');
 ```
 
 By default it reads Markdown's math syntax, where `$x$` is inline and `$$` surrounds display formulas, and like Pandoc it leaves "\$5 and \$10" as text. With `delimiters: 'typst'`, it reads Typst's syntax instead. This site is built with it.
+
+## Typst's HTML export
+
+Typst's experimental HTML export, `typst compile --features html --format html`, writes equations as MathML, for the browser to lay out. To have Typlet lay them out as Typst does on pages, write formulas through the helper in [contrib/typlet.typ](https://github.com/dbccccccc/Typlet/blob/main/contrib/typlet.typ), copied next to the document:
+
+```typst
+#import "typlet.typ": typlet-math, typlet-assets
+#typlet-assets(preamble: "#set math.equation(numbering: \"(1)\")")
+
+Let #typlet-math(`x^2 + y^2 = z^2`) hold. Then
+#typlet-math(`sum_(i=1)^n i = (n(n+1))/2`, block: true)
+```
+
+`typlet-math` takes the formula as a raw block or a string, `block: true` for a display equation, and a `preamble` of definitions and set rules for that formula. In HTML export it writes a `<typlet-math>` element with `display` and `preamble` attributes, which `typlet/contrib/element` renders in the browser; in paged output it is an equation like any other, which `eval` makes from the source. `typlet-assets` writes the stylesheet and the scripts once, from jsDelivr unless `base` names a copy of the package's `fonts/` and `dist/` served with the page, and its `preamble` applies to every formula of the document, whose numbered equations count up through the page. The helper needs `target()`, which Typst 0.15 has; Typst 0.13 and 0.14 have it only with `--features html`, so pass the flag to paged compilations too.
