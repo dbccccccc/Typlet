@@ -16,6 +16,7 @@ What each release of Typlet changes. The versions follow [semantic versioning](h
 - Copying puts literal text on the clipboard as text: a `<em>` written out on the page stayed a tag in the copied HTML. The plain text keeps the page's lines: one after a block or `<br>`, a blank one between paragraphs, and a tab between table cells. A numbered equation in the `html` output keeps its exact source for copying in a `data-typst-source` attribute.
 - Over- and underlines take their constants from the Bold face when their base is a bold glyph, or when the equation is bold, as Typst does; they sat 0.18 pt off in `#strong[$overline(x)$]`.
 - Chinese, Japanese and Korean text is laid out as HTML, drawn with the browser's fonts at an em per character, with a warning; it fell back to MathML. Typst sets it in a font of the system's, which Typlet can't know, so the positions around it are exact and the characters themselves are the browser's.
+- `typlet --batch` renders JSON Lines in one process: each line in is an object with a `source`, an `id` and render options, and each line out is the result of `renderToResult`, or an error, written as the lines arrive. Build scripts in any language can keep one `typlet` running and send it formulas as they go.
 
 ## 0.1.1
 

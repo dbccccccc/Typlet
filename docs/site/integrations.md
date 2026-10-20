@@ -53,6 +53,22 @@ typlet "sum_(i=1)^n i" --display-mode > formula.html
 
 The formula comes from the argument, the `--input` file, or standard input. `--format` picks the output, `--preamble` and `--preamble-file` take a preamble, and `--trust`, `--no-throw-on-error`, `--strict` and the budgets work like the options of the same names. Errors print Typst's message and hints with the line and column. `typlet --help` lists every option.
 
+### Batch mode
+
+`typlet --batch` renders many formulas in one process, for build scripts in any language. It reads [JSON Lines](https://jsonlines.org/) from standard input, or from the `--input` file, and writes a line of JSON for each as the lines arrive, so a script can keep one `typlet` running and send it formulas as it meets them.
+
+```bash
+printf '%s\n' '{"id": 1, "source": "x^2"}' '{"id": 2, "source": "sum_i i", "displayMode": true}' | typlet --batch
+```
+
+Each input line is an object with the formula as `source`, an `id` to return as is, and any of the render options `displayMode`, `output`, `throwOnError`, `errorColor`, `strict`, `trust`, `preamble` and the budgets, which override the flags for that line. Each output line is the result of `renderToResult`, with the `id` first:
+
+```json
+{"id": 1, "markup": "<span class=\"typlet\">…</span>", "drawnAs": "html", "warnings": [], "number": null}
+```
+
+A formula that fails gives `{"id": …, "error": {"kind", "message", "hints", "span", "in", "diagnostics"}}` instead, and the command exits with 1 once every line is done; with `throwOnError: false`, it renders in the error color, as `drawnAs: "error"`. A line that isn't such an object gives an error of kind `input`, and the exit code 2. Warnings are part of each result rather than printed, and `strict: "error"` makes them errors. Numbered display equations count up across the lines; `"equationCounter": 0` on a line restarts the count, for a new document. Blank lines are skipped.
+
 ## rehype
 
 `rehype-typlet` renders the math that [remark-math](https://github.com/remarkjs/remark-math) finds, like rehype-katex:
