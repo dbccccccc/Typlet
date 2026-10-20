@@ -45,6 +45,11 @@ const RAW_THEME: ReadonlyArray<readonly [selectors: string, color: string | null
 
 const atoms = (scope: string) => scope.split('.');
 
+/** The theme's selectors, parsed once: for each entry, its paths of scopes, each scope as its atoms. */
+const THEME: ReadonlyArray<readonly [paths: string[][][], color: string | null]> = RAW_THEME.map(
+  ([selectors, color]) => [selectors.split(',').map((selector) => selector.trim().split(/\s+/).map(atoms)), color],
+);
+
 /** Whether a scope selector's atoms are a prefix of a scope's. */
 function isPrefix(selector: string[], scope: string[]): boolean {
   return selector.length <= scope.length && selector.every((atom, i) => atom === scope[i]);
@@ -55,8 +60,7 @@ function isPrefix(selector: string[], scope: string[]): boolean {
  * deeper scope of the stack) matches a scope stack, like syntect's
  * `ScopeSelector::does_match`. `null` if it doesn't match.
  */
-function matchPower(selector: string, stack: string[][]): number | null {
-  const scopes = selector.trim().split(/\s+/).map(atoms);
+function matchPower(scopes: string[][], stack: string[][]): number | null {
   let index = 0;
   let score = 0;
   for (let i = 0; i < stack.length; i++) {
@@ -73,10 +77,10 @@ function matchPower(selector: string, stack: string[][]): number | null {
 /** The foreground color of a scope stack, or `null` for the default, like syntect's `style_for_stack`. */
 function foregroundFor(stack: string[][]): string | null {
   const matching: [number, string | null][] = [];
-  for (const [selectors, color] of RAW_THEME) {
+  for (const [paths, color] of THEME) {
     let best: number | null = null;
-    for (const selector of selectors.split(',')) {
-      const power = matchPower(selector, stack);
+    for (const path of paths) {
+      const power = matchPower(path, stack);
       if (power !== null && (best === null || power > best)) best = power;
     }
     if (best !== null) matching.push([best, color]);
@@ -93,9 +97,21 @@ function foregroundFor(stack: string[][]): string | null {
 function highlightTypst(text: string, lang: 'typ' | 'typc' | 'typm'): HtmlNode[] {
   const root = lang === 'typc' ? parseCode(text) : lang === 'typm' ? parseMath(text) : parse(text);
   const out: HtmlNode[] = [];
-  const visit = (node: LinkedTree, stack: string[][]) => {
+  // The color of each stack of scopes, found once.
+  const colors = new Map<string, string | null>();
+  // The nodes to visit with the scopes around each, the next on top: a
+  // depth-first walk without recursion, as a chain of field accesses in the
+  // code nests as deep as it is long.
+  const pending: [node: LinkedTree, stack: string[][]][] = [[new LinkedTree(root), []]];
+  while (pending.length > 0) {
+    const [node, stack] = pending.pop()!;
     if (node.node.children.length === 0) {
-      const color = foregroundFor(stack);
+      const key = stack.map((scope) => scope.join('.')).join(' ');
+      let color = colors.get(key);
+      if (color === undefined) {
+        color = foregroundFor(stack);
+        colors.set(key, color);
+      }
       const segment = text.slice(node.offset, node.offset + node.node.len);
       splitNewlines(segment).forEach((line, i) => {
         if (i > 0) out.push(elem('br'));
@@ -109,12 +125,13 @@ function highlightTypst(text: string, lang: 'typ' | 'typc' | 'typm'): HtmlNode[]
         }
       });
     }
-    for (const child of node.children()) {
+    const children = node.children();
+    for (let i = children.length - 1; i >= 0; i--) {
+      const child = children[i]!;
       const tag = highlight(child);
-      visit(child, tag === null ? stack : [...stack, atoms(TM_SCOPES[tag])]);
+      pending.push([child, tag === null ? stack : [...stack, atoms(TM_SCOPES[tag])]]);
     }
-  };
-  visit(new LinkedTree(root), []);
+  }
   return out;
 }
 

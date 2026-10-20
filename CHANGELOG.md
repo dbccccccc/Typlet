@@ -6,6 +6,7 @@ What each release of Typlet changes. The versions follow [semantic versioning](h
 
 - `renderToResult()` returns the markup with what drew the formula (`drawnAs`: `html`, `mathml`, `fallback` or `error`), the warnings and the equation number. Warnings have a `kind`: `fallback`, `deprecation` or `other`.
 - The `html` output falls back to MathML, with a warning, for a formula the HTML can't draw, as the default output does. It threw an `unsupported` error before.
+- Raw code tagged as Typst (`typ`, `typc` or `typm`) in a formula is highlighted in time linear in its length. A chain of a few thousand field accesses overflowed the stack, with an error that escaped `throwOnError: false`, and wide code took seconds.
 
 ## 0.1.1
 

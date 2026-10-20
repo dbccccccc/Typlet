@@ -284,7 +284,7 @@ Typst has no budget on calls. Computation that Typst would finish slowly fails i
 - **Values:** Typlet's `repr` of an expression is compared with Typst's. A generator produces thousands of expressions over literals and operators, including invalid ones, whose error messages must match too.
 - **Formulas with code:** content trees, MathML, frames and diagnostics, as for any formula (§5.3).
 - **Preambles and set rules:** the oracle compiles the preamble and the formula together.
-- **Budgets:** adversarial inputs (`test/budget-cases.mjs`), such as deep nesting, recursion bombs and huge repetition, must fail with a `limit` error within 50 ms.
+- **Budgets:** adversarial inputs (`test/budget-cases.mjs`), such as deep nesting, recursion bombs and huge repetition, must fail with a `limit` error within 50 ms; inputs whose work must stay linear in their size, such as raw code with a long chain of field accesses, must render within 50 ms.
 
 ## 7. Size and startup
 
