@@ -50,6 +50,7 @@ const PAGES = [
   ['code', 'Embedded code', 'docs/site/code.md'],
   ['integrations', 'Integrations', 'docs/site/integrations.md'],
   ['supported', 'Supported features', 'docs/supported.md'],
+  ['fallbacks', 'What falls back', 'docs/fallbacks.md'],
   ['gallery', 'Gallery', null],
   ['playground', 'Playground', null],
   ['compare', 'Compare', null],

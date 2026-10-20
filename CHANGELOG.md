@@ -20,6 +20,7 @@ What each release of Typlet changes. The versions follow [semantic versioning](h
 - `<typlet-math>` takes a `preamble` attribute, which replaces the preamble of `elementOptions` for that formula.
 - `require('markdown-it-typlet')` from CommonJS, as Hexo loads the plugins its configuration names, gets the plugin itself on Node 22.12 and later.
 - [contrib/typlet.typ](contrib/typlet.typ) is a helper for Typst's HTML export: `typlet-math` writes a formula as a `<typlet-math>` element in HTML export and as an equation on pages, and `typlet-assets` loads Typlet once, with a preamble for the document.
+- The documentation gains recipes for VitePress, Docusaurus and Hexo, a generated page of what falls back to MathML or is refused and why ([docs/fallbacks.md](docs/fallbacks.md), from the test corpus), and a note on what is stable in `SyntaxKind`: the names, not the numbers.
 
 ## 0.1.1
 

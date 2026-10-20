@@ -48,8 +48,8 @@ describe('version', () => {
     expect(lock.packages['']?.version).toBe(pkg.version);
   });
 
-  it('is the version the README and the Typst helper load from jsDelivr', () => {
-    for (const file of ['README.md', 'contrib/typlet.typ']) {
+  it('is the version the README, the documentation and the Typst helper load from jsDelivr', () => {
+    for (const file of ['README.md', 'docs/site/integrations.md', 'contrib/typlet.typ']) {
       const links = read(file).split('cdn.jsdelivr.net/npm/typlet@').slice(1);
       expect(links.length, file).toBeGreaterThan(0);
       for (const link of links) expect(link.slice(0, link.search(/[/"'`)]/)), file).toBe(pkg.version);
