@@ -203,6 +203,12 @@ export default function markdownItTyplet(md, options = {}) {
     return renderToString(source, { throwOnError: false, ...renderOptions, displayMode, equationCounter });
   };
 
+  // Each document starts its default counter afresh, even when the caller
+  // reuses one environment for several documents.
+  md.core.ruler.before('block', 'typlet_equation_counter', (state) => {
+    if (renderOptions.equationCounter === undefined) state.env.typletEquationCounter = { value: 0 };
+  });
+
   md.inline.ruler.after('escape', 'typlet_inline', delimiters === 'typst' ? inlineTypst : inlineMarkdown);
   if (delimiters === 'markdown') {
     md.block.ruler.after('blockquote', 'typlet_block', blockMarkdown, { alt: ['paragraph', 'reference', 'blockquote', 'list'] });

@@ -144,10 +144,53 @@ describe('copy-typst', () => {
     expect(typletReplaceWithSource(fragmentOf(display)).textContent).toBe('$ a + b $');
   });
 
+  it('keeps the exact source of a numbered html equation, whatever its number', () => {
+    const display = renderToString(' x + y ', { output: 'html', displayMode: true, preamble: '#set math.equation(numbering: n => [ #n ])' });
+    expect(typletReplaceWithSource(fragmentOf(display)).textContent).toBe('$  x + y  $');
+  });
+
   it('takes delimiters of its own', () => {
     const fragment = fragmentOf(renderToString('x', { displayMode: true }));
     const delimiters = { ...defaultCopyDelimiters, display: ['$$', '$$'] as const };
     expect(typletReplaceWithSource(fragment, delimiters).textContent).toBe('$$x$$');
+  });
+
+  /** Copies all of an element's content, and gives what the clipboard gets. */
+  const copyAll = (element: Element) => {
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    const selection = document.getSelection()!;
+    selection.removeAllRanges();
+    selection.addRange(range);
+    const data = new Map<string, string>();
+    const event = {
+      target: element,
+      clipboardData: { setData: (type: string, value: string) => data.set(type, value) },
+      preventDefault: vi.fn(),
+    } as unknown as ClipboardEvent;
+    handleCopy(event);
+    return data;
+  };
+
+  it('keeps literal text as text on the clipboard', () => {
+    document.body.innerHTML = '<p id="p"></p>';
+    const p = document.getElementById('p')!;
+    p.append('<em>literal</em> &amp; ', fragmentOf(renderToString('x')), ' tail');
+    const html = fragmentOf(copyAll(p).get('text/html')!);
+    expect(html.firstChild?.nodeType).toBe(3);
+    expect(html.firstChild?.textContent).toBe('<em>literal</em> &amp; ');
+    expect(html.querySelectorAll('em')).toHaveLength(0);
+    expect(copyAll(p).get('text/plain')).toBe('<em>literal</em> &amp; $x$ tail');
+  });
+
+  it.each([
+    ['<p>First FORMULA</p><p>Second OTHER</p>', 'First $x$\n\nSecond $y$'],
+    ['<div>First FORMULA<br>Second OTHER</div>', 'First $x$\nSecond $y$'],
+    ['<ul><li>First FORMULA</li><li>Second OTHER</li></ul>', 'First $x$\nSecond $y$'],
+    ['<table><tr><td>First FORMULA</td><td>Second OTHER</td></tr><tr><td>C</td></tr></table>', 'First $x$\tSecond $y$\nC'],
+  ])('keeps the lines of %s in the plain text', (markup, expected) => {
+    document.body.innerHTML = `<div id="d">${markup.replace('FORMULA', renderToString('x')).replace('OTHER', renderToString('y'))}</div>`;
+    expect(copyAll(document.getElementById('d')!).get('text/plain')).toBe(expected);
   });
 
   it('puts a selection’s formulas on the clipboard as source', () => {

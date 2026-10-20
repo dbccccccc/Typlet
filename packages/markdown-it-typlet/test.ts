@@ -47,4 +47,23 @@ describe('markdown-it-typlet', () => {
     expect(html.match(/>\((\d)\)</g)).toEqual(['>(1)<', '>(2)<']);
     expect(md.render('$$\nc\n$$\n')).toContain('>(1)<');
   });
+
+  it.each(['render', 'renderInline'] as const)('restarts numbering with a reused env in %s', (method) => {
+    const md = new MarkdownIt().use(markdownItTyplet, { preamble: '#set math.equation(numbering: "(1)")', output: 'mathml' });
+    const env = { application: 'preserved' };
+    const source = method === 'render' ? '$$a$$\n\n$$b$$' : '$$a$$ $$b$$';
+    for (let i = 0; i < 2; i++) {
+      expect(md[method](source, env).match(/>\((\d)\)</g)).toEqual(['>(1)<', '>(2)<']);
+      expect(env.application).toBe('preserved');
+    }
+  });
+
+  it('keeps counting with a counter of the caller’s across documents', () => {
+    const equationCounter = { value: 4 };
+    const md = new MarkdownIt().use(markdownItTyplet, { preamble: '#set math.equation(numbering: "(1)")', equationCounter, output: 'mathml' });
+    const env = {};
+    expect(md.render('$$a$$', env)).toContain('>(5)<');
+    expect(md.render('$$b$$', env)).toContain('>(6)<');
+    expect(equationCounter.value).toBe(6);
+  });
 });
