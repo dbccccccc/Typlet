@@ -38,6 +38,9 @@ describe.each(['paired', 'typst-docs', 'symbols', 'code', 'features', 'levels'])
         compared++;
         continue;
       }
+      // Characters the math font lacks are the browser's to draw, and Typst drew
+      // them as tofu (glyph 0) for want of a font too, so there is no reference.
+      if (got.fonts.some((font) => font.startsWith('browser')) && want.glyphs.some((glyph) => glyph[1] === 0)) continue;
       compared++;
       const diff = frameDiff(got, want);
       if (diff) failures.push(`${formula.id}: ${formula.src}\n  ${diff}`);

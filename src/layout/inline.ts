@@ -11,7 +11,7 @@
 
 import type { Color } from '../eval/color.js';
 import type { BoxElem, Content, Corners, Sides, Stroke, TextEdge } from '../eval/content.js';
-import { ElementBudget, type SourceDiagnostic, type Span, nested, unsupported } from '../eval/diag.js';
+import { ElementBudget, type SourceDiagnostic, type Span, nested, unsupported, warning } from '../eval/diag.js';
 import { type Abs, type Length, REL_ONE, type RelLength, ZERO_LENGTH, emAt, lengthAt } from '../eval/layout.js';
 import { type StyleChain, chain, get, property } from '../eval/styles.js';
 import { equationShowSetStyles } from '../elements/mod.js';
@@ -34,8 +34,8 @@ import {
   textShift,
 } from '../ir/resolve.js';
 import { resolveStroke } from './cancel.js';
-import { FONT_METRICS, type FontFace, advance, boundingBox, hasGlyph, shapeMath } from './font.js';
-import { missingGlyph, modifyFrame, toEm } from './fragment.js';
+import { FONT_METRICS, type FontFace, advance, boundingBox, browserFace, hasGlyph, shapeMath } from './font.js';
+import { browserDrawn, missingGlyph, modifyFrame, toEm } from './fragment.js';
 import { type BoxBorder, type FixedStroke, Frame, type Glyph, type Point, type Shape, point } from './frame.js';
 import { layoutInline } from './math.js';
 
@@ -80,7 +80,7 @@ function layoutParagraphInner(content: Content, styles: StyleChain, warnings: So
   const collector: Collector = { budget: new ElementBudget(), items: [], warnings, quoter: new SmartQuoter(), region: available, full: '' };
   for (const [elem, elemStyles] of realizeParagraph(content, styles, collector.budget)) collect(elem, elemStyles, collector);
   const items = trimSpaces(collector.items);
-  const line = buildLine(items, get(styles, 'align', 'alignment', 'start'), width, region);
+  const line = buildLine(items, get(styles, 'align', 'alignment', 'start'), width, region, warnings);
   // Typst breaks a line that doesn't fit its region where it can: at a
   // space, or between the pieces of an inline equation. Typlet lays out one
   // line.
@@ -244,12 +244,14 @@ const LETTERS_AT_EDGES = /^\p{L}(?:.*\p{L})?\p{M}*$/su;
  * character and the combining marks after it, becomes its glyphs at their
  * advances. Then tracking and spacing apply.
  */
-export function shapeText(text: string, styles: StyleChain, span: Span): { face: FontFace; glyphs: Glyph[] } {
+export function shapeText(text: string, styles: StyleChain, span: Span, warn?: (message: string) => void): { face: FontFace; glyphs: Glyph[] } {
   const face = fontFace(styles, span);
   if (isRtlLanguage(get(styles, 'text', 'lang', 'en')) && !LETTERS_AT_EDGES.test(text)) {
     unsupported(span, 'right-to-left text in HTML output yet');
   }
   const glyphs: Glyph[] = [];
+  // The clusters the browser draws, which the math font lacks.
+  let browser = '';
   for (let i = 0; i < text.length; ) {
     let end = i + (text.codePointAt(i)! > 0xffff ? 2 : 1);
     while (end < text.length) {
@@ -258,11 +260,20 @@ export function shapeText(text: string, styles: StyleChain, span: Span): { face:
       end += next > 0xffff ? 2 : 1;
     }
     const cluster = text.slice(i, end);
-    const ids = shapeMath(cluster, 0, false, face);
-    if (ids === null || ids.some((id) => !hasGlyph(id, face))) unsupported(span, missingGlyph(cluster, face));
-    for (const id of ids) glyphs.push({ id, xAdvance: toEm(advance(id, face)), xOffset: 0, yAdvance: 0, yOffset: 0, range: [i, end] });
+    let font = face;
+    let ids = shapeMath(cluster, 0, false, face);
+    if (ids === null || ids.some((id) => !hasGlyph(id, face))) {
+      font = browserFace(face);
+      ids = shapeMath(cluster, 0, false, font);
+      if (ids === null) unsupported(span, missingGlyph(cluster, face));
+      browser += cluster;
+    }
+    for (const id of ids) {
+      glyphs.push({ id, ...(font === face ? {} : { font }), xAdvance: toEm(advance(id, font)), xOffset: 0, yAdvance: 0, yOffset: 0, range: [i, end] });
+    }
     i = end;
   }
+  if (browser !== '') warn?.(browserDrawn(browser));
   trackAndSpace(text, glyphs, styles);
   return { face, glyphs };
 }
@@ -351,7 +362,7 @@ export function textEdge(edge: TextEdge, top: boolean, size: Abs, glyphs: readon
       // The glyphs' bounds.
       let extent = 0;
       for (const glyph of glyphs) {
-        const box = boundingBox(glyph.id, face);
+        const box = boundingBox(glyph.id, glyph.font ?? face);
         if (box) extent = Math.max(extent, emAt(toEm(top ? box.yMax : -box.yMin), size));
       }
       return extent;
@@ -360,8 +371,8 @@ export function textEdge(edge: TextEdge, top: boolean, size: Abs, glyphs: readon
 }
 
 /** A run of text as a frame from its top edge to its bottom edge, with decorations. */
-function textFrame(item: Extract<LineItem, { kind: 'text' }>): Frame {
-  const { face, glyphs } = shapeText(item.text, item.styles, item.span);
+function textFrame(item: Extract<LineItem, { kind: 'text' }>, warnings: SourceDiagnostic[]): Frame {
+  const { face, glyphs } = shapeText(item.text, item.styles, item.span, (message) => warnings.push(warning(item.span, message)));
   const size = fontSize(item.styles);
   const top = textEdge(get<TextEdge>(item.styles, 'text', 'top-edge', 'cap-height'), true, size, glyphs, face);
   const bottom = textEdge(get<TextEdge>(item.styles, 'text', 'bottom-edge', 'baseline'), false, size, glyphs, face);
@@ -433,9 +444,10 @@ function buildLine(
   align: 'start' | 'center' | 'end',
   width: Abs | null,
   region: Abs | null,
+  warnings: SourceDiagnostic[],
 ): { frame: Frame; naturalWidth: Abs } {
   const frames: [Frame | null, Abs][] = items.map((item) =>
-    item.kind === 'space' ? [null, item.width] : [item.kind === 'frame' ? item.frame : textFrame(item), 0],
+    item.kind === 'space' ? [null, item.width] : [item.kind === 'frame' ? item.frame : textFrame(item, warnings), 0],
   );
   let remaining = 0;
   const last = items.at(-1);

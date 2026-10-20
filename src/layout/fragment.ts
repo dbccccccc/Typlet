@@ -24,7 +24,9 @@ import {
   UNITS_PER_EM,
   advance,
   boundingBox,
+  browserFace,
   glyphConstruction,
+  isBrowserFace,
   isExtendedShape,
   italicCorrection,
   kernInfo,
@@ -89,11 +91,20 @@ function featFallback(features: MathFeatures, retry: (features: MathFeatures) =>
   }
 }
 
-/** Shapes a grapheme cluster in the math font, or refuses text the font lacks. */
-function shape(text: string, features: MathFeatures, span: Span, face: FontFace): Glyph[] {
-  const ids = shapeMath(text, features.ssty, features.dtls, face);
-  if (ids === null || ids.some((id) => !hasGlyph(id, face))) unsupported(span, missingGlyph(text, face));
-  return ids.map((id) => ({ id, xAdvance: toEm(advance(id, face)), xOffset: 0, yAdvance: 0, yOffset: 0, range: [0, text.length] }));
+/**
+ * Shapes a grapheme cluster in the math font, or in the browser's fonts for
+ * the characters of Chinese, Japanese and Korean the math font lacks, or
+ * refuses text neither can draw.
+ */
+function shape(text: string, features: MathFeatures, span: Span, face: FontFace): { font: FontFace; glyphs: Glyph[] } {
+  let font = face;
+  let ids = shapeMath(text, features.ssty, features.dtls, face);
+  if (ids === null || ids.some((id) => !hasGlyph(id, face))) {
+    font = browserFace(face);
+    ids = shapeMath(text, 0, false, font);
+    if (ids === null) unsupported(span, missingGlyph(text, face));
+  }
+  return { font, glyphs: ids.map((id) => ({ id, xAdvance: toEm(advance(id, font)), xOffset: 0, yAdvance: 0, yOffset: 0, range: [0, text.length] })) };
 }
 
 /** Why Typlet can't draw text: the font lacks it, or Typlet lacks its Bold metrics. */
@@ -101,6 +112,11 @@ export function missingGlyph(text: string, face: FontFace): string {
   return face === 'book'
     ? `${JSON.stringify(text)} in HTML output, as New Computer Modern Math has no glyph for it`
     : `bold ${JSON.stringify(text)} in HTML output yet`;
+}
+
+/** The warning for text the browser draws in place of the math font. */
+export function browserDrawn(text: string): string {
+  return `Typlet drew ${JSON.stringify(text)} with the browser's fonts, an em per character, as New Computer Modern Math has none for it`;
 }
 
 /** Applies hidden content and links to a fragment's frame, like `FrameModify`. */
@@ -344,6 +360,7 @@ export class GlyphFragment {
     const features = mathFeatures(styles);
     const shaped = (f: MathFeatures) => GlyphFragment.base(styles, f, text, cls, props.size, span);
     let glyph = shaped(features);
+    if (isBrowserFace(glyph.item.font)) warn(browserDrawn(text));
     let action = decide(glyph, stretch);
     // If the glyph isn't sufficient, retry shaping without `ssty` and `flac`
     // until one satisfies the stretch request; else keep the original.
@@ -374,8 +391,8 @@ export class GlyphFragment {
     mathSize: MathSize,
     span: Span,
   ): GlyphFragment {
-    const face = fontFace(styles, span);
-    const item: TextItem = { font: face, size: fontSize(styles), fill: textFill(styles), text, glyphs: shape(text, features, span, face) };
+    const shaped = shape(text, features, span, fontFace(styles, span));
+    const item: TextItem = { font: shaped.font, size: fontSize(styles), fill: textFill(styles), text, glyphs: shaped.glyphs };
     return new GlyphFragment(item, mathSize, cls, span, frameModifiers(styles), textShift(styles));
   }
 

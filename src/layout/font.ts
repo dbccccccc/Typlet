@@ -34,8 +34,45 @@ import { BOLD_FONT, DATA as BOLD } from '../generated/metrics-bold.js';
 import { DATA as CORE, FONT } from '../generated/metrics.js';
 import { isMark } from '../syntax/unicode.js';
 
-/** The fonts Typlet draws with: New Computer Modern Math Book, and its Bold for heavier text. */
-export type FontFace = 'book' | 'bold';
+/**
+ * A face glyphs are drawn in: New Computer Modern Math's Book or Bold, or the
+ * browser's own fonts, regular or bold, for the characters of Chinese,
+ * Japanese and Korean that the math font lacks (docs/DESIGN.md §4). In the
+ * browser faces, a glyph's id is its character's code point.
+ */
+export type FontFace = 'book' | 'bold' | 'browser' | 'browser-bold';
+
+export const isBrowserFace = (face: FontFace): boolean => face === 'browser' || face === 'browser-bold';
+
+/** The browser face that stands in for a face of the math font. */
+export const browserFace = (face: FontFace): FontFace => (face === 'bold' || face === 'browser-bold' ? 'browser-bold' : 'browser');
+
+/**
+ * The advance, in ems, of a character the browser draws when the math font
+ * lacks it: the ideographs, kana, Hangul, symbols and fullwidth forms of
+ * Chinese, Japanese and Korean, which their fonts set an em wide, and their
+ * halfwidth forms, half an em. `null` for other characters. Typst would set
+ * them in a font of the system's, which Typlet can't know; this is as close
+ * as it gets.
+ */
+export function browserAdvance(cp: number): number | null {
+  if (
+    (cp >= 0x2e80 && cp <= 0x2fdf) ||
+    (cp >= 0x3000 && cp <= 0x33ff) ||
+    (cp >= 0x3400 && cp <= 0x4dbf) ||
+    (cp >= 0x4e00 && cp <= 0x9fff) ||
+    (cp >= 0xac00 && cp <= 0xd7af) ||
+    (cp >= 0xf900 && cp <= 0xfaff) ||
+    (cp >= 0xfe30 && cp <= 0xfe4f) ||
+    (cp >= 0xff01 && cp <= 0xff60) ||
+    (cp >= 0xffe0 && cp <= 0xffe6) ||
+    (cp >= 0x20000 && cp <= 0x3134f)
+  ) {
+    return 1;
+  }
+  if ((cp >= 0xff61 && cp <= 0xffdc) || (cp >= 0xffe8 && cp <= 0xffee)) return 0.5;
+  return null;
+}
 
 /** The metrics data of a set of glyphs. */
 export type MetricsData = typeof CORE;
@@ -483,6 +520,7 @@ let boldTables: Tables | null = null;
 let extended: MetricsData | null = null;
 
 function get(face: FontFace = 'book'): Tables {
+  if (isBrowserFace(face)) throw new Error('the browser faces have no tables');
   if (face === 'bold') return (boldTables ??= new Tables(BOLD_FONT.glyphCount, BOLD));
   if (!tables) {
     tables = new Tables(FONT.glyphCount, CORE);
@@ -503,11 +541,13 @@ export function registerExtendedMetrics(data: MetricsData): void {
 
 /** Whether Typlet has the glyph's metrics. */
 export function hasGlyph(id: number, face: FontFace = 'book'): boolean {
+  if (isBrowserFace(face)) return browserAdvance(id) !== null;
   return (get(face).flagsOf(id) & PRESENT) !== 0;
 }
 
 /** The glyph's horizontal advance, from `hmtx`. */
 export function advance(id: number, face: FontFace = 'book'): number {
+  if (isBrowserFace(face)) return (browserAdvance(id) ?? 1) * UNITS_PER_EM;
   const t = get(face);
   t.flagsOf(id);
   return t.advances[id]!;
@@ -515,6 +555,9 @@ export function advance(id: number, face: FontFace = 'book'): number {
 
 /** The glyph's bounding box, or `null` for glyphs without an outline. */
 export function boundingBox(id: number, face: FontFace = 'book'): Rect | null {
+  // A browser-drawn character fills its advance, within the em box that
+  // the fonts of Chinese, Japanese and Korean design their glyphs in.
+  if (isBrowserFace(face)) return { xMin: 0, yMin: -0.12 * UNITS_PER_EM, xMax: advance(id, face), yMax: 0.88 * UNITS_PER_EM };
   const t = get(face);
   if ((t.flagsOf(id) & HAS_BBOX) === 0) return null;
   return { xMin: t.xMin[id]!, yMin: t.yMin[id]!, xMax: t.xMax[id]!, yMax: t.yMax[id]! };
@@ -522,36 +565,43 @@ export function boundingBox(id: number, face: FontFace = 'book'): Rect | null {
 
 /** The glyph's italic correction from the MATH table, if it has one. */
 export function italicCorrection(id: number, face: FontFace = 'book'): number | undefined {
+  if (isBrowserFace(face)) return undefined;
   const t = get(face);
   return (t.flagsOf(id) & HAS_ITALIC) !== 0 ? t.italics[id] : undefined;
 }
 
 /** The glyph's top accent attachment from the MATH table, if it has one. */
 export function topAccentAttachment(id: number, face: FontFace = 'book'): number | undefined {
+  if (isBrowserFace(face)) return undefined;
   const t = get(face);
   return (t.flagsOf(id) & HAS_ACCENT) !== 0 ? t.accents[id] : undefined;
 }
 
 /** Whether the MATH table marks the glyph as an extended shape. */
 export function isExtendedShape(id: number, face: FontFace = 'book'): boolean {
-  return (get(face).flagsOf(id) & EXTENDED_SHAPE) !== 0;
+  return !isBrowserFace(face) && (get(face).flagsOf(id) & EXTENDED_SHAPE) !== 0;
 }
 
 /** The glyph's MATH kern tables, if it has any. */
 export function kernInfo(id: number, face: FontFace = 'book'): KernInfo | undefined {
-  return get(face).kerns.get(id);
+  return isBrowserFace(face) ? undefined : get(face).kerns.get(id);
 }
 
 /** The glyph's size variants and assembly along an axis, if it has them. */
 export function glyphConstruction(id: number, axis: Axis, face: FontFace = 'book'): GlyphConstruction | undefined {
+  if (isBrowserFace(face)) return undefined;
   const t = get(face);
   return (axis === 'vertical' ? t.vertical : t.horizontal).get(id);
 }
 
 /** The glyph a character, or a character with a variation selector, maps to. */
 export function glyphIndex(text: string, face: FontFace = 'book'): number | undefined {
-  const t = get(face);
   const length = [...text].length;
+  if (isBrowserFace(face)) {
+    const cp = text.codePointAt(0)!;
+    return length === 1 && browserAdvance(cp) !== null ? cp : undefined;
+  }
+  const t = get(face);
   if (length === 1) return t.glyphOf(text.codePointAt(0)!);
   return length === 2 ? t.sequences.get(text) : undefined;
 }
@@ -567,9 +617,11 @@ const isVariationSelector = (cp: number): boolean => cp >= 0xfe00 && cp <= 0xfe0
  * character.
  */
 export function shapeMath(text: string, ssty: 0 | 1 | 2, dtls: boolean, face: FontFace = 'book'): number[] | null {
+  const cps = [...text].map((c) => c.codePointAt(0)!);
+  // The browser draws each character as it is, so each is its own glyph.
+  if (isBrowserFace(face)) return cps.every((cp) => browserAdvance(cp) !== null) ? cps : null;
   const t = get(face);
   const out: number[] = [];
-  const cps = [...text].map((c) => c.codePointAt(0)!);
   for (let i = 0; i < cps.length; i++) {
     let cp = cps[i]!;
     // A base and the combining marks after it become their composition when
@@ -602,5 +654,5 @@ export function shapeMath(text: string, ssty: 0 | 1 | 2, dtls: boolean, face: Fo
 
 /** The code point Typlet draws the glyph with: its own, or a private-use one. */
 export function drawingCodePoint(id: number, face: FontFace = 'book'): number | undefined {
-  return get(face).codePoint(id);
+  return isBrowserFace(face) ? id : get(face).codePoint(id);
 }

@@ -154,6 +154,7 @@ The fonts are under the GUST Font License; see [fonts/MANIFEST-typlet-newcm-math
 
 Typlet 0.1 draws most formulas as Typst does, and says so when it can't:
 - **Some formulas are drawn as MathML, with a warning,** by the browser and not by Typst's layout. These are formulas with a symbol that New Computer Modern Math lacks, with text in a script it lacks, such as Cyrillic, Hebrew or Arabic, or in Devanagari, which needs shaping, with raw text, or with text settings such as another font or a stroke.
+- **Chinese, Japanese and Korean text is drawn with the browser's fonts,** an em per character, with a warning. Typst sets it in a font of the system's, which Typlet can't know; the page can choose the font with the `.typlet .g.c` selector.
 - **Code that needs Typst's document engine is refused,** with a `TypletError` of kind `unsupported`: loops, `show` rules other than show-set rules for equations, `context`, counters and file access. The `fallback` option can render such formulas another way.
 - **One math font.** Formulas are set in New Computer Modern Math, Typst's default.
 - **Speed.** Typlet renders a formula about as fast as KaTeX once its code is warm, and a page's first formulas more slowly. The documentation site's comparison page measures both in your browser.

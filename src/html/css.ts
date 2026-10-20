@@ -56,6 +56,10 @@ export const HTML_CSS = `.typlet {
 .typlet .g.b {
   font-weight: bold;
 }
+/* Characters the math font lacks, which the browser draws with a serif of its own. */
+.typlet .g.c {
+  font-family: serif;
+}
 .typlet .r {
   position: absolute;
   background: currentColor;

@@ -16,7 +16,7 @@
 import { type Color, toHex } from '../eval/color.js';
 import { type Abs, absToPt } from '../eval/layout.js';
 import { DEFAULT_FONT_SIZE } from '../ir/resolve.js';
-import { UNITS_PER_EM, advance, drawingCodePoint } from '../layout/font.js';
+import { type FontFace, UNITS_PER_EM, advance, drawingCodePoint, isBrowserFace } from '../layout/font.js';
 import { type BoxBorder, type FixedStroke, type Frame, type Placed, IDENTITY, type Shape, type Size, type Transform, walkFrame } from '../layout/frame.js';
 import type { NumberedBlock } from '../layout/math.js';
 import type { InlineItem } from '../layout/run.js';
@@ -48,7 +48,7 @@ interface Run {
   y: number;
   /** The font size, relative to the formula's. */
   scale: number;
-  bold: boolean;
+  font: FontFace;
   fill: string | null;
   text: string;
   /** Where the next glyph goes if it continues the run. */
@@ -164,7 +164,9 @@ export function frameContent(frame: Frame, ctx: DrawContext): string {
     const style = [`left:${em(r.x / r.scale)}`, `top:${em(r.y / r.scale - 1)}`];
     if (r.scale !== 1) style.unshift(`font-size:${em(r.scale)}`);
     if (r.fill) style.push(`color:${r.fill}`);
-    out += `<span class="${r.bold ? 'g b' : 'g'}" style="${style.join(';')}">${escapeText(r.text)}</span>`;
+    // `b` sets the weight; `c` hands the characters to the browser's fonts.
+    const classes = `g${r.font === 'bold' || r.font === 'browser-bold' ? ' b' : ''}${isBrowserFace(r.font) ? ' c' : ''}`;
+    out += `<span class="${classes}" style="${style.join(';')}">${escapeText(r.text)}</span>`;
     run = null;
   };
   walkFrame(frame, IDENTITY, (placed: Placed) => {
@@ -190,15 +192,16 @@ export function frameContent(frame: Frame, ctx: DrawContext): string {
     const y = toEm(placed.at.y);
     const scale = absToPt(placed.size) / BASE;
     const fill = css(placed.fill);
-    const bold = placed.font === 'bold';
     const width = (advance(placed.id, placed.font) / UNITS_PER_EM) * scale;
-    if (run && run.y === y && run.scale === scale && run.bold === bold && run.fill === fill && Math.abs(run.end - x) < 1e-7) {
+    // Runs stay in one face: the browser's own advances for the characters it
+    // draws must not move the glyphs placed after them.
+    if (run && run.y === y && run.scale === scale && run.font === placed.font && run.fill === fill && Math.abs(run.end - x) < 1e-7) {
       run.text += char;
       run.end = x + width;
       return;
     }
     flush();
-    run = { x, y, scale, bold, fill, text: char, end: x + width };
+    run = { x, y, scale, font: placed.font, fill, text: char, end: x + width };
   });
   flush();
   return out + links;

@@ -71,6 +71,8 @@ export function applyTransform(t: Transform, p: Point): Point {
 /** A glyph in a text item. Advances and offsets are in ems, y up. */
 export interface Glyph {
   readonly id: number;
+  /** The glyph's face when it isn't the item's: a character the browser draws. */
+  readonly font?: FontFace;
   xAdvance: Em;
   readonly xOffset: Em;
   readonly yAdvance: Em;
@@ -286,7 +288,7 @@ export function walkFrame(frame: Frame, ts: Transform, visit: (placed: Placed) =
         for (const glyph of text.glyphs) {
           visit({
             kind: 'glyph',
-            font: text.font,
+            font: glyph.font ?? text.font,
             id: glyph.id,
             at: applyTransform(at, point(x + emAt(glyph.xOffset, text.size), -(y + emAt(glyph.yOffset, text.size)))),
             size: text.size,

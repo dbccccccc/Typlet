@@ -128,6 +128,8 @@ HTML can only address characters, but OpenType MATH size variants and assembly p
 
 The metrics are generated from the oracle's dump of the font as Typst reads it, through ttf-parser and rustybuzz, and the tests check them against it. Text runs such as `"if"` or `argmax` use the extracted advances and kerning pairs, and the browser shapes them. Bold text needs New Computer Modern Math Bold, so the pipeline adds a small Latin subset of it, declared with `font-weight: bold`, which browsers load only when a page shows bold text.
 
+Text in Chinese, Japanese or Korean is the one case Typlet draws without metrics of its own. Typst sets it in whichever font the system has, which Typlet can't know, so it hands those characters to the browser's fonts (`.typlet .g.c`, a serif by default) at the advance their fonts share, an em, or half an em for halfwidth forms, and warns. Each such run gets a span of its own, so the browser's advances never move the glyphs placed after it. Text in other scripts the math font lacks, such as Cyrillic, which Typst sets in Libertinus Serif, still falls back to MathML.
+
 The font is under the GUST Font License, which allows modification and redistribution and asks that derived fonts be renamed. The fonts therefore ship as "Typlet NewCM Math", with the license and a manifest.
 
 `npm run test:browsers` checks the result in Chromium, Firefox and WebKit: a glyph, a script-size alternate, a size variant, the parts of an assembly, a wide accent and a display operator, each placed from the metrics, must draw within a pixel of their predicted ink.
