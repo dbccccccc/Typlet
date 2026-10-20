@@ -81,6 +81,8 @@ try {
   // class as a type only. The plugin's dependency on typlet is installed.
   const [plugin] = JSON.parse(npm(['pack', '--json', '--pack-destination', project], join(root, 'packages/markdown-it-typlet')));
   npm(['install', '--offline', '--no-audit', '--no-fund', '--ignore-scripts', '--legacy-peer-deps', `./${plugin.filename}`], project);
+  copyFileSync(join(consumer, 'require-plugin.cjs'), join(project, 'require-plugin.cjs'));
+  execFileSync(process.execPath, ['require-plugin.cjs'], { cwd: project, stdio: 'inherit' });
   copyFileSync(join(consumer, 'markdown-it.mts'), join(project, 'markdown-it.mts'));
   const markdownIt = JSON.parse(readFileSync(join(root, 'node_modules/markdown-it/package.json'), 'utf8'));
   const peers = [
