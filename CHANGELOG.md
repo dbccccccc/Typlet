@@ -10,6 +10,7 @@ What each release of Typlet changes. The versions follow [semantic versioning](h
 - Formulas whose structure would overflow the native stack, or take exponential work, stop with a `limit` error: a chain of thousands of operators, definitions that nest content thousands deep, a style that feeds an element its own body such as `#set box(box())`, values that share parts such as `(x, x)` built thirty times over, and `primes` with a huge count. Three internal limits do this, with no option: 1,024 nested expressions, 256 levels of nesting after evaluation, and 100,000 steps comparing or showing values.
 - A callback during layout, such as a `cancel` line's `angle` function, runs within the formula's budgets, and its warnings are reported. It had budgets of its own, so `maxCalls` didn't apply to it.
 - A warning is reported once per location and message, as Typst reports it: a function called several times warns once.
+- The package and the documentation site carry the W3C Software and Document License of the MathML Core operator data that reaches Typlet through typst-assets, and the notices name the Bold face's version.
 
 ## 0.1.1
 
