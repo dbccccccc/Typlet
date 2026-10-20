@@ -84,7 +84,7 @@ renderToString('x + foo');
 //   hints: ['if you meant to display multiple letters as is, try adding spaces between each letter: `f o o`', …]
 ```
 
-`parse()`, from the main `typlet` entry point, returns Typst's syntax tree for a formula, with the same node kinds, error recovery and messages as typst-syntax.
+`parse()`, from the main `typlet` entry point, returns Typst's syntax tree for a formula, with the same node kinds, error recovery and messages as typst-syntax. The names of `SyntaxKind` are the stable part: they follow typst-syntax, and a release that moves to a new Typst version lists the kinds it renamed or split. The numbers behind the names shift whenever a kind is added, so compare kinds by name, as in `kind === SyntaxKind.Equation` or `SyntaxKind[kind]`, and never store the numbers.
 
 ### Embedded code
 
@@ -160,11 +160,11 @@ Typlet 0.1 draws most formulas as Typst does, and says so when it can't:
 - **One math font.** Formulas are set in New Computer Modern Math, Typst's default.
 - **Speed.** Typlet renders a formula about as fast as KaTeX once its code is warm, and a page's first formulas more slowly. The documentation site's comparison page measures both in your browser.
 
-[docs/supported.md](docs/supported.md) lists every function and symbol Typlet supports.
+[docs/supported.md](docs/supported.md) lists every function and symbol Typlet supports, and [docs/fallbacks.md](docs/fallbacks.md) what falls back to MathML or is refused, and why, over the test corpus.
 
 ## Documentation
 
-- [The documentation site](https://dbccccccc.github.io/Typlet/) has a guide, embedded code, the integrations, the supported features, a gallery, a playground and a comparison with KaTeX. Its pages are in [docs/site/](docs/site), and `npm run build && npm run docs:build && npm run docs:serve` serves it on http://localhost:5175/.
+- [The documentation site](https://dbccccccc.github.io/Typlet/) has a guide, embedded code, the integrations, the supported features, what falls back, a gallery, a playground and a comparison with KaTeX. Its pages are in [docs/site/](docs/site), and `npm run build && npm run docs:build && npm run docs:serve` serves it on http://localhost:5175/.
 - [docs/DESIGN.md](docs/DESIGN.md) explains the design: the outputs, the pipeline, the fonts, the tests against Typst and embedded code.
 - [docs/UPSTREAM.md](docs/UPSTREAM.md) maps Typlet's files to the Typst files they are ported from.
 - [SECURITY.md](SECURITY.md) covers rendering untrusted formulas and reporting vulnerabilities.

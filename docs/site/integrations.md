@@ -96,6 +96,73 @@ md.render('Let $x^2$ be.\n\n$$\nsum_(i=1)^n i\n$$\n');
 
 By default it reads Markdown's math syntax, where `$x$` is inline and `$$` surrounds display formulas, and like Pandoc it leaves "\$5 and \$10" as text. With `delimiters: 'typst'`, it reads Typst's syntax instead. This site is built with it.
 
+## Static site generators
+
+The plugins fit the generators built on rehype or markdown-it, which render at build time, in Node. Each page needs Typlet's stylesheet, `typlet/fonts/typlet.css`, which loads the fonts.
+
+### VitePress
+
+VitePress renders Markdown with markdown-it. Add the plugin in `.vitepress/config.ts`, and leave VitePress's own `markdown.math` option off:
+
+```ts
+import { defineConfig } from 'vitepress';
+import markdownItTyplet from 'markdown-it-typlet';
+
+export default defineConfig({
+  markdown: {
+    config(md) {
+      md.use(markdownItTyplet, { preamble: '#let RR = $bb(R)$' });
+    },
+  },
+});
+```
+
+The theme loads the stylesheet, in `.vitepress/theme/index.ts`:
+
+```ts
+import DefaultTheme from 'vitepress/theme';
+import 'typlet/fonts/typlet.css';
+
+export default DefaultTheme;
+```
+
+### Docusaurus
+
+Docusaurus renders MDX with remark and rehype. In `docusaurus.config.js`, an ES module as the plugins are, give the docs and the blog remark-math and rehype-typlet, and add the stylesheet:
+
+```js
+import remarkMath from 'remark-math';
+import rehypeTyplet from 'rehype-typlet';
+
+export default {
+  presets: [
+    ['classic', {
+      docs: { remarkPlugins: [remarkMath], rehypePlugins: [[rehypeTyplet, { preamble: '#let RR = $bb(R)$' }]] },
+      blog: { remarkPlugins: [remarkMath], rehypePlugins: [rehypeTyplet] },
+    }],
+  ],
+  stylesheets: [{ href: 'https://cdn.jsdelivr.net/npm/typlet@0.1.1/fonts/typlet.css', type: 'text/css' }],
+};
+```
+
+### Hexo
+
+Hexo renders Markdown with [hexo-renderer-markdown-it](https://github.com/hexojs/hexo-renderer-markdown-it), which loads the plugins `_config.yml` names with `require()`. `markdown-it-typlet` is an ES module, which `require()` loads on Node 22.12 or later:
+
+```yaml
+markdown:
+  plugins:
+    - name: markdown-it-typlet
+      options:
+        preamble: '#let RR = $bb(R)$'
+```
+
+A script in `scripts/`, which Hexo runs at startup, puts the stylesheet in every page's head:
+
+```js
+hexo.extend.injector.register('head_end', '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typlet@0.1.1/fonts/typlet.css">');
+```
+
 ## Typst's HTML export
 
 Typst's experimental HTML export, `typst compile --features html --format html`, writes equations as MathML, for the browser to lay out. To have Typlet lay them out as Typst does on pages, write formulas through the helper in [contrib/typlet.typ](https://github.com/dbccccccc/Typlet/blob/main/contrib/typlet.typ), copied next to the document:

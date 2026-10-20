@@ -8,7 +8,7 @@
 
 The `typlet/mathml` entry point renders MathML alone. It leaves out the layout engine and the font metrics, so it is about half the size, and it suits EPUB, tools that consume MathML, and pages where size matters most.
 
-`parse(source)` returns Typst's syntax tree for a formula, with the same node kinds, error recovery and messages as Typst's parser, for editors and linters.
+`parse(source)` returns Typst's syntax tree for a formula, with the same node kinds, error recovery and messages as Typst's parser, for editors and linters. Compare kinds by name, as in `kind === SyntaxKind.Equation` or through `SyntaxKind[kind]` and `kindName(kind)`: the names follow typst-syntax, and a release that moves to a new Typst version lists the kinds it renamed or split, while the numbers behind the names shift whenever a kind is added.
 
 ## Options
 

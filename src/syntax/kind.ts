@@ -5,7 +5,9 @@
 /**
  * A syntactical building block of a Typst file. Created by the lexer or the
  * parser. The variants, their order and their names match typst-syntax, so
- * `SyntaxKind[kind]` gives the same name as Rust's `Debug` output.
+ * `SyntaxKind[kind]` gives the same name as Rust's `Debug` output. The names
+ * are the stable part of the API: the numbers shift whenever typst-syntax
+ * adds a kind, so compare kinds by name and never store the numbers.
  */
 export enum SyntaxKind {
   /** The end of token stream. */

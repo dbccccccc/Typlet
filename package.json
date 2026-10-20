@@ -120,7 +120,8 @@
     "test:visual": "node test/browsers/visual.mjs",
     "demo": "node tools/demo/serve.mjs",
     "docs:features": "node tools/site/features.mjs",
-    "docs:check": "node tools/site/features.mjs --check",
+    "docs:fallbacks": "node tools/site/fallbacks.mjs",
+    "docs:check": "node tools/site/features.mjs --check && node tools/site/fallbacks.mjs --check",
     "docs:build": "node tools/site/build.mjs",
     "docs:serve": "node tools/site/serve.mjs",
     "prepublishOnly": "npm run check"
