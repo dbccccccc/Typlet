@@ -142,7 +142,7 @@ export default {
       blog: { remarkPlugins: [remarkMath], rehypePlugins: [rehypeTyplet] },
     }],
   ],
-  stylesheets: [{ href: 'https://cdn.jsdelivr.net/npm/typlet@0.1.1/fonts/typlet.css', type: 'text/css' }],
+  stylesheets: [{ href: 'https://cdn.jsdelivr.net/npm/typlet@0.2.0/fonts/typlet.css', type: 'text/css' }],
 };
 ```
 
@@ -161,7 +161,7 @@ markdown:
 A script in `scripts/`, which Hexo runs at startup, puts the stylesheet in every page's head:
 
 ```js
-hexo.extend.injector.register('head_end', '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typlet@0.1.1/fonts/typlet.css">');
+hexo.extend.injector.register('head_end', '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typlet@0.2.0/fonts/typlet.css">');
 ```
 
 ## Typst's HTML export

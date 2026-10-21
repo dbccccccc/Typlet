@@ -8,7 +8,7 @@ A lightweight, KaTeX-style renderer for [Typst](https://typst.app) math: one sma
 
 Typlet draws Typst math as HTML laid out by a port of Typst's own math layout, with MathML for screen readers, and its tests compare every formula it lays out with the Typst compiler's own layout. It evaluates the embedded code formulas use, from `#h(1em)` and `mat(delim: "[", ...)` to styled content, boxes, `#let` definitions, functions and set rules (see [Embedded code](#embedded-code)). It comes with auto-render, copy-as-Typst, a custom element, a command-line tool, plugins for rehype and markdown-it, and a helper for Typst's HTML export (see [Integrations](#integrations)).
 
-> **Status: 0.1, the first public release.** It reproduces Typst 0.15.1. The API may still change before 1.0: [CHANGELOG.md](CHANGELOG.md) lists what each release changes, [Limitations](#limitations) what Typlet doesn't draw yet, and [docs/DESIGN.md](docs/DESIGN.md) how it works.
+> **Status: 0.2.** It reproduces Typst 0.15.1. The API may still change before 1.0: [CHANGELOG.md](CHANGELOG.md) lists what each release changes, [Limitations](#limitations) what Typlet doesn't draw yet, and [docs/DESIGN.md](docs/DESIGN.md) how it works.
 
 Typlet is an independent project and is not affiliated with Typst GmbH.
 
@@ -21,8 +21,8 @@ npm install typlet
 Or load it in a page, with its stylesheet:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typlet@0.1.1/fonts/typlet.css">
-<script src="https://cdn.jsdelivr.net/npm/typlet@0.1.1/dist/typlet.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typlet@0.2.0/fonts/typlet.css">
+<script src="https://cdn.jsdelivr.net/npm/typlet@0.2.0/dist/typlet.min.js"></script>
 <script>
   typlet.render('sum_(i=1)^n i = (n(n+1))/2', document.getElementById('formula'), { displayMode: true });
 </script>

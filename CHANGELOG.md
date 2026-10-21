@@ -2,7 +2,9 @@
 
 What each release of Typlet changes. The versions follow [semantic versioning](https://semver.org/): while they start with 0, a minor release may change the API, and each Typlet version reproduces one Typst version. `rehype-typlet` and `markdown-it-typlet` are released with Typlet, under the same version.
 
-## Unreleased
+## 0.2.0
+
+A minor release. It reproduces Typst 0.15.1, like 0.1.1. The API grows, with `renderToResult()` and warning kinds, and changes in one place: the `html` output falls back to MathML where it threw before.
 
 - `renderToResult()` returns the markup with what drew the formula (`drawnAs`: `html`, `mathml`, `fallback` or `error`), the warnings and the equation number. Warnings have a `kind`: `fallback`, `approximation`, `deprecation` or `other`.
 - The `html` output falls back to MathML, with a warning, for a formula the HTML can't draw, as the default output does. It threw an `unsupported` error before.
@@ -23,6 +25,8 @@ What each release of Typlet changes. The versions follow [semantic versioning](h
 - `require('markdown-it-typlet')` from CommonJS, as Hexo loads the plugins its configuration names, gets the plugin itself on Node 22.12 and later.
 - [contrib/typlet.typ](contrib/typlet.typ) is a helper for Typst's HTML export: `typlet-math` writes a formula as a `<typlet-math>` element in HTML export, with the source in an attribute so that the line breaks of a raw block survive, and as an equation on pages, and `typlet-assets` loads Typlet once, with a preamble for the document that applies on pages as well.
 - The documentation gains recipes for VitePress, Docusaurus and Hexo, a generated page of what falls back to MathML or is refused and why ([docs/fallbacks.md](docs/fallbacks.md), from the test corpus), and a note on what is stable in `SyntaxKind`: the names, not the numbers.
+
+Of the 1,670 formulas of the test corpus that Typst renders, Typlet now lays out 1,504, draws 158 as MathML with a warning, and refuses 8.
 
 ## 0.1.1
 
