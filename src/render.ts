@@ -116,6 +116,12 @@ export interface TypletDiagnostic {
 export type WarningKind =
   /** The HTML could not draw the formula, which is drawn as MathML instead. */
   | 'fallback'
+  /**
+   * The HTML drew part of the formula only approximately: text in Chinese,
+   * Japanese or Korean with the browser's fonts, an em per character, rather
+   * than with the metrics of a font of Typst's.
+   */
+  | 'approximation'
   /** A deprecated name, such as a renamed symbol. */
   | 'deprecation'
   /** Anything else Typst or Typlet warns about. */
@@ -182,7 +188,7 @@ function diagnostic(d: SourceDiagnostic): TypletDiagnostic {
 }
 
 function warningOf(d: SourceDiagnostic): TypletWarning {
-  const kind: WarningKind = d.kind === 'fallback' || d.kind === 'deprecation' ? d.kind : 'other';
+  const kind: WarningKind = d.kind === 'fallback' || d.kind === 'approximation' || d.kind === 'deprecation' ? d.kind : 'other';
   return { ...diagnostic(d), severity: 'warning', kind };
 }
 

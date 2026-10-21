@@ -22,9 +22,10 @@ export interface SourceDiagnostic {
    * Set for Typlet's own errors, `unsupported` when Typlet refuses a construct
    * that Typst supports and `limit` when a resource budget runs out, and for
    * the warnings the API tells apart: `deprecation` for a deprecated name,
-   * `fallback` when the HTML output draws a formula as MathML.
+   * `fallback` when the HTML output draws a formula as MathML, and
+   * `approximation` when it draws part of a formula with the browser's fonts.
    */
-  kind?: 'unsupported' | 'limit' | 'deprecation' | 'fallback';
+  kind?: 'unsupported' | 'limit' | 'deprecation' | 'fallback' | 'approximation';
 }
 
 /**
@@ -80,6 +81,11 @@ export function error(span: Span, message: string, ...hints: string[]): SourceDi
 
 export function warning(span: Span, message: string, ...hints: string[]): SourceDiagnostic {
   return { severity: 'warning', span, message, hints, trace: [] };
+}
+
+/** A warning that the HTML drew something only approximately, such as text with the browser's fonts. */
+export function approximation(span: Span, message: string): SourceDiagnostic {
+  return { ...warning(span, message), kind: 'approximation' };
 }
 
 /** Fails with an error at a location. */

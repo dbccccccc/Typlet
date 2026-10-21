@@ -25,7 +25,7 @@ import { runIntoFrame } from './run.js';
 /** Lays out text as one line, like a paragraph in math, from `layout_text`. */
 export function layoutText(text: string, ctx: MathContext, styles: StyleChain, props: MathProperties): void {
   const size = fontSize(styles);
-  const { face, glyphs } = shapeText(text, styles, props.span, (message) => ctx.warn(props.span, message));
+  const { face, glyphs } = shapeText(text, styles, props.span, (message) => ctx.warn(props.span, message, 'approximation'));
   // Text in math has its glyphs' bounds as its top and bottom edges.
   const top = textEdge('bounds', true, size, glyphs, face);
   const bottom = textEdge('bounds', false, size, glyphs, face);
@@ -85,8 +85,8 @@ export function layoutGlyph(
       .join('');
   }
 
-  const glyph = GlyphFragment.create(text, kind.stretch, glyphStyles, props, kind.class, (message) =>
-    ctx.warn(props.span, message),
+  const glyph = GlyphFragment.create(text, kind.stretch, glyphStyles, props, kind.class, (message, kind) =>
+    ctx.warn(props.span, message, kind),
   );
   // Large operators are always centered on the axis (TeXbook, p. 155).
   if (glyph.class === MathClass.Large) glyph.centerOnAxis();

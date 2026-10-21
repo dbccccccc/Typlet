@@ -51,9 +51,10 @@ export const browserFace = (face: FontFace): FontFace => (face === 'bold' || fac
  * The advance, in ems, of a character the browser draws when the math font
  * lacks it: the ideographs, kana, Hangul, symbols and fullwidth forms of
  * Chinese, Japanese and Korean, which their fonts set an em wide, and their
- * halfwidth forms, half an em. `null` for other characters. Typst would set
- * them in a font of the system's, which Typlet can't know; this is as close
- * as it gets.
+ * halfwidth forms, half an em; nothing for the combining marks among them,
+ * such as the kana voicing marks, which sit on the character before. `null`
+ * for other characters. Typst would set them in a font of the system's,
+ * which Typlet can't know; this is as close as it gets.
  */
 export function browserAdvance(cp: number): number | null {
   if (
@@ -68,7 +69,7 @@ export function browserAdvance(cp: number): number | null {
     (cp >= 0xffe0 && cp <= 0xffe6) ||
     (cp >= 0x20000 && cp <= 0x3134f)
   ) {
-    return 1;
+    return isMark(cp) ? 0 : 1;
   }
   if ((cp >= 0xff61 && cp <= 0xffdc) || (cp >= 0xffe8 && cp <= 0xffee)) return 0.5;
   return null;
@@ -539,9 +540,8 @@ export function registerExtendedMetrics(data: MetricsData): void {
   tables?.add(data);
 }
 
-/** Whether Typlet has the glyph's metrics. */
+/** Whether Typlet has the glyph's metrics, in a face of the math font. */
 export function hasGlyph(id: number, face: FontFace = 'book'): boolean {
-  if (isBrowserFace(face)) return browserAdvance(id) !== null;
   return (get(face).flagsOf(id) & PRESENT) !== 0;
 }
 
@@ -594,13 +594,13 @@ export function glyphConstruction(id: number, axis: Axis, face: FontFace = 'book
   return (axis === 'vertical' ? t.vertical : t.horizontal).get(id);
 }
 
-/** The glyph a character, or a character with a variation selector, maps to. */
+/**
+ * The glyph a character, or a character with a variation selector, maps to
+ * in a face of the math font: the character map as the tests check it
+ * against the oracle's. Rendering shapes text with `shapeMath` instead.
+ */
 export function glyphIndex(text: string, face: FontFace = 'book'): number | undefined {
   const length = [...text].length;
-  if (isBrowserFace(face)) {
-    const cp = text.codePointAt(0)!;
-    return length === 1 && browserAdvance(cp) !== null ? cp : undefined;
-  }
   const t = get(face);
   if (length === 1) return t.glyphOf(text.codePointAt(0)!);
   return length === 2 ? t.sequences.get(text) : undefined;

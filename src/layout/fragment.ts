@@ -8,7 +8,7 @@
 
 import { NAMED_COLORS } from '../eval/color.js';
 import { consumeParts, unsupported } from '../eval/diag.js';
-import type { Span } from '../eval/diag.js';
+import type { SourceDiagnostic, Span } from '../eval/diag.js';
 import { type Abs, type Em, emAt, relRelativeTo } from '../eval/layout.js';
 import type { StyleChain } from '../eval/styles.js';
 import { MathSize, equationSize } from '../elements/style.js';
@@ -354,13 +354,13 @@ export class GlyphFragment {
     styles: StyleChain,
     props: MathProperties,
     cls: MathClass,
-    warn: (message: string) => void,
+    warn: (message: string, kind?: SourceDiagnostic['kind']) => void,
   ): GlyphFragment {
     const span = props.span;
     const features = mathFeatures(styles);
     const shaped = (f: MathFeatures) => GlyphFragment.base(styles, f, text, cls, props.size, span);
     let glyph = shaped(features);
-    if (isBrowserFace(glyph.item.font)) warn(browserDrawn(text));
+    if (isBrowserFace(glyph.item.font)) warn(browserDrawn(text), 'approximation');
     let action = decide(glyph, stretch);
     // If the glyph isn't sufficient, retry shaping without `ssty` and `flac`
     // until one satisfies the stretch request; else keep the original.
