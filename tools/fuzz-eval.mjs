@@ -206,15 +206,18 @@ for (let done = 0; done < count; done += BATCH) {
     }
     if (!want.frame) continue;
     let frame;
+    const layoutWarnings = [];
     try {
-      frame = T.layoutFlat(formula);
+      frame = T.layoutFlat(formula, layoutWarnings);
     } catch (e) {
       if (e instanceof T.SourceError && e.diagnostics.some((d) => d.kind === 'unsupported')) continue;
       fail(formula, 'layout', String(e.stack ?? e));
       continue;
     }
-    // Characters the browser draws have no reference: the oracle has no font for them.
-    if (frame.fonts.some((font) => font.startsWith('browser'))) {
+    // Characters the browser draws have no reference: the oracle has no font
+    // for them. The warning says so even when the characters are hidden, which
+    // leaves no glyph in the frame but still sets its size.
+    if (layoutWarnings.some((w) => w.kind === 'approximation') || frame.fonts.some((font) => font.startsWith('browser'))) {
       stats.browser++;
       continue;
     }
