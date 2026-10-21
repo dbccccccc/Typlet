@@ -178,6 +178,44 @@ describe('the typlet command in batch mode', () => {
     expect(results(files['out.jsonl']!).map((r) => r.drawnAs)).toEqual(['html', 'html']);
   });
 
+  it('writes the output file as the results arrive, and closes it', async () => {
+    const written: string[] = [];
+    let closed = false;
+    const io: Io = {
+      stdin: () => lines({ source: 'x' }, { source: 'y' }),
+      stdout: () => {},
+      stderr: () => {},
+      readFile: () => '',
+      writeFile: () => {
+        throw new Error('not expected');
+      },
+      createWriter: (path) => {
+        expect(path).toBe('out.jsonl');
+        return {
+          write: (text) => {
+            expect(closed).toBe(false);
+            written.push(text);
+          },
+          close: () => {
+            closed = true;
+          },
+        };
+      },
+    };
+    expect(await main(['-b', '-o', 'out.jsonl'], io)).toBe(0);
+    expect(written).toHaveLength(2);
+    expect(closed).toBe(true);
+  });
+
+  it('skips a byte order mark, and rejects counts beyond safe integers', async () => {
+    const input = `﻿${lines({ source: 'x', output: 'mathml' }, { source: 'x', equationCounter: 1e300 })}`;
+    const { code, stdout } = await run(['-b'], {}, input);
+    expect(code).toBe(2);
+    const [first, second] = results(stdout);
+    expect(first).toMatchObject({ drawnAs: 'mathml' });
+    expect(second!.error).toEqual({ kind: 'input', message: 'line 2: "equationCounter" must be a whole number' });
+  });
+
   it('writes each result as its line arrives', async () => {
     let stdout = '';
     const seen: number[] = [];

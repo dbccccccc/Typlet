@@ -5,7 +5,7 @@
 // batch mode, it renders JSON Lines in one process: a formula per line in, a
 // result per line out, as the lines arrive.
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { closeSync, openSync, readFileSync, writeFileSync, writeSync } from 'node:fs';
 import { createInterface } from 'node:readline';
 import { parseArgs } from 'node:util';
 import { type Output, type RenderOptions, type Strictness, TypletError, renderToResult, renderToString, version } from './index.js';
@@ -41,7 +41,8 @@ object with the formula as "source", an "id" to return as is, and render
 options such as "displayMode", "output" or "preamble", which override the
 flags. Each result is a line of JSON with the "id", the "markup", what it was
 "drawnAs", the "warnings" and the equation "number", or an "error" with its
-"kind" and "message".
+"kind" and "message". The results go out as the lines arrive, to standard
+output or to the --output file.
 `;
 
 /** Where the command reads and writes, so tests can run it without a process. */
@@ -53,6 +54,8 @@ export interface Io {
   readonly stderr: (text: string) => void;
   readonly readFile: (path: string) => string;
   readonly writeFile: (path: string, text: string) => void;
+  /** Opens a file to write results to as they arrive, for batch mode with `--output`. Without it, `writeFile` gets them all at the end. */
+  readonly createWriter?: (path: string) => { readonly write: (text: string) => void; readonly close: () => void };
 }
 
 export const processIo: Io = {
@@ -62,6 +65,15 @@ export const processIo: Io = {
   stderr: (text) => process.stderr.write(text),
   readFile: (path) => readFileSync(path, 'utf8'),
   writeFile: (path, text) => writeFileSync(path, text),
+  createWriter: (path) => {
+    const fd = openSync(path, 'w');
+    return {
+      write: (text) => {
+        writeSync(fd, text);
+      },
+      close: () => closeSync(fd),
+    };
+  },
 };
 
 const FORMATS: readonly Output[] = ['htmlAndMathml', 'html', 'mathml'];
@@ -122,7 +134,7 @@ function parseLine(text: string): Line {
       ok = typeof field === 'number' && Number.isFinite(field) && field > 0;
       expected = 'a positive number';
     } else if (takes === 'count') {
-      ok = typeof field === 'number' && Number.isInteger(field) && field >= 0;
+      ok = typeof field === 'number' && Number.isSafeInteger(field) && field >= 0;
       expected = 'a whole number';
     } else {
       ok = typeof field === takes;
@@ -143,8 +155,10 @@ async function batch(lines: AsyncIterable<string> | Iterable<string>, flags: Ren
   const defaults: RenderOptions = { ...flags, strict: flags.strict === 'error' ? 'error' : 'ignore', equationCounter: counter };
   let code = 0;
   let n = 0;
-  for await (const text of lines) {
+  for await (let text of lines) {
     n++;
+    // A byte order mark, which some editors and shells write before the first line.
+    if (n === 1 && text.startsWith('﻿')) text = text.slice(1);
     if (text.trim() === '') continue;
     const line = parseLine(text);
     let result: Record<string, unknown>;
@@ -162,10 +176,15 @@ async function batch(lines: AsyncIterable<string> | Iterable<string>, flags: Ren
       try {
         result = { id: line.id, ...renderToResult(line.source, options) };
       } catch (e) {
-        if (!(e instanceof TypletError)) throw e;
         code = Math.max(code, 1);
-        const where = e.diagnostics[0]?.in ?? 'formula';
-        result = { id: line.id, error: { kind: e.kind, message: e.message, hints: e.hints, span: e.span, in: where, diagnostics: e.diagnostics } };
+        if (e instanceof TypletError) {
+          const where = e.diagnostics[0]?.in ?? 'formula';
+          result = { id: line.id, error: { kind: e.kind, message: e.message, hints: e.hints, span: e.span, in: where, diagnostics: e.diagnostics } };
+        } else {
+          // A failure inside Typlet, which is a bug: this line reports it, and the others go on.
+          const error = e as { name?: unknown; message?: unknown } | null;
+          result = { id: line.id, error: { kind: 'internal', message: `${String(error?.name ?? 'Error')}: ${String(error?.message ?? e)}` } };
+        }
       }
     }
     emit(`${JSON.stringify(result)}\n`);
@@ -275,6 +294,20 @@ export async function main(args: readonly string[], io: Io = processIo): Promise
       return fail((e as Error).message);
     }
     if (values.output === undefined) return batch(lines, options, io.stdout);
+    // The results go to the file as they arrive, as to standard output.
+    let writer: ReturnType<NonNullable<Io['createWriter']>> | undefined;
+    try {
+      writer = io.createWriter?.(values.output);
+    } catch (e) {
+      return fail((e as Error).message);
+    }
+    if (writer) {
+      try {
+        return await batch(lines, options, writer.write);
+      } finally {
+        writer.close();
+      }
+    }
     let results = '';
     const code = await batch(lines, options, (line) => {
       results += line;
