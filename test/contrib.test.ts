@@ -188,6 +188,12 @@ describe('copy-typst', () => {
     ['<div>First FORMULA<br>Second OTHER</div>', 'First $x$\nSecond $y$'],
     ['<ul><li>First FORMULA</li><li>Second OTHER</li></ul>', 'First $x$\nSecond $y$'],
     ['<table><tr><td>First FORMULA</td><td>Second OTHER</td></tr><tr><td>C</td></tr></table>', 'First $x$\tSecond $y$\nC'],
+    // Pretty-printed markup, whose whitespace browsers collapse.
+    ['<ul>\n  <li>First FORMULA</li>\n  <li>Second OTHER</li>\n</ul>\n', 'First $x$\nSecond $y$'],
+    ['<p>\n  First\n  FORMULA\n</p>\n<p>\n  Second OTHER\n</p>', 'First $x$\n\nSecond $y$'],
+    ['<div>First FORMULA<br>\n  Second OTHER</div>', 'First $x$\nSecond $y$'],
+    ['<table>\n  <tr>\n    <td>A FORMULA</td>\n    <td>B OTHER</td>\n  </tr>\n</table>', 'A $x$\tB $y$'],
+    ['<pre>a\n  b FORMULA</pre>', 'a\n  b $x$'],
   ])('keeps the lines of %s in the plain text', (markup, expected) => {
     document.body.innerHTML = `<div id="d">${markup.replace('FORMULA', renderToString('x')).replace('OTHER', renderToString('y'))}</div>`;
     expect(copyAll(document.getElementById('d')!).get('text/plain')).toBe(expected);
