@@ -6,7 +6,7 @@
 // Latin, Roman and Greek numerals, symbols, and more. Chinese numerals are
 // refused.
 
-import { bail, unsupported } from './diag.js';
+import { bail, checkStringLength, unsupported } from './diag.js';
 
 /** A numeral system, like codex's `NumeralSystem`. */
 type System =
@@ -122,6 +122,8 @@ export function represent(named: Named, n: number): string {
       for (const [numeral, weight] of system.numerals) {
         if (weight === 0 || weight > n) continue;
         const reps = Math.floor(n / weight);
+        // Modified for Typlet: a huge number writes as many numerals, within the string budget.
+        checkStringLength(out.length + numeral.length * reps);
         out += numeral.repeat(reps);
         n -= weight * reps;
       }
@@ -130,7 +132,10 @@ export function represent(named: Named, n: number): string {
     case 'symbolic': {
       if (n === 0) zero();
       const count = system.symbols.length;
-      return system.symbols[(n - 1) % count]!.repeat(Math.ceil(n / count));
+      const symbol = system.symbols[(n - 1) % count]!;
+      const reps = Math.ceil(n / count);
+      checkStringLength(symbol.length * reps);
+      return symbol.repeat(reps);
     }
     case 'fixed':
       return n < system.symbols.length ? system.symbols[n]! : tooLarge();

@@ -5,14 +5,14 @@
 // `render` on it (docs/DESIGN.md §2).
 
 import type { SourceDiagnostic } from './eval/diag.js';
-import { HintedError, SourceError, dedupe, error, setElementLimit, warning } from './eval/diag.js';
+import { HintedError, SourceError, dedupe, error, setElementLimit, setMaxSize, warning } from './eval/diag.js';
 import type { Content } from './eval/content.js';
 import type { DrawContext } from './html/html.js';
 import { DEFAULT_LIMITS, type Limits, setLayoutEngine } from './eval/func.js';
 import { type Preamble, evalFormula, evalPreamble } from './eval/index.js';
 import type { StyleChain } from './eval/styles.js';
 import type { MathItem } from './ir/item.js';
-import { MathResolver, equationStyles, resolveEquation, setMaxSize } from './ir/resolve.js';
+import { MathResolver, equationStyles, resolveEquation } from './ir/resolve.js';
 import { itemToMathml } from './mathml/index.js';
 import { parse, parseMath } from './syntax/index.js';
 

@@ -7,7 +7,7 @@
 // has, from the metrics in ./font.ts.
 
 import { NAMED_COLORS } from '../eval/color.js';
-import { unsupported } from '../eval/diag.js';
+import { consumeParts, unsupported } from '../eval/diag.js';
 import type { Span } from '../eval/diag.js';
 import { type Abs, type Em, emAt, relRelativeTo } from '../eval/layout.js';
 import type { StyleChain } from '../eval/styles.js';
@@ -633,15 +633,12 @@ function assemble(
   const size = base.item.size;
   const at = (units: number) => emAt(toEm(units), size);
 
-  // The number of times the extenders repeat, and how far to spread the
-  // parts (0 = maximal overlap, 1 = minimal overlap).
-  let full = 0;
-  let ratio = 0;
-  let repeat = 0;
-  for (;;) {
-    full = 0;
-    ratio = 0;
+  // The parts with the extenders repeated `repeat` times: the advance they
+  // give with maximal overlap, how far spreading them to minimal overlap
+  // can grow it, and how many there are.
+  const measure = (repeat: number): { full: number; growable: number; count: number } => {
     const list = [...parts(assembly, repeat)];
+    let full = 0;
     let growable = 0;
     list.forEach((part, i) => {
       let adv = at(part.fullAdvance);
@@ -656,13 +653,39 @@ function assemble(
       }
       full += adv;
     });
-    if (full < target) {
-      const delta = target - full;
-      ratio = Math.min(delta / growable, 1);
-      full += ratio * growable;
-    }
-    if (target <= full || repeat >= MAX_REPEATS) break;
-    repeat++;
+    return { full, growable, count: list.length };
+  };
+  const reaches = (m: { full: number; growable: number }) => target <= m.full + m.growable;
+
+  // The number of times the extenders repeat: the fewest at which the parts,
+  // spread to minimal overlap, reach the target. Modified for Typlet: Typst
+  // tries one more repetition at a time, a pass over the parts for each, so
+  // a tall delimiter costs as many passes as repetitions. Past the first,
+  // each repetition adds the same amount, so the count comes from two
+  // passes, then a step down or up where floating point put it off by one.
+  let repeat = 0;
+  let measured = measure(0);
+  if (!reaches(measured)) {
+    const one = measure(1);
+    const two = measure(2);
+    const perRepeat = two.full + two.growable - (one.full + one.growable);
+    repeat = perRepeat > 0 ? Math.min(MAX_REPEATS, Math.max(1, Math.ceil(1 + (target - (one.full + one.growable)) / perRepeat))) : MAX_REPEATS;
+    measured = measure(repeat);
+    while (repeat > 0 && reaches(measure(repeat - 1))) measured = measure(--repeat);
+    while (!reaches(measured) && repeat < MAX_REPEATS) measured = measure(++repeat);
+  }
+  // The parts are glyphs in the output, which a chain of ever taller
+  // delimiters multiplies: they have a budget.
+  consumeParts(measured.count, base.span);
+
+  // The advance the parts give, spread as far as the target asks (0 =
+  // maximal overlap, 1 = minimal overlap).
+  let full = measured.full;
+  let ratio = 0;
+  if (full < target) {
+    const delta = target - full;
+    ratio = Math.min(delta / measured.growable, 1);
+    full += ratio * measured.growable;
   }
 
   const glyphs: Glyph[] = [];

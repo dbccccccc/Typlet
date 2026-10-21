@@ -69,7 +69,7 @@ import type {
   VecElem,
 } from '../eval/content.js';
 import { join, sequence, symbolElem } from '../eval/content.js';
-import { ElementBudget, type SourceDiagnostic, type Span, bailAt, enterNesting, exitNesting, limit, unsupported, warning } from '../eval/diag.js';
+import { ElementBudget, type SourceDiagnostic, type Span, bailAt, checkSize, enterNesting, exitNesting, limit, nested, unsupported, warning } from '../eval/diag.js';
 import {
   type Abs,
   type FixedAlignment,
@@ -187,7 +187,7 @@ export function fontSize(styles: StyleChain): Abs {
     }
   }
   const size = em * DEFAULT_FONT_SIZE + abs;
-  if (size > maxSize * DEFAULT_FONT_SIZE) limit(null, `Typlet stopped at a size of more than ${maxSize}em`);
+  checkSize(size, DEFAULT_FONT_SIZE, null);
   switch (equationSize(styles)) {
     case MathSize.Script:
       return (70 / 100) * size;
@@ -602,20 +602,6 @@ function resolveH(elem: HElem, ctx: MathResolver, styles: StyleChain): void {
   }
 }
 
-// The largest size a formula may give spacing, boxes and text, in ems of the
-// font size (docs/DESIGN.md §6.6). The renderer sets it for each formula.
-let maxSize = 1000;
-
-/** Sets the size budget for the following formulas: the `maxSize` option. */
-export function setMaxSize(ems: number): void {
-  maxSize = ems;
-}
-
-/** Fails for a size beyond the budget, at a font size. */
-export function checkSize(size: Abs, fontSize: Abs, span: Span): void {
-  if (Math.abs(size) > maxSize * fontSize) limit(span, `Typlet stopped at a size of more than ${maxSize}em`);
-}
-
 function resolveText(elem: TextElem, ctx: MathResolver, styles: StyleChain): void {
   const variant = equationVariant(styles);
   const bold = equationBold(styles);
@@ -745,10 +731,12 @@ function resolveInnerAttach(
   let baseElem = elem.base;
   while (baseElem.func === 'equation') baseElem = baseElem.body;
 
-  // Resolve the base and recursively merge outer attachments inwards.
+  // Resolve the base and recursively merge outer attachments inwards. The
+  // recursion follows a chain of attachments directly, so it counts as
+  // nesting here, as resolving the base through `resolveIntoItem` would.
   const base =
     baseElem.func === 'attach'
-      ? resolveInnerAttach(baseElem, attachments, tInsideTr, ctx, styles)
+      ? nested(baseElem.span, () => resolveInnerAttach(baseElem as AttachElem, attachments, tInsideTr, ctx, styles))
       : ctx.resolveIntoItem(baseElem, styles);
 
   // Take the inner attachments back out of the lists.

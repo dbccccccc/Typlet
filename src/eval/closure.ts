@@ -8,7 +8,7 @@ import type { Arg, Args } from './args.js';
 import { destructure, isPattern, letParts, patternBindings, sinkIdent } from './binding.js';
 import { valueCast } from './cast.js';
 import { evalExpr } from './code.js';
-import { SourceError } from './diag.js';
+import { SourceError, enterEval, exitEval } from './diag.js';
 import type { Engine, Func } from './func.js';
 import { type Binding, type Library, Scope, Scopes } from './scope.js';
 import { type Value, NONE, funcValue } from './value.js';
@@ -143,6 +143,19 @@ class CapturesVisitor {
   constructor(private readonly external: Scopes) {}
 
   visit(node: LinkedNode): void {
+    // Modified for Typlet: the body is walked as deep as it nests, which the
+    // parser bounds only for nesting, so a chain of operators goes as deep as
+    // it is long. The expression depth bounds the walk as it bounds the
+    // evaluation of the same body.
+    enterEval(node.span);
+    try {
+      this.visitInner(node);
+    } finally {
+      exitEval();
+    }
+  }
+
+  private visitInner(node: LinkedNode): void {
     switch (node.kind) {
       case K.Ident:
         return this.capture(node.text, (scopes) => scopes.get(node.text, null));

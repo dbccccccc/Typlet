@@ -269,6 +269,8 @@ function count(n: bigint): number {
 }
 
 function repeatStr(text: string, n: number): string {
+  // Nothing repeated is nothing, however many times: no work for a huge count.
+  if (text === '') return '';
   checkStringLength(text.length * n);
   return text.repeat(n);
 }
@@ -341,6 +343,8 @@ export function mul(lhs: Value, rhs: Value): Value {
 }
 
 function repeatArray(items: Value[], n: number): Value[] {
+  // Nothing repeated is nothing, however many times: no work for a huge count.
+  if (items.length === 0) return [];
   checkItems(items.length, n);
   const out: Value[] = [];
   for (let i = 0; i < n; i++) out.push(...items);

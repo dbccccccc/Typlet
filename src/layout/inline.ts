@@ -11,7 +11,7 @@
 
 import type { Color } from '../eval/color.js';
 import type { BoxElem, Content, Corners, Sides, Stroke, TextEdge } from '../eval/content.js';
-import { ElementBudget, type SourceDiagnostic, type Span, nested, unsupported, warning } from '../eval/diag.js';
+import { ElementBudget, type SourceDiagnostic, type Span, checkSize, nested, unsupported, warning } from '../eval/diag.js';
 import { type Abs, type Length, REL_ONE, type RelLength, ZERO_LENGTH, emAt, lengthAt } from '../eval/layout.js';
 import { type StyleChain, chain, get, property } from '../eval/styles.js';
 import { equationShowSetStyles } from '../elements/mod.js';
@@ -23,7 +23,6 @@ import {
   type FrameModifiers,
   type HighlightDeco,
   type Pair,
-  checkSize,
   collapseSpaces,
   fontFace,
   fontSize,

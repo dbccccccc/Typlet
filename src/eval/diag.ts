@@ -153,6 +153,31 @@ export function checkContentItems(n: number): void {
   if (n > maxItems) bailLimit(`Typlet stopped at content of more than ${maxItems} items`);
 }
 
+// The largest size a formula may give spacing, boxes and text, and the
+// longest length the output may hold, in ems of the font size (docs/DESIGN.md
+// §6.6). The renderer sets it for each formula.
+let maxSize = 1000;
+
+/** Sets the size budget for the following formulas: the `maxSize` option. */
+export function setMaxSize(ems: number): void {
+  maxSize = ems;
+}
+
+/** Fails for a size beyond the budget, at a font size, in points. */
+export function checkSize(size: number, fontSize: number, span: Span): void {
+  if (!(Math.abs(size) <= maxSize * fontSize)) limit(span, `Typlet stopped at a size of more than ${maxSize}em`);
+}
+
+/**
+ * Fails for a length written to the output beyond the budget, in ems of the
+ * font size it is written in. Every length the HTML and the MathML carry
+ * passes here, so whatever the layout computed, none reaches the page
+ * unchecked.
+ */
+export function checkEm(em: number, span: Span = null): void {
+  if (!(Math.abs(em) <= maxSize)) limit(span, `Typlet stopped at a size of more than ${maxSize}em`);
+}
+
 /**
  * Counts the elements content realizes to, so that content that refers to
  * itself over and over, doubling at each step, stops (docs/DESIGN.md §6.6).
@@ -178,6 +203,25 @@ let elementLimit = 10_000;
 /** Sets the element budget for the following formulas. */
 export function setElementLimit(max: number): void {
   elementLimit = max;
+}
+
+/**
+ * The parts of glyphs assembled to stretch, such as a tall parenthesis's, in
+ * the current formula. Each is a glyph in the output, and a chain of ever
+ * taller delimiters multiplies them, so they have a budget of their own, the
+ * size of the element budget.
+ */
+let parts = 0;
+
+/** Starts a formula's count of glyph parts. */
+export function resetParts(): void {
+  parts = 0;
+}
+
+/** Counts `count` parts of an assembled glyph. */
+export function consumeParts(count: number, span: Span): void {
+  parts += count;
+  if (!(parts <= elementLimit)) limit(span, `Typlet stopped after ${elementLimit} parts of stretched glyphs`);
 }
 
 // --- Depth guards (docs/DESIGN.md §6.6) ---------------------------------------

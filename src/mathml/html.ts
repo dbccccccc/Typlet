@@ -6,8 +6,10 @@
 // Typst's HTML export does, and protecting whitespace that browsers would
 // otherwise collapse.
 
+import { checkEm } from '../eval/diag.js';
 import { roundWithPrecision, rustDisplayFloat } from '../eval/repr.js';
 import { type Length, absToPt } from '../eval/layout.js';
+import { DEFAULT_FONT_SIZE } from '../ir/resolve.js';
 import { isDefaultIgnorable } from '../syntax/unicode.js';
 
 /** An HTML element. Attributes keep their order; CSS properties become a `style` attribute. */
@@ -134,13 +136,24 @@ function cssNumber(value: number): string {
   return rustDisplayFloat(roundWithPrecision(value, 4));
 }
 
+// Modified for Typlet: every length written to the output is checked against
+// the size budget, its ems as they are and its points as ems of the default
+// font size.
+
 /** An em length in CSS, like `Em::to_css`. */
 export function emToCss(em: number): string {
+  checkEm(em);
   return `${cssNumber(em)}em`;
+}
+
+function checkLength(length: Length): void {
+  checkEm(length.em);
+  checkEm(absToPt(length.abs) / absToPt(DEFAULT_FONT_SIZE));
 }
 
 /** A length in CSS: one unit, a sum in `calc()`, or `0`, like `Length::to_css`. */
 export function lengthToCss(length: Length): string {
+  checkLength(length);
   const parts: [number, string][] = [];
   if (length.em !== 0) parts.push([length.em, 'em']);
   if (length.abs !== 0) parts.push([absToPt(length.abs), 'pt']);
@@ -149,6 +162,7 @@ export function lengthToCss(length: Length): string {
 
 /** A relative length in CSS, like `Rel::to_css`. */
 export function relToCss(rel: { rel: number; abs: Length }): string {
+  checkLength(rel.abs);
   const parts: [number, string][] = [];
   if (rel.rel !== 0) parts.push([rel.rel * 100, '%']);
   if (rel.abs.em !== 0) parts.push([rel.abs.em, 'em']);
