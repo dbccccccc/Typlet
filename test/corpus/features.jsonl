@@ -132,5 +132,7 @@
 {"display":true,"id":"display-binom-block","src":"binom(n, k)"}
 {"display":false,"id":"display-accent-inline","src":"hat(sum)"}
 {"display":true,"id":"display-accent-block","src":"hat(sum)"}
+{"display":false,"id":"display-accent-stretch-rounding-inline","src":"accent(hat arrow.l.double, ->)"}
+{"display":true,"id":"display-accent-stretch-rounding-block","src":"accent(hat arrow.l.double, ->)"}
 {"display":false,"id":"display-class-large-inline","src":"class(\"large\", x)_a^b"}
 {"display":true,"id":"display-class-large-block","src":"class(\"large\", x)_a^b"}

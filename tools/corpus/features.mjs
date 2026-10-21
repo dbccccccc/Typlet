@@ -152,6 +152,9 @@ const both = [
   ['display-cases', 'f(x) = cases(1 & x > 0, 0 & "else")'],
   ['display-binom', 'binom(n, k)'],
   ['display-accent', 'hat(sum)'],
+  // A stretched accent whose spread lands within rounding of its target, so
+  // that the count of extenders must follow Typst's arithmetic exactly.
+  ['display-accent-stretch-rounding', 'accent(hat arrow.l.double, ->)'],
   ['display-class-large', 'class("large", x)_a^b'],
 ];
 

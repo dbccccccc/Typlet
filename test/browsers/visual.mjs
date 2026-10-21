@@ -61,7 +61,7 @@ const SKIPPED = new Set(['levels/preamble-text']);
 // formula. A change in these numbers is a change in what Typlet draws, and
 // fails the run until it is reviewed and the numbers are updated, so that no
 // formula drops out of the comparison unnoticed.
-const EXPECTED = { html: 408, mathml: 17, error: 32 };
+const EXPECTED = { html: 410, mathml: 17, error: 32 };
 
 // The formulas: the corpora's, where Typlet draws HTML.
 const formulas = [];

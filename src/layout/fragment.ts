@@ -655,7 +655,16 @@ function assemble(
     });
     return { full, growable, count: list.length };
   };
-  const reaches = (m: { full: number; growable: number }) => target <= m.full + m.growable;
+  // Whether the parts, spread as far as they can, reach the target: in the
+  // arithmetic of Typst's loop, which spreads by `ratio * growable` and then
+  // checks `target <= full`. Where the spread lands within rounding of the
+  // target, that product decides between one repetition and the next, so
+  // `target <= full + growable` would stop one short of Typst.
+  const reaches = (m: { full: number; growable: number }) => {
+    let full = m.full;
+    if (full < target) full += Math.min((target - full) / m.growable, 1) * m.growable;
+    return target <= full;
+  };
 
   // The number of times the extenders repeat: the fewest at which the parts,
   // spread to minimal overlap, reach the target. Modified for Typlet: Typst

@@ -2,7 +2,7 @@
 
 # What falls back, and why
 
-Of the 1,670 formulas of the test corpus that Typst 0.15.1 renders, Typlet lays out 1,504 as HTML, draws 158 as MathML with a warning, and refuses 8. The corpus (test/corpus/README.md) holds the examples of Typst's documentation, the formulas of TypstPad's symbol picker, a formula for each symbol of the `sym` module, and the test cases of Typlet's features and embedded code, so symbols weigh heavily in it. This page is generated from it by tools/site/fallbacks.mjs.
+Of the 1,672 formulas of the test corpus that Typst 0.15.1 renders, Typlet lays out 1,506 as HTML, draws 158 as MathML with a warning, and refuses 8. The corpus (test/corpus/README.md) holds the examples of Typst's documentation, the formulas of TypstPad's symbol picker, a formula for each symbol of the `sym` module, and the test cases of Typlet's features and embedded code, so symbols weigh heavily in it. This page is generated from it by tools/site/fallbacks.mjs.
 
 ## Drawn as MathML
 

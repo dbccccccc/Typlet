@@ -26,7 +26,7 @@ A minor release. It reproduces Typst 0.15.1, like 0.1.1. The API grows, with `re
 - [contrib/typlet.typ](contrib/typlet.typ) is a helper for Typst's HTML export: `typlet-math` writes a formula as a `<typlet-math>` element in HTML export, with the source in an attribute so that the line breaks of a raw block survive, and as an equation on pages, and `typlet-assets` loads Typlet once, with a preamble for the document that applies on pages as well.
 - The documentation gains recipes for VitePress, Docusaurus and Hexo, a generated page of what falls back to MathML or is refused and why ([docs/fallbacks.md](docs/fallbacks.md), from the test corpus), and a note on what is stable in `SyntaxKind`: the names, not the numbers.
 
-Of the 1,670 formulas of the test corpus that Typst renders, Typlet now lays out 1,504, draws 158 as MathML with a warning, and refuses 8.
+Of the 1,672 formulas of the test corpus that Typst renders, Typlet now lays out 1,506, draws 158 as MathML with a warning, and refuses 8.
 
 ## 0.1.1
 
