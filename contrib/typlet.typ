@@ -62,7 +62,7 @@
 /// - preamble: code before every formula of the document, such as `#let`
 ///   definitions and `set` rules, as a string or a raw block. Numbered
 ///   equations count up through the page.
-#let typlet-assets(base: "https://cdn.jsdelivr.net/npm/typlet@0.1.1", preamble: none) = {
+#let typlet-assets(base: "https://cdn.jsdelivr.net/npm/typlet@0.2.0", preamble: none) = {
   let pre = if preamble == none { none } else { _text(preamble, "the preamble") }
   _preamble.update(pre)
   context if target() == "html" {
