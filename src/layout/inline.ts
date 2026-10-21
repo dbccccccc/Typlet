@@ -11,7 +11,7 @@
 
 import type { Color } from '../eval/color.js';
 import type { BoxElem, Content, Corners, Sides, Stroke, TextEdge } from '../eval/content.js';
-import { ElementBudget, type SourceDiagnostic, type Span, checkSize, nested, unsupported, warning } from '../eval/diag.js';
+import { ElementBudget, type SourceDiagnostic, type Span, approximation, checkSize, nested, unsupported } from '../eval/diag.js';
 import { type Abs, type Length, REL_ONE, type RelLength, ZERO_LENGTH, emAt, lengthAt } from '../eval/layout.js';
 import { type StyleChain, chain, get, property } from '../eval/styles.js';
 import { equationShowSetStyles } from '../elements/mod.js';
@@ -371,7 +371,7 @@ export function textEdge(edge: TextEdge, top: boolean, size: Abs, glyphs: readon
 
 /** A run of text as a frame from its top edge to its bottom edge, with decorations. */
 function textFrame(item: Extract<LineItem, { kind: 'text' }>, warnings: SourceDiagnostic[]): Frame {
-  const { face, glyphs } = shapeText(item.text, item.styles, item.span, (message) => warnings.push(warning(item.span, message)));
+  const { face, glyphs } = shapeText(item.text, item.styles, item.span, (message) => warnings.push(approximation(item.span, message)));
   const size = fontSize(item.styles);
   const top = textEdge(get<TextEdge>(item.styles, 'text', 'top-edge', 'cap-height'), true, size, glyphs, face);
   const bottom = textEdge(get<TextEdge>(item.styles, 'text', 'bottom-edge', 'baseline'), false, size, glyphs, face);

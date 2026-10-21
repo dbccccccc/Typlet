@@ -53,8 +53,10 @@ export class MathContext {
     this.fragments.push(fragment);
   }
 
-  warn(span: Span, message: string): void {
-    this.warnings.push(warning(span, message));
+  /** Records a warning, with the kind the API tells apart, if it has one. */
+  warn(span: Span, message: string, kind?: SourceDiagnostic['kind']): void {
+    const diagnostic = warning(span, message);
+    this.warnings.push(kind === undefined ? diagnostic : { ...diagnostic, kind });
   }
 
   /** Lays out an item into fragments. */

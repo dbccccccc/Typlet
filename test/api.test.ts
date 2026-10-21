@@ -185,6 +185,8 @@ describe('text the math font lacks', () => {
     expect(result.drawnAs).toBe('html');
     expect(result.markup).toMatch(/<span class="g c" style="[^"]*">中文<\/span>/);
     expect(messages).toEqual(['Typlet drew "中文" with the browser\'s fonts, an em per character, as New Computer Modern Math has none for it']);
+    expect(result.warnings.map((w) => w.kind)).toEqual(['approximation']);
+    expect(seen('中').result.warnings.map((w) => w.kind)).toEqual(['approximation']);
     const frame = layoutFlat({ id: 'cjk', src: '"中文"', display: false });
     expect(frame.box).toMatchObject({ width: 22 });
     expect(frame.fonts).toEqual(['browser']);
@@ -197,6 +199,11 @@ describe('text the math font lacks', () => {
     const bold = seen('#strong[中]');
     expect(bold.result.drawnAs).toBe('html');
     expect(bold.result.markup).toContain('class="g b c"');
+  });
+
+  it('gives combining kana marks no advance of their own', () => {
+    expect(layoutFlat({ id: 'ga-decomposed', src: '"が"', display: false }).box).toMatchObject({ width: 11 });
+    expect(layoutFlat({ id: 'ga', src: '"が"', display: false }).box).toMatchObject({ width: 11 });
   });
 
   it('still draws text of other scripts it has no metrics for as MathML', () => {
