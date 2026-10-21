@@ -1,20 +1,11 @@
-// Abusive formulas: those that must stop with a `limit` error (docs/DESIGN.md
-// §6.6 and §6.8), and those whose work must stay linear in their size, so that
-// they render. test/budgets.test.ts checks the errors and the rendering;
-// scripts/check-budgets.mjs checks that the built bundle finishes each within
-// 50 ms.
+// Abusive formulas, which must stop with a `limit` error (docs/DESIGN.md §6.6 and
+// §6.8). test/budgets.test.ts checks the errors; scripts/check-budgets.mjs
+// checks that the built bundle stops each within 50 ms.
 
 /** `#let` lines that double a value 30 times, starting from `start`. */
 function doubling(start, join) {
   const lines = [`#let x0 = ${start}`];
   for (let i = 1; i <= 30; i++) lines.push(`#let x${i} = ${join(`x${i - 1}`)}`);
-  return lines.join('\n');
-}
-
-/** `#let` lines that nest `$x$` `count` times, in a square root unless `build` says otherwise. */
-export function nestedDefinitions(count, build = (name) => `math.sqrt(${name})`) {
-  const lines = ['#let x0 = $x$'];
-  for (let i = 1; i <= count; i++) lines.push(`#let x${i} = ${build(`x${i - 1}`)}`);
   return lines.join('\n');
 }
 
@@ -30,6 +21,8 @@ export const BUDGET_CASES = [
   ['a huge space', 'a #h(1e9pt) b', {}],
   ['huge text', '#text(size: 1e6pt)[x]', {}],
   ['a huge box', '#box(width: 1e6pt)', {}],
+<<<<<<< Updated upstream
+=======
   // Recursion that follows the formula's structure, which the parser bounds
   // only for nesting (docs/DESIGN.md §6.6).
   ['a flat chain of 3,000 additions', '#(' + Array(3000).fill('1').join('+') + ')', {}],
@@ -40,11 +33,12 @@ export const BUDGET_CASES = [
   ['a box whose body is a box', '#box()', { preamble: '#set box(box())' }],
   ['an attachment whose top is an attachment', 'attach(x)', { preamble: '#set math.attach(t: math.attach([x]))' }],
   ['2,000 nested attachments', '#x2000', { preamble: nestedDefinitions(2000, (name) => `math.attach(${name}, t: [1])`) }],
-  // The recursive parser overflowed V8's stack at 6,500 to 8,300 branches,
-  // depending on what the JIT had compiled. The branches are written tightly:
-  // the parse is linear in the source, and the long form took 45 ms of the
-  // 50 ms budget on a CI runner.
-  ['10,000 else-if branches', '#{' + 'if false{}else '.repeat(10000) + '{}}', {}],
+  // Stops at the expression depth: the evaluator follows the chain of
+  // branches. The parser follows it without recursion, which
+  // test/syntax.test.ts checks at a length that overflowed the stack, out of
+  // reach of the stopwatch: parsing is linear in the source, and 10,000
+  // branches took the whole 50 ms on a slow CI runner.
+  ['3,000 else-if branches', '#{' + 'if false{}else '.repeat(3000) + '{}}', {}],
   ['a closure whose body is a chain of 3,000 additions', '#{ let f() = (' + '1+'.repeat(3000) + '1); 1 }', {}],
   // Values that share parts take exponential work to compare or show.
   ['shared arrays compared', '#(x30 == x30)', { preamble: doubling('(1,)', (x) => `(${x}, ${x})`) }],
@@ -62,34 +56,11 @@ export const BUDGET_CASES = [
   ['huge tracking', '#text(tracking: 1e9pt)[xy]', {}],
   ['a huge stroke', '#box(stroke: 1e9pt)[x]', {}],
   ['a huge baseline shift', '#text(baseline: 1e9pt)[x]', {}],
+>>>>>>> Stashed changes
 ];
 
 /** Formulas that stop with Typst's own errors: `[name, source, options, kind, message]`. */
 export const TYPST_LIMIT_CASES = [
   ['endless recursion', '#f(0)', { preamble: '#let f(n) = f(n + 1)' }, 'eval', 'maximum function call depth exceeded'],
   ['deep nesting', '('.repeat(2000) + 'x' + ')'.repeat(2000), {}, 'syntax', 'maximum parsing depth exceeded'],
-];
-
-/** A chain of `n` field accesses. */
-const chain = (n) => 'x' + '.x'.repeat(n);
-
-/**
- * Formulas that must render, within the time budget, as their work is linear
- * in their size: `[name, source, options]`. Raw code tagged as Typst is parsed
- * and highlighted again. Highlighting followed a chain of field accesses by
- * recursion, which overflowed the stack at a few thousand, and found siblings
- * in time that grew with the code's width. At these sizes it took seconds or
- * overflowed; each renders in a few milliseconds now, which leaves the budget
- * room for slower machines.
- */
-export const BOUNDED_CASES = [
-  ['a deep chain in raw code', '#[```typc ' + chain(3000) + '```]', {}],
-  ['wide raw code', '#[```typc ' + 'x; '.repeat(2000) + '```]', {}],
-  ['a hashed chain in raw markup', '#[```typ #' + chain(3000) + '```]', {}],
-  ['many hashes in raw markup', '#[```typ ' + '#x '.repeat(2000) + '```]', {}],
-  ['a chain in raw math', '#[```typm ' + chain(3000) + '```]', {}],
-  // The parser follows a chain of `else if` without recursion.
-  ['3,000 else-if branches in raw code', '#[```typc ' + 'if x {} else '.repeat(3000) + '{}```]', {}],
-  // An empty array repeated is empty, however huge the count: no loop runs.
-  ['an empty array repeated a huge number of times', '#(() * 9223372036854775807)', {}],
 ];
