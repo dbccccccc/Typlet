@@ -40,7 +40,11 @@ export const BUDGET_CASES = [
   ['a box whose body is a box', '#box()', { preamble: '#set box(box())' }],
   ['an attachment whose top is an attachment', 'attach(x)', { preamble: '#set math.attach(t: math.attach([x]))' }],
   ['2,000 nested attachments', '#x2000', { preamble: nestedDefinitions(2000, (name) => `math.attach(${name}, t: [1])`) }],
-  ['10,000 else-if branches', '#{' + 'if false { 1 } else '.repeat(10000) + '{ 2 }}', {}],
+  // The recursive parser overflowed V8's stack at 6,500 to 8,300 branches,
+  // depending on what the JIT had compiled. The branches are written tightly:
+  // the parse is linear in the source, and the long form took 45 ms of the
+  // 50 ms budget on a CI runner.
+  ['10,000 else-if branches', '#{' + 'if false{}else '.repeat(10000) + '{}}', {}],
   ['a closure whose body is a chain of 3,000 additions', '#{ let f() = (' + '1+'.repeat(3000) + '1); 1 }', {}],
   // Values that share parts take exponential work to compare or show.
   ['shared arrays compared', '#(x30 == x30)', { preamble: doubling('(1,)', (x) => `(${x}, ${x})`) }],
