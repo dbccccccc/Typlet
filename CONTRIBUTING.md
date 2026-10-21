@@ -120,7 +120,7 @@ Typlet is under the MIT License, and contributions are accepted under it. Code p
 ## Releasing
 
 For maintainers. Releases are tags on `main`, and publishing one as a GitHub release publishes the packages:
-1. Set the version in `package.json`, `package-lock.json`, `src/version.ts`, the packages in `packages/` (and their dependency on `typlet`, when the minor version changes) and the README's install snippet. Rename the Unreleased section of `CHANGELOG.md` to the version. The tests check that these agree.
+1. Set the version in `package.json`, `package-lock.json`, `src/version.ts`, the packages in `packages/` (and their dependency on `typlet`, when the minor version changes) and the jsDelivr links in the README, the integrations page and `contrib/typlet.typ`. Rename the Unreleased section of `CHANGELOG.md` to the version. The tests check that these agree.
 2. Run `npm run check`, `npm run test:browsers` and `npm run test:visual`.
 3. Commit to `main` and push.
 4. Publish a GitHub release of a new tag `v<version>` on that commit, as the latest release. The release workflow (`.github/workflows/release.yml`) runs CI on the tag, publishes `typlet`, `rehype-typlet` and `markdown-it-typlet` to npm, and then deploys the documentation site. A pre-release, or a release that isn't the latest, publishes nothing.

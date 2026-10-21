@@ -23,6 +23,8 @@ const html = renderToString('x^2 + y^2 = r^2');
 render('sum_(i=1)^n i', element, { displayMode: true });
 ```
 
+`renderToResult(source, options)` returns the markup with what drew the formula, the warnings and the equation number, for pages that need to know, such as an editor's preview.
+
 Pages need Typlet's stylesheet, which loads its fonts as the page's formulas need them:
 
 ```html
@@ -51,10 +53,11 @@ Formulas follow the text's color, so they work in dark mode, and they scale with
 
 ## Learn more
 
-- [Guide](guide.html): options, errors and warnings, styling.
+- [Guide](guide.html): rendering and `renderToResult`, options, errors and warnings, styling.
 - [Embedded code](code.html): what code formulas can use, preambles and numbering, links, budgets.
-- [Integrations](integrations.html): auto-render, copy-typst, the `<typlet-math>` element, the `typlet` command, and plugins for rehype and markdown-it.
+- [Integrations](integrations.html): auto-render, copy-typst, the `<typlet-math>` element, the `typlet` command and its batch mode, plugins for rehype and markdown-it, recipes for VitePress, Docusaurus and Hexo, and Typst's HTML export.
 - [Supported features](supported.html): every function and symbol, generated from the library.
+- [What falls back](fallbacks.html): the formulas of the test corpus that are drawn as MathML or refused, and why.
 - [Gallery](gallery.html) and [playground](playground.html).
 - [Compare](compare.html): the same formulas rendered by Typlet and by KaTeX in your browser, with the time each takes.
 - [Security](security.html): rendering untrusted formulas.

@@ -293,7 +293,7 @@ Typst has no budget on calls. Computation that Typst would finish slowly fails i
 
 ## 7. Size and startup
 
-**Size budgets.** CI checks the brotli size of each entry point against `scripts/size-budgets.json`: 125 KB for the full browser bundle and 70 KB for `typlet/mathml`, which leaves out the layout and metrics. KaTeX's script is about 61 KB, plus its CSS. Typlet's extra size is mostly the parser for all of Typst's syntax, Typst's error messages, embedded code and the font metrics.
+**Size budgets.** CI checks the brotli size of each entry point against `scripts/size-budgets.json`: 125 KB for the full browser bundle, 70 KB for `typlet/mathml`, which leaves out the layout and metrics, and 40 KB for `src/layout/font.ts` bundled on its own, which measures the font metrics apart from the entry points. KaTeX's script is about 61 KB, plus its CSS. Typlet's extra size is mostly the parser for all of Typst's syntax, Typst's error messages, embedded code and the font metrics.
 
 **Compact metrics.** The metrics of the 7,500 glyphs Typst reaches are columns of characters, decoded as glyphs are used: numbers are two base-92 digits per glyph, read where they are, and the tables few glyphs have are comma-separated fields, found by skipping from the nearest of a column's steps. Nothing is decoded at import.
 

@@ -16,6 +16,8 @@ md.render('Let $f: RR -> RR$.\n\n$$\nsum_(i=1)^n i = (n(n+1))/2\n$$\n');
 
 Pages need Typlet's stylesheet and fonts: `typlet/fonts/typlet.css`.
 
+The package is an ES module, and `require('markdown-it-typlet')` loads it too, on Node 22.12 and later, which is how Hexo loads the plugins its configuration names. The [integrations page](https://dbccccccc.github.io/Typlet/integrations.html) has recipes for VitePress and Hexo.
+
 ## Syntax
 
 By default the plugin reads Markdown's math syntax:
