@@ -27,7 +27,7 @@ The `typlet/mathml` entry point renders MathML alone. It leaves out the layout e
 | `maxCollectionSize` | 10,000 | The most items in an array or dictionary. |
 | `maxStringLength` | 100,000 | The most characters in a string. |
 | `maxElements` | 10,000 | The most content elements a formula makes. |
-| `maxSize` | 1,000 | The largest size of spacing, boxes and text, in ems. |
+| `maxSize` | 1,000 | The largest size of spacing, boxes and text, and of every length in the output, in ems. |
 | `maxOutputSize` | 1,000,000 | The longest output, in characters. |
 
 ## Errors

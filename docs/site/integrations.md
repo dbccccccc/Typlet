@@ -41,9 +41,10 @@ Numbered display equations are numbered in order, with one counter for the call.
 <typlet-math>x^2</typlet-math>
 <typlet-math display>sum_(i=1)^n i</typlet-math>
 <typlet-math source="a^2 + b^2 = c^2"></typlet-math>
+<typlet-math preamble="#let RR = $bb(R)$">f: RR -> RR</typlet-math>
 ```
 
-Setting its `source` property or attribute renders a new formula, and `output` chooses the output. `elementOptions` holds render options for every element, such as a `preamble`. It renders into the element itself, so the page needs `typlet.css`. Invalid formulas show their source in the error color.
+Setting its `source` property or attribute renders a new formula, and `output` chooses the output. `elementOptions` holds render options for every element, such as a `preamble`; a `preamble` attribute replaces it for that formula, as Typst's HTML export writes one through `contrib/typlet.typ`, below. It renders into the element itself, so the page needs `typlet.css`. Invalid formulas show their source in the error color.
 
 ## The `typlet` command
 

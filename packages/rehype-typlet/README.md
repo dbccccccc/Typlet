@@ -25,7 +25,7 @@ const file = await unified()
   .process('Let $f: RR -> RR$.\n\n$$\nsum_(i=1)^n i = (n(n+1))/2\n$$\n');
 ```
 
-Pages need Typlet's stylesheet and fonts: `typlet/fonts/typlet.css`.
+Pages need Typlet's stylesheet and fonts: `typlet/fonts/typlet.css`. The [integrations page](https://dbccccccc.github.io/Typlet/integrations.html) has a recipe for Docusaurus.
 
 ## Options
 

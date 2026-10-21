@@ -6,7 +6,7 @@
 
 A lightweight, KaTeX-style renderer for [Typst](https://typst.app) math: one small JavaScript file plus split web fonts, with a synchronous API and no WASM or compiler.
 
-Typlet draws Typst math as HTML laid out by a port of Typst's own math layout, with MathML for screen readers, and its tests compare every formula it lays out with the Typst compiler's own layout. It evaluates the embedded code formulas use, from `#h(1em)` and `mat(delim: "[", ...)` to styled content, boxes, `#let` definitions, functions and set rules (see [Embedded code](#embedded-code)). It comes with auto-render, copy-as-Typst, a custom element, a command-line tool, and plugins for rehype and markdown-it (see [Integrations](#integrations)).
+Typlet draws Typst math as HTML laid out by a port of Typst's own math layout, with MathML for screen readers, and its tests compare every formula it lays out with the Typst compiler's own layout. It evaluates the embedded code formulas use, from `#h(1em)` and `mat(delim: "[", ...)` to styled content, boxes, `#let` definitions, functions and set rules (see [Embedded code](#embedded-code)). It comes with auto-render, copy-as-Typst, a custom element, a command-line tool, plugins for rehype and markdown-it, and a helper for Typst's HTML export (see [Integrations](#integrations)).
 
 > **Status: 0.1, the first public release.** It reproduces Typst 0.15.1. The API may still change before 1.0: [CHANGELOG.md](CHANGELOG.md) lists what each release changes, [Limitations](#limitations) what Typlet doesn't draw yet, and [docs/DESIGN.md](docs/DESIGN.md) how it works.
 
@@ -59,7 +59,7 @@ import { renderToResult } from 'typlet';
 
 const { markup, drawnAs, warnings, number } = renderToResult('x^2', { strict: 'ignore' });
 // drawnAs: 'html' | 'mathml' | 'fallback' | 'error'
-// warnings: each with a kind, 'fallback', 'deprecation' or 'other'
+// warnings: each with a kind, 'fallback', 'approximation', 'deprecation' or 'other'
 // number: '(1)' for a numbered display equation, else null
 ```
 
@@ -75,7 +75,7 @@ renderToString('sum_(i=1)^n i = (n(n+1))/2', { displayMode: true });
 //  <annotation encoding="application/x-typst">sum_(i=1)^n i = (n(n+1))/2</annotation></semantics></math></span></span>'
 ```
 
-The options follow KaTeX's where the meaning carries over: `displayMode`, `output`, `throwOnError`, `errorColor`, `strict` and `trust`. Typlet adds `preamble`, `equationCounter` and `fallback` (see [Embedded code](#embedded-code)), and budgets for untrusted input: `maxCalls` (30,000 function calls), `maxCollectionSize` (10,000 items), `maxStringLength` (100,000 characters), `maxElements` (10,000 content elements), `maxSize` (1,000 em for spacing, boxes and text) and `maxOutputSize` (1,000,000 characters). An invalid formula throws a `TypletError` with Typst's message and hints, the error's span in the source, and a `kind`: `syntax`, `eval`, `unsupported` (Typst supports it, Typlet doesn't yet) or `limit` (a budget ran out).
+The options follow KaTeX's where the meaning carries over: `displayMode`, `output`, `throwOnError`, `errorColor`, `strict` and `trust`. Typlet adds `preamble`, `equationCounter` and `fallback` (see [Embedded code](#embedded-code)), and budgets for untrusted input: `maxCalls` (30,000 function calls), `maxCollectionSize` (10,000 items), `maxStringLength` (100,000 characters), `maxElements` (10,000 content elements), `maxSize` (1,000 em for spacing, boxes, text and every length in the output) and `maxOutputSize` (1,000,000 characters). An invalid formula throws a `TypletError` with Typst's message and hints, the error's span in the source, and a `kind`: `syntax`, `eval`, `unsupported` (Typst supports it, Typlet doesn't yet) or `limit` (a budget ran out).
 
 ```js
 renderToString('x + foo');
