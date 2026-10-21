@@ -9,7 +9,7 @@ import { SyntaxKind } from '../syntax/kind.js';
 import type { SyntaxNode } from '../syntax/node.js';
 import { evalDisplay, evalExpr } from './code.js';
 import { type Content, type EquationElem, sequence } from './content.js';
-import { type SourceDiagnostic, SourceError, resetValueSteps, setCollectionLimits } from './diag.js';
+import { type SourceDiagnostic, SourceError, resetParts, resetValueSteps, setCollectionLimits } from './diag.js';
 import { DEFAULT_LIMITS, type Engine, type Limits, callFunc, newEngine } from './func.js';
 import { LIBRARY } from './library.js';
 import { evalSetRule, evalShowRule } from './rules.js';
@@ -78,6 +78,7 @@ export function evalFormula(
   const engine = newEngine(limits);
   setCollectionLimits(limits.collectionSize, limits.stringLength);
   resetValueSteps();
+  resetParts();
   const vm = new Vm(engine, LIBRARY);
   // The formula sees the preamble's definitions, and its own `let`s don't
   // change them for other formulas.

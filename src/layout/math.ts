@@ -7,10 +7,10 @@
 // content that isn't math, such as a displayed value, is refused.
 
 import type { Content, EquationElem } from '../eval/content.js';
-import { type SourceDiagnostic, type Span, unsupported, warning } from '../eval/diag.js';
+import { type SourceDiagnostic, type Span, nested, unsupported, warning } from '../eval/diag.js';
 import { type Abs, type Alignment, type FixedAlignment, emAt, lengthAt } from '../eval/layout.js';
 import { type StyleChain, type Styles, get } from '../eval/styles.js';
-import { type MathItem, asSlice, isMultiline, properties } from '../ir/item.js';
+import { type MathItem, asSlice, isMultiline, properties, spanOf } from '../ir/item.js';
 import { equationStyles, fontSize, resolveEquation } from '../ir/resolve.js';
 import { layoutAccent } from './accent.js';
 import { layoutCancel } from './cancel.js';
@@ -76,8 +76,12 @@ export class MathContext {
   }
 
   private layoutIntoSelf(item: MathItem, styles: StyleChain): void {
-    const outer = item.type === 'component' ? item.styles : styles;
-    for (const child of asSlice(item)) layoutRealized(child, this, child.type === 'component' ? child.styles : outer);
+    // Modified for Typlet: the items nest as deep as the content they were
+    // resolved from, which the resolver bounded; the bound holds here too.
+    nested(spanOf(item), () => {
+      const outer = item.type === 'component' ? item.styles : styles;
+      for (const child of asSlice(item)) layoutRealized(child, this, child.type === 'component' ? child.styles : outer);
+    });
   }
 }
 

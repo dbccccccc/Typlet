@@ -2,7 +2,7 @@
 // Copyright The Typst Project Developers. Licensed under Apache-2.0.
 // Modified for Typlet. See THIRD_PARTY_NOTICES.md.
 
-import { ElementBudget, type SourceDiagnostic, type Span, warning } from '../eval/diag.js';
+import { ElementBudget, type SourceDiagnostic, type Span, checkEm, nested, warning } from '../eval/diag.js';
 import type { Em } from '../eval/layout.js';
 import { rustDisplayFloat } from '../eval/repr.js';
 import { equationShowSetStyles } from '../elements/mod.js';
@@ -22,6 +22,7 @@ import {
   isExplicit,
   isIgnorant,
   resolveRequested,
+  spanOf,
 } from '../ir/item.js';
 import type { AlignedRow } from '../ir/multiline.js';
 import { MathClass } from '../utils/math-class.js';
@@ -290,19 +291,23 @@ class MathContext {
   }
 
   handleIntoNodes(item: MathItem, only: Form | null = null): HtmlNode[] {
-    const prev = this.content;
-    this.content = [];
-    try {
-      const items = asSlice(item);
-      items.forEach((child, i) => {
-        const position: NodePosition =
-          items.length === 1 ? { only } : i === 0 ? 'start' : i === items.length - 1 ? 'end' : 'middle';
-        handleRealized(child, this, position);
-      });
-      return this.content;
-    } finally {
-      this.content = prev;
-    }
+    // Modified for Typlet: the items nest as deep as the content they were
+    // resolved from, which the resolver bounded; the bound holds here too.
+    return nested(spanOf(item), () => {
+      const prev = this.content;
+      this.content = [];
+      try {
+        const items = asSlice(item);
+        items.forEach((child, i) => {
+          const position: NodePosition =
+            items.length === 1 ? { only } : i === 0 ? 'start' : i === items.length - 1 ? 'end' : 'middle';
+          handleRealized(child, this, position);
+        });
+        return this.content;
+      } finally {
+        this.content = prev;
+      }
+    });
   }
 
   handleIntoNode(item: MathItem): HtmlNode {
@@ -442,8 +447,9 @@ function handleKind(comp: ComponentItem, ctx: MathContext, props: MathProperties
   }
 }
 
-/** An em value as Typst formats it for `lspace` and `rspace`: Rust's float `Display`. */
+/** An em value as Typst formats it for `lspace` and `rspace`: Rust's float `Display`. Checked against the size budget, as every length written. */
 function fmtEm(em: number): string {
+  checkEm(em);
   return rustDisplayFloat(em);
 }
 

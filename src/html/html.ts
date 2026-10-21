@@ -14,6 +14,7 @@
 // what they link. Black is the text's color, so formulas follow the page's.
 
 import { type Color, toHex } from '../eval/color.js';
+import { checkEm } from '../eval/diag.js';
 import { type Abs, absToPt } from '../eval/layout.js';
 import { DEFAULT_FONT_SIZE } from '../ir/resolve.js';
 import { type FontFace, UNITS_PER_EM, advance, drawingCodePoint, isBrowserFace } from '../layout/font.js';
@@ -21,8 +22,9 @@ import { type BoxBorder, type FixedStroke, type Frame, type Placed, IDENTITY, ty
 import type { NumberedBlock } from '../layout/math.js';
 import type { InlineItem } from '../layout/run.js';
 
-/** Lengths in ems of the formula's font size, with four decimals. */
+/** Lengths in ems of the formula's font size, with four decimals. Every length of the HTML passes here, within the size budget. */
 function em(value: number): string {
+  checkEm(value);
   const rounded = Math.round(value * 10000) / 10000;
   return `${Object.is(rounded, -0) ? 0 : rounded}em`;
 }

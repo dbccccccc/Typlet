@@ -68,7 +68,8 @@ export function applyNumbering(
     try {
       return represent(named, n);
     } catch (e) {
-      if (!(e instanceof HintedError)) throw e;
+      // A budget that ran out is Typlet's error, not a number the system can't write.
+      if (!(e instanceof HintedError) || e.kind !== undefined) throw e;
       engine.warnings.push(warning(span, e.message, 'this will become a hard error in the future'));
       return String(n);
     }

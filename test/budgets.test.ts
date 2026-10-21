@@ -53,6 +53,20 @@ describe('budgets', () => {
     expect(renderToString('#f(79)', { preamble: '#let f(n) = if n == 0 { 0 } else { f(n - 1) + 1 }', output: 'mathml' })).toContain('<mn>79</mn>');
     expect(renderToString('#(' + Array(500).fill('1').join('+') + ')', { output: 'mathml' })).toContain('<mn>500</mn>');
     expect(renderToString('#x100', { preamble: nestedDefinitions(100) })).toContain('<msqrt>');
+    // A chain of a hundred attachments, binomials nested twenty deep, five
+    // hundred `else if` branches, and a closure with a long body.
+    expect(renderToString('#x100', { preamble: nestedDefinitions(100, (name) => `math.attach(${name}, t: [1])`), output: 'mathml' })).toContain('<msup>');
+    expect(renderToString('#x20', { preamble: nestedDefinitions(20, (name) => `math.binom(${name}, 1)`) })).toContain('<span class="typlet-html"');
+    expect(renderToString('#{' + 'if false { 1 } else '.repeat(500) + '{ 2 }}', { output: 'mathml' })).toContain('<mn>2</mn>');
+    expect(renderToString('#{ let f() = (' + '1+'.repeat(500) + '1); f() }', { output: 'mathml' })).toContain('<mn>501</mn>');
+  });
+
+  it('apply to every length in the output', () => {
+    expect(failure('#box(stroke: 1e9pt)[x]', { output: 'mathml' }).message).toBe('Typlet stopped at a size of more than 1000em');
+    expect(failure('#h(1e9pt)', { output: 'mathml' }).kind).toBe('limit');
+    expect(failure('#text(baseline: 1e9pt)[x]', { output: 'html' }).kind).toBe('limit');
+    expect(failure('cases(gap: #1e9em, 1, 2)', { output: 'html' }).kind).toBe('limit');
+    expect(failure('#x120', { preamble: nestedDefinitions(120, (name) => `math.binom(${name}, 1)`) }).message).toBe('Typlet stopped after 10000 parts of stretched glyphs');
   });
 
   it('apply to callbacks during layout', () => {

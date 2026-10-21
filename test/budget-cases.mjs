@@ -39,11 +39,25 @@ export const BUDGET_CASES = [
   ['a deep equation number', 'x', { displayMode: true, preamble: nestedDefinitions(1200, (name) => `[a #${name}]`) + '\n#set math.equation(numbering: n => x1200)' }],
   ['a box whose body is a box', '#box()', { preamble: '#set box(box())' }],
   ['an attachment whose top is an attachment', 'attach(x)', { preamble: '#set math.attach(t: math.attach([x]))' }],
+  ['2,000 nested attachments', '#x2000', { preamble: nestedDefinitions(2000, (name) => `math.attach(${name}, t: [1])`) }],
+  ['10,000 else-if branches', '#{' + 'if false { 1 } else '.repeat(10000) + '{ 2 }}', {}],
+  ['a closure whose body is a chain of 3,000 additions', '#{ let f() = (' + '1+'.repeat(3000) + '1); 1 }', {}],
   // Values that share parts take exponential work to compare or show.
   ['shared arrays compared', '#(x30 == x30)', { preamble: doubling('(1,)', (x) => `(${x}, ${x})`) }],
   ['shared arrays shown', '#x30', { preamble: doubling('(1,)', (x) => `(${x}, ${x})`) }],
   ['shared content compared', '#(x30 == x30)', { preamble: doubling('[a]', (x) => `strong[#${x} #${x}]`) }],
   ['a huge number of primes', 'primes(#9223372036854775807)', {}],
+  // Each delimiter of a chain of binomials is taller than the last, and a
+  // stretched glyph is assembled from parts, up to a thousand: the parts
+  // have a budget.
+  ['120 nested binomials', '#x120', { preamble: nestedDefinitions(120, (name) => `math.binom(${name}, 1)`) }],
+  ['a roman numeral of a huge number', 'x', { displayMode: true, preamble: '#set math.equation(numbering: "I")', equationCounter: { value: 1e16 } }],
+  // Every length written to the output is within the size budget, whatever
+  // computed it.
+  ['a huge row gap', 'vec(gap: #1e9em, 1, 2)', {}],
+  ['huge tracking', '#text(tracking: 1e9pt)[xy]', {}],
+  ['a huge stroke', '#box(stroke: 1e9pt)[x]', {}],
+  ['a huge baseline shift', '#text(baseline: 1e9pt)[x]', {}],
 ];
 
 /** Formulas that stop with Typst's own errors: `[name, source, options, kind, message]`. */
@@ -70,4 +84,8 @@ export const BOUNDED_CASES = [
   ['a hashed chain in raw markup', '#[```typ #' + chain(3000) + '```]', {}],
   ['many hashes in raw markup', '#[```typ ' + '#x '.repeat(2000) + '```]', {}],
   ['a chain in raw math', '#[```typm ' + chain(3000) + '```]', {}],
+  // The parser follows a chain of `else if` without recursion.
+  ['3,000 else-if branches in raw code', '#[```typc ' + 'if x {} else '.repeat(3000) + '{}```]', {}],
+  // An empty array repeated is empty, however huge the count: no loop runs.
+  ['an empty array repeated a huge number of times', '#(() * 9223372036854775807)', {}],
 ];

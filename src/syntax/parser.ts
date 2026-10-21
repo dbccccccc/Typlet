@@ -886,17 +886,31 @@ function contextual(p: Parser, atomic: boolean): void {
   p.wrap(m, K.Contextual);
 }
 
-/** Parses an if-else conditional: `if x { y } else { z }`. */
+/**
+ * Parses an if-else conditional: `if x { y } else { z }`.
+ *
+ * Modified for Typlet: typst-syntax parses each `else if` by recursion, which
+ * a chain of thousands of them takes deeper than the native stack, and the
+ * depth check doesn't count them. The chain is parsed in a loop instead, and
+ * the nodes are wrapped from the innermost conditional outward, in the order
+ * the recursion wraps them, which gives the same tree.
+ */
 function conditional(p: Parser): void {
-  const m = p.marker();
+  const markers = [p.marker()];
   p.assert(K.If);
   codeExpr(p);
   block(p);
-  if (p.eatIf(K.Else)) {
-    if (p.at(K.If)) conditional(p);
-    else block(p);
+  while (p.eatIf(K.Else)) {
+    if (!p.at(K.If)) {
+      block(p);
+      break;
+    }
+    markers.push(p.marker());
+    p.assert(K.If);
+    codeExpr(p);
+    block(p);
   }
-  p.wrap(m, K.Conditional);
+  for (let i = markers.length - 1; i >= 0; i--) p.wrap(markers[i]!, K.Conditional);
 }
 
 /** Parses a while loop: `while x { y }`. */
