@@ -264,14 +264,14 @@ Formulas from chat, comments or shared links are untrusted. Levels 1 and 2 alway
 | Budget | Default | Why |
 |---|---|---|
 | Call depth | 80 | Typst's own limit, with Typst's error message |
-| Parser nesting | 256 | Typst's own limit |
-| Expression depth | 1,024 | Bounds the evaluator's recursion, which a chain of operators deepens without nesting, and the rest of a block after each rule |
-| Nesting depth | 256, after evaluation | Bounds the recursion of resolving, layout and conversion, which definitions deepen without nesting syntax, and which `#set box(box())` feeds its own body; and of comparing and showing values |
+| Parser nesting | 256 | Typst's own limit; a chain of `else if` branches, which typst-syntax parses by recursion, is parsed in a loop |
+| Expression depth | 1,024, counted across the calls in progress | Bounds the evaluator's recursion, which a chain of operators deepens without nesting, the rest of a block after each rule, and the walk over a closure's body when it is defined |
+| Nesting depth | 256, after evaluation | Bounds the recursion of resolving, layout and conversion, which definitions deepen without nesting syntax, which a chain of attachments deepens, and which `#set box(box())` feeds its own body; and of comparing and showing values |
 | Value steps | 100,000 per formula | Values that share parts, such as `(x, x)` built thirty times over, take exponential work to compare or show |
 | Function calls | 30,000 per formula | Bounds recursion: an exponential recursion stops within about 30 ms |
 | Collection size | 10,000 items; 100,000 characters per string | Stops repetition such as `"x" * 100000000`, and doubling with `+` |
-| Content elements | 10,000 per formula | Stops content that doubles, such as a chain of `#let x1 = [#x0 #x0]` |
-| Sizes of spacing, boxes and text | 1,000 em | Stops `#h(1e9pt)` and `#text(size: 1e6pt)` |
+| Content elements, and parts of stretched glyphs | 10,000 each per formula | Stops content that doubles, such as a chain of `#let x1 = [#x0 #x0]`, and chains of ever taller delimiters, each assembled from up to a thousand parts |
+| Sizes of spacing, boxes and text, and every length in the output | 1,000 em | Stops `#h(1e9pt)` and `#text(size: 1e6pt)` where they are resolved, and any other length, such as a gap, a stroke or tracking, where the HTML or the MathML writes it, whatever computed it |
 | Output size | 1 MB per formula | A last line of defense |
 
 Typst has no budget on calls. Computation that Typst would finish slowly fails in Typlet with a `limit` error. The budgets on calls, collections, strings, elements, sizes and output can be changed through options: `maxCalls`, `maxCollectionSize`, `maxStringLength`, `maxElements`, `maxSize` and `maxOutputSize`. The depth and step limits have no option: they stand in for the native stack, which the formula's structure must never exhaust, and are far beyond what formulas use.

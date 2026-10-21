@@ -57,7 +57,7 @@ Typst warns about some formulas, for example about deprecated symbols, and Typle
 renderToString(source, { strict: (warning) => (warning.kind === 'deprecation' ? 'ignore' : 'warn') });
 ```
 
-Each warning has a `kind`: `fallback` when the HTML can't draw a formula yet, for example one with a character New Computer Modern Math lacks, and Typlet draws it as MathML instead; `deprecation` for a deprecated name; and `other` for the rest, such as a link left out for lack of `trust`.
+Each warning has a `kind`: `fallback` when the HTML can't draw a formula yet, for example one with a character New Computer Modern Math lacks, and Typlet draws it as MathML instead; `approximation` when the HTML drew part of a formula only approximately, as it draws Chinese, Japanese and Korean text with the browser's fonts rather than from a font's metrics; `deprecation` for a deprecated name; and `other` for the rest, such as a link left out for lack of `trust`.
 
 ## Styling
 
