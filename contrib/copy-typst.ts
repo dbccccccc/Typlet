@@ -76,48 +76,68 @@ const BLOCKS = new Set([
   'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'li', 'main', 'nav', 'ol', 'pre', 'section', 'table', 'tr', 'ul',
 ]);
 
+/** The elements whose text keeps its spaces and line breaks, as `white-space: pre` does. */
+const PRE = new Set(['pre', 'textarea', 'listing', 'xmp', 'plaintext']);
+
 /**
  * The text of copied content as it reads on the page, which `textContent`
- * runs together: a line break after a block element or `<br>`, a blank line
- * between paragraphs, and a tab between table cells.
+ * runs together: runs of whitespace collapse to a space, as browsers
+ * collapse them, except in `<pre>`; a line breaks after a block element or
+ * `<br>`, with no spaces at its ends; a blank line separates paragraphs; and
+ * a tab separates table cells.
  */
 function plainText(container: Element): string {
   let out = '';
   // The separator the next text gets: the longest wanted since the last text.
   let pending = '';
+  // How many elements that keep their whitespace the text is in.
+  let pre = 0;
   const separate = (separator: string) => {
     if (separator.length > pending.length || (separator === '\n' && pending === '\t')) pending = separator;
   };
   const write = (text: string) => {
     if (text === '') return;
-    if (out !== '' && pending === '\t') out += '\t';
-    else if (out !== '' && pending !== '') {
-      // Line breaks already around the join count towards the separator.
-      const before = out.length - out.replace(/\n+$/, '').length;
-      const after = text.length - text.replace(/^\n+/, '').length;
-      out += '\n'.repeat(Math.max(0, pending.length - before - after));
+    if (out !== '' && pending !== '') {
+      out = out.replace(/ +$/, '');
+      if (pending === '\t') out += '\t';
+      else {
+        // Line breaks already around the join count towards the separator.
+        const before = out.length - out.replace(/\n+$/, '').length;
+        const after = text.length - text.replace(/^\n+/, '').length;
+        out += '\n'.repeat(Math.max(0, pending.length - before - after));
+      }
     }
     pending = '';
+    if (pre === 0) {
+      // A line starts without spaces, and two spaces don't meet.
+      if (out === '' || /[\n\t]$/.test(out)) text = text.replace(/^ +/, '');
+      if (out.endsWith(' ') && text.startsWith(' ')) text = text.slice(1);
+    }
     out += text;
   };
   const visit = (node: Node): void => {
     if (node.nodeType === 3) {
-      write(node.textContent ?? '');
+      const text = node.textContent ?? '';
+      write(pre > 0 ? text : text.replace(/[\t\n\r ]+/g, ' '));
       return;
     }
     if (node.nodeType !== 1) return;
     const tag = (node as Element).localName;
     if (tag === 'br') {
+      out = out.replace(/ +$/, '');
       write('\n');
       return;
     }
     const separator = tag === 'p' ? '\n\n' : BLOCKS.has(tag) ? '\n' : tag === 'td' || tag === 'th' ? '\t' : '';
     if (separator !== '') separate(separator);
+    if (PRE.has(tag)) pre++;
     for (const child of node.childNodes) visit(child);
+    if (PRE.has(tag)) pre--;
     if (separator !== '' && separator !== '\t') separate(separator);
   };
   visit(container);
-  return out;
+  // Nothing follows the last line: no line break after it, as browsers copy.
+  return out.replace(/[ \n\t]+$/, '');
 }
 
 /** The copy handler: puts the selection's formulas on the clipboard as Typst source. */
